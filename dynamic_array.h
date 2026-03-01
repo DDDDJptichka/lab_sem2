@@ -11,4 +11,3 @@ typedef struct Dynamic_arr{
 
 } dynamic_arr_t;
 
-//фции
