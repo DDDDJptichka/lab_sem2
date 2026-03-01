@@ -24,8 +24,3 @@ void add_to_arr(dynamic_arr_t *arr, void *elem){
     
 
 }
-
-void ning(){
-
-    
-}
