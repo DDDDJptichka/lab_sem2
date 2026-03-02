@@ -10,3 +10,5 @@ typedef struct field_info{
 } field_info_t;
 
 const field_info_t* get_double_info();
+
+const field_info_t* get_func_info();
