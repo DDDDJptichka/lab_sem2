@@ -1,3 +1,7 @@
 #pragma once
 
-typedef void (*func_t)(const void *arg);
+#include <stdbool.h>
+
+typedef void (*func_t)(void *arg);
+
+typedef bool (*predicate_t)(const void *arg);
