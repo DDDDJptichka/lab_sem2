@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "dynamic_array.h"
 #include "func.h"
 #include "checker.h"

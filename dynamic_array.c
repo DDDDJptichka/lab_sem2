@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "checker.h"
 
+#define GET_ELEM(arr, i) ((char*)(arr)->data + (i) * (arr)->type->size)
+
 dynamic_arr_t* create_arr(size_t capacity, const field_info_t *info, error_code *error){
     
     if (capacity == 0){
@@ -71,4 +73,31 @@ int add_to_arr(dynamic_arr_t *arr, void *elem, error_code *error){
     *error = OK;
 
     return 0;
+}
+
+void* get_elem(dynamic_arr_t *arr, size_t index, error_code *error){
+
+    if (error == NULL){
+
+        return NULL;
+
+    }
+
+    if (arr == NULL){
+
+        *error = ERROR_NULL;
+        return NULL;
+
+    }
+
+    if (index >= arr->size){
+
+        *error = ERROR_GET_ELEM_OUT_OF_RANGE;
+        return NULL;
+
+    }
+
+    *error = OK;
+
+    return GET_ELEM(arr, index);
 }
