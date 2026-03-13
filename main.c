@@ -1,12 +1,19 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <locale.h>
+#include <windows.h>
 #include "test.h"
 #include "checker.h"
 #include "dynamic_arr_operations.h"
 #include "dynamic_array.h"
 #include "func.h"
+#include "console_interface.h"
 
 int main(){
+    
+    SetConsoleOutputCP(1251);
+    SetConsoleCP(1251);
+    setlocale(LC_ALL, "Russian");
 
     test_create_arr_zero_capacity_DOUBLE();
     test_create_arr_zero_capacity_FUNC();
@@ -28,6 +35,8 @@ int main(){
     test_concatenate_diff_types_arrays();
     test_concatenate_DOUBLE();
     test_concatenate_FUNC();
+
+    dialoge();
 
     return 0;
 }

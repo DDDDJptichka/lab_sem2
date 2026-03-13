@@ -1,3 +1,32 @@
+#pragma once
+
+#define TEST(test_name) \
+    static void test_name(); \
+    static void __attribute__((constructor)) \
+    register_##test_name(){ \
+        register_test(#test_name, test_name); \
+    } \
+    static void test_name()
+
+#define TEST_ENTRY_POINT \
+    int main(void){ \
+        run_tests(); \
+        return print_stats(); \
+    }
+
+typedef void (*test_func)(void);
+
+typedef struct test{
+
+    const char *name;
+    test_func this_test;
+    struct test_h *next_test;
+
+} test_h;
+
+void register_test(const char *name, test_func test);
+void run_tests();
+
 void test_create_arr_zero_capacity_DOUBLE();
 void test_create_arr_zero_capacity_FUNC();
 void test_create_arr_DOUBLE();

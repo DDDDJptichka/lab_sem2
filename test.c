@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include "test.h"
 #include "func.h"
 #include "dynamic_array.h"
 #include "checker.h"
