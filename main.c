@@ -38,5 +38,7 @@ int main(){
 
     dialoge();
 
+//gcc main.c console_interface.c dynamic_array.c dynamic_arr_operations.c field_info.c checker_printf.c test.c -o a.exe
+
     return 0;
 }
