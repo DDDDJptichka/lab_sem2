@@ -139,4 +139,7 @@ dynamic_arr_t* check_where(dynamic_arr_t *arr, predicate_t pred){
         return NULL;
 
     }
+
+
+    ///доделать выбор ф-ций
 }
