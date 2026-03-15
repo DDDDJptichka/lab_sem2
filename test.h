@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdbool.h>
+
 #define TEST(test_name) \
     static void test_name(); \
     static void __attribute__((constructor)) \
@@ -26,6 +28,24 @@ typedef struct test{
 
 void register_test(const char *name, test_func test);
 void run_tests();
+
+void num_plus_322(void *arg);
+void num_negative(void *arg);
+void num_minus_2(void *arg);
+void square_square(void *arg);
+void square(void *arg);
+
+void do_nothing(void *f);
+void to_square_func(void *f);
+void to_num_negative_func(void *f);
+void to_num_minus_2_func(void *f);
+
+bool is_square_square(void *f);
+bool is_square(void *f);
+
+bool is_less_than_ten(void *num);
+bool perfect_man_height(void *height);
+bool is_more_than_ten(void *num);
 
 void test_create_arr_zero_capacity_DOUBLE();
 void test_create_arr_zero_capacity_FUNC();

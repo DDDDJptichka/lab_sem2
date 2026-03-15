@@ -10,21 +10,21 @@
 void num_plus_322(void *arg){
 
     double *x = arg;
-    *x = (*x) + 322;
+    *x = (*x) + 322.00000000000;
 
 }
 
 void num_negative(void *arg){
 
     double *x = arg;
-    *x = (*x) * (-1);
+    *x = (*x) * (-1.000000000000);
 
 }
 
 void num_minus_2(void *arg){
 
     double *x = arg;
-    *x = (*x) - 2;
+    *x = (*x) - 2.000000000000;
 
 }
 
@@ -48,6 +48,62 @@ void do_nothing(void *f){
 
 }
 
+void to_square_func(void *f){
+
+    func_t *func = f;
+
+    if (*func != square){
+
+        *func = square;
+
+    }
+
+}
+
+void to_square_square_func(void *f){
+
+    func_t *func = f;
+
+    if (*func != square_square){
+
+        *func = square_square;
+
+    }
+
+}
+
+void to_num_negative_func(void *f){
+
+    func_t *func = f;
+
+    if (*func != num_negative){
+
+        *func = num_negative;
+
+    }
+
+}
+
+void to_num_minus_2_func(void *f){
+
+    func_t *func = f;
+
+    if (*func != num_minus_2){
+
+        *func = num_minus_2;
+
+    }
+
+}
+
+bool is_square_square(void *f){
+
+    func_t *func = f;
+
+    return (*func == square_square);
+
+}
+
 bool perfect_man_height(void *height){
 
     double *h = height;
@@ -56,11 +112,27 @@ bool perfect_man_height(void *height){
 
 }
 
-bool is_square(void *arg){
+bool is_square(void *f){
 
-    func_t *f = arg;
+    func_t *func = f;
 
-    return (*f == square);
+    return (*func == square);
+
+}
+
+bool is_less_than_ten(void *num){
+    
+    double *h = num;
+
+    return ((*h - 10.0) < 0);
+
+}
+
+bool is_more_than_ten(void *num){
+
+    double *h = num;
+
+    return ((*h - 10.0) > 0);
 
 }
 
