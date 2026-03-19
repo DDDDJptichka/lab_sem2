@@ -7,7 +7,7 @@
 
 dynamic_arr_t* create_arr(size_t capacity, const field_info_t *info, error_code *error){
     
-    if (capacity == 0){
+    if (capacity <= 0){
 
         *error = ERROR_ZERO_CAPACITY;
 
@@ -47,6 +47,14 @@ dynamic_arr_t* create_arr(size_t capacity, const field_info_t *info, error_code 
 }
 
 int add_to_arr(dynamic_arr_t *arr, void *elem, error_code *error){
+
+    
+    if (arr == NULL){
+
+        //*error = ERROR_NULL;
+        return 1;
+
+    }
 
     if (arr->size >= arr->capacity){
 

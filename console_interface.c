@@ -23,7 +23,7 @@ int choose_action(){
 
     while ((check_scanf != 1) || ((flag != 0) && (flag != 1) && (flag != 2) && (flag != 3) && (flag != 4))){
         
-        printf("\n\nНЕКОРРЕКТНЫЙ ВВВОД\n\n=============================\n"
+        printf("\n\nНЕКОРРЕКТНЫЙ ВВОД\n\n=============================\n"
                 "0 - Создать массив\n1 - Применить map\n2 - Применить where\n3 - Применить concatenate\n4 - Выход\n\n"
                 "-----------------------------\n"
                 "Введите номер действия: ");
@@ -45,7 +45,7 @@ int choose_array_type(){
 
     while ((check_scanf != 1) || ((flag != 0) && (flag != 1))){
 
-        printf("\n\nНЕКОРРЕКТНЫЙ ВВВОД\n\n=============================\n"
+        printf("\n\nНЕКОРРЕКТНЫЙ ВВОД\n\n=============================\n"
                 "Какого типа массив хотите создать?\n\n0 - функциональный\n1 - вещественный\n\nВведите номер действия: ");
 
         check_scanf = scanf("%d", &flag);
@@ -73,7 +73,7 @@ dynamic_arr_t* create_double_array_console(){
         
         while (check_scanf != 1){
 
-            printf("\n\nНЕКОРРЕКТНЫЙ ВВВОД\n\n=============================\n");
+            printf("\n\nНЕКОРРЕКТНЫЙ ВВОД\n\n==========================\n");
             printf("\n\nХотите добавить элемент?\n\n0 - да\n1 - нет\n\nВведите номер действия: ");
 
             check_scanf = scanf("%d", &flag);
@@ -84,11 +84,11 @@ dynamic_arr_t* create_double_array_console(){
         if (flag == 0){
 
             printf("\n\nВведите элемент:   ");
-            check_scanf = scanf("%.9f", &element);
+            check_scanf = scanf("%lf", &element);
 
             while (check_scanf != 1){
 
-                printf("\n\nНЕКОРРЕКТНЫЙ ВВВОД\n\n=============================\n");
+                printf("\n\nНЕКОРРЕКТНЫЙ ВВОД\n\n=============================\n");
                 printf("\n\nВведите элемент:   ");
 
                 check_scanf = scanf("%lf", &element);
@@ -128,13 +128,13 @@ dynamic_arr_t* create_double_array_console(){
         }
         else{
 
-            printf("%.9f ]", *(double*)get_elem(arr, i, &error));
+            printf("%.9f", *(double*)get_elem(arr, i, &error));
 
         }
 
     }
 
-    printf("\n\n");       
+    printf(" ]\n\n");       
 
     return arr;
 }
@@ -154,7 +154,7 @@ dynamic_arr_t* create_func_array_console(){
 
         while (check_scanf != 1){
 
-            printf("\n\nНЕКОРРЕКТНЫЙ ВВВОД\n\n=============================\n");
+            printf("\n\nНЕКОРРЕКТНЫЙ ВВОД\n\n=============================\n");
             printf("\n\nХотите добавить функцию?\n\n0 - да\n1 - нет\n\nВведите номер действия: ");
 
             check_scanf = scanf("%d", &flag);
@@ -169,7 +169,7 @@ dynamic_arr_t* create_func_array_console(){
 
         while ((check_scanf != 1) || ((flag != 0) && (flag != 1) && (flag != 2) && (flag != 3) && (flag != 4) && (flag != 5))){
 
-            printf("\n\nНЕКОРРЕКТНЫЙ ВВВОД\n\n=============================\n");
+            printf("\n\nНЕКОРРЕКТНЫЙ ВВОД\n\n=============================\n");
             printf("\n\nСписок доступных функций(выберите, какую хотите добавить):\n\n0 - num_plus_322\n1 - num_negative\n2 - num_minus_2\n3 - square\n4 - square_square\n5 - do_nothing\n\nВведите номер действия: ");
 
             check_scanf = scanf("%d", &flag);
@@ -253,7 +253,7 @@ dynamic_arr_t* do_map_console(dynamic_arr_t *arr){
         
         while ((check_scanf != 1) || ((flag != 0) && (flag != 1) && (flag != 2) && (flag != 3) && (flag != 4))){
 
-            printf("\n\nНЕКОРРЕКТНЫЙ ВВВОД\n\n=============================\n");
+            printf("\n\nНЕКОРРЕКТНЫЙ ВВОД\n\n=============================\n");
             printf("\n\nВыберите функцию, которую хотите применить к массиву\n\n0 - num_plus_322\n1 - num_negative\n2 - num_minus_2\n3 - square\n4 - square_square\n\nВведите номер действия: ");
 
             check_scanf = scanf("%d", &flag);
@@ -304,7 +304,7 @@ dynamic_arr_t* do_map_console(dynamic_arr_t *arr){
 
         }
 
-        printf("\n\n");       
+        printf(" ]\n\n");       
 
     }
     else if (arr->type == get_func_info()){
@@ -316,7 +316,7 @@ dynamic_arr_t* do_map_console(dynamic_arr_t *arr){
         
         while ((check_scanf != 1) || ((flag != 0) && (flag != 1) && (flag != 2) && (flag != 3))){
 
-            printf("\n\nНЕКОРРЕКТНЫЙ ВВВОД\n\n=============================\n");
+            printf("\n\nНЕКОРРЕКТНЫЙ ВВОД\n\n=============================\n");
             printf("\n\nВыберите функцию, которую хотите применить к массиву\n\n0 - do_nothing\n1 - to_square_func\n2 - to_num_negative_func\n3 - to_num_minus_2_func\n\nВведите номер действия: ");
 
             check_scanf = scanf("%d", &flag);
@@ -390,7 +390,7 @@ dynamic_arr_t* do_where_console(dynamic_arr_t *arr){
         
         while ((check_scanf != 1) || ((flag != 0) && (flag != 1) && (flag != 2))){
 
-            printf("\n\nНЕКОРРЕКТНЫЙ ВВВОД\n\n=============================\n");
+            printf("\n\nНЕКОРРЕКТНЫЙ ВВОД\n\n=============================\n");
             printf("\n\nВыберите функцию(фильтр), который хотите применить к массиву\n\n0 - is_less_than_ten\n1 - perfect_man_height\n2 - is_more_than_ten\n\nВведите номер действия: ");
 
             check_scanf = scanf("%d", &flag);
@@ -425,7 +425,7 @@ dynamic_arr_t* do_where_console(dynamic_arr_t *arr){
         
         while ((check_scanf != 1) || ((flag != 0) && (flag != 1))){
 
-            printf("\n\nНЕКОРРЕКТНЫЙ ВВВОД\n\n=============================\n");
+            printf("\n\nНЕКОРРЕКТНЫЙ ВВОД\n\n=============================\n");
             printf("\n\nВыберите функцию, которую хотите применить к массиву\n\n0 - is_square\n1 - is_square_square\n\nВведите номер действия: ");
 
             check_scanf = scanf("%d", &flag);
@@ -476,7 +476,7 @@ dynamic_arr_t* do_where_console(dynamic_arr_t *arr){
 
             }
 
-            printf("\n\n");
+            printf(" ]\n\n");
 
         }
         
@@ -505,7 +505,7 @@ dynamic_arr_t *do_concatenate_console(){
     
     while ((check_scanf != 1) || ((flag != 0) && (flag != 1))){
 
-        printf("\n\nНЕКОРРЕКТНЫЙ ВВВОД\n\n=============================\n");
+        printf("\n\nНЕКОРРЕКТНЫЙ ВВОД\n\n=============================\n");
         printf("\n\nКакого типа массивы хотите конкатенировать?\n\n0 - double\n1 - function\n\nВведите номер действия: ");
 
         check_scanf = scanf("%d", &flag);
@@ -549,13 +549,13 @@ dynamic_arr_t *do_concatenate_console(){
                 }
                 else{
 
-                    printf("%.9f ]", *(double*)get_elem(res_arr, i, &error));
+                    printf("%.9f", *(double*)get_elem(res_arr, i, &error));
 
                 }
 
             }
 
-            printf("\n\n");
+            printf(" ]\n\n");
 
         }
 
@@ -615,9 +615,10 @@ dynamic_arr_t* do_interface(){
         flag = choose_action();
 
     }
-
+    
     return arr;
 
 }
-///доделать выбор ф-ций
-//gcc main.c console_interface.c dynamic_array.c dynamic_arr_operations.c field_info.c checker_printf.c test.c -o a.exe
+///доделать выбор ф-ций ++++++++
+//доделать визуализацию функций
+//gcc main.c console_interface.c dynamic_array.c dynamic_arr_operations.c field_info.c checker_printf.c test.c -o a.exe 

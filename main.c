@@ -15,30 +15,9 @@ int main(){
     SetConsoleCP(1251);
     setlocale(LC_ALL, "Russian");
 
-    test_create_arr_zero_capacity_DOUBLE();
-    test_create_arr_zero_capacity_FUNC();
-    test_create_arr_DOUBLE();
-    test_create_arr_FUNC();
-    test_add_to_arr_DOUBLE();
-    test_add_to_arr_FUNC();
-    test_wrong_get_from_arr_DOUBLE();
-    test_wrong_get_from_arr_FUNC();
-    test_try_to_brake_malloc_DOUBLE();
-    test_try_to_brake_malloc_FUNC();
-    test_try_to_brake_realloc_DOUBLE();
-    test_try_to_brake_realloc_FUNC();
-    test_map_DOUBLE();
-    test_map_FUNC();
-    test_where_DOUBLE();
-    test_where_FUNC();
-    test_concatenate_null_arr();
-    test_concatenate_diff_types_arrays();
-    test_concatenate_DOUBLE();
-    test_concatenate_FUNC();
-
     dynamic_arr_t *arr = do_interface();
-
-//gcc main.c console_interface.c dynamic_array.c dynamic_arr_operations.c field_info.c checker_printf.c test.c -o a.exe
 
     return 0;
 }
+
+//gcc test.c console_interface.c dynamic_array.c dynamic_arr_operations.c field_info.c checker_printf.c assertions.c -o test.exe

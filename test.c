@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "test.h"
 #include "func.h"
 #include "dynamic_array.h"
 #include "checker.h"
 #include "dynamic_arr_operations.h"
 #include "field_info.h"
+#include "assertions.h"
 
 void num_plus_322(void *arg){
 
@@ -42,11 +44,7 @@ void square(void *arg){
 
 }
 
-void do_nothing(void *f){
-
-    func_t *func = f;
-
-}
+void do_nothing(void *f){}
 
 void to_square_func(void *f){
 
@@ -136,55 +134,74 @@ bool is_more_than_ten(void *num){
 
 }
 
-error_code error;
+TEST(test_create_arr_zero_capacity_DOUBLE){
 
-void test_create_arr_zero_capacity_DOUBLE(){
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(0, get_double_info(), &error);
 
-    printf("%s\n", err_printf(error));
+    ASSERT_NULL(arr);
+    ASSERT_EQ(error, ERROR_ZERO_CAPACITY);
     
 }
 
-void test_create_arr_zero_capacity_FUNC(){
+TEST(test_create_arr_zero_capacity_FUNC){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(0, get_func_info(), &error);
 
-    printf("%s\n\n", err_printf(error));
-    
+    ASSERT_NULL(arr);
+    ASSERT_EQ(error, ERROR_ZERO_CAPACITY);
+
 }
 
-void test_create_arr_DOUBLE(){
+TEST(test_create_arr_DOUBLE){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(3, get_double_info(), &error);
 
-    printf("%s\n", err_printf(error));
+    ASSERT_NOT_NULL(arr);
+    ASSERT_EQ(error, OK);
     
 }
 
-void test_create_arr_FUNC(){
+TEST(test_create_arr_FUNC){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(3, get_func_info(), &error);
 
-    printf("%s\n\n", err_printf(error));
+    ASSERT_NOT_NULL(arr);
+    ASSERT_EQ(error, OK);
     
 }
 
-void test_add_to_arr_DOUBLE(){
+TEST(test_add_to_arr_DOUBLE){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(1, get_double_info(), &error);
 
-    double x;
+    double x, res;
 
     x = 0.6372;
     
     add_to_arr(arr, &x, &error);
 
-    printf("double get:   %f %s\n", *(double*)get_elem(arr, 0, &error), err_printf(error));
+    ASSERT_EQ(error, OK);
+
+    res = *(double*)get_elem(arr, 0, &error);
+
+    ASSERT_EQ(error, OK);
+    ASSERT_DOUBLE_EQ(res, x);
 
 }
 
-void test_add_to_arr_FUNC(){
+TEST(test_add_to_arr_FUNC){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(1, get_func_info(), &error);
 
@@ -196,14 +213,18 @@ void test_add_to_arr_FUNC(){
 
     add_to_arr(arr, &f1, &error);
 
-    f_check = *(func_t*)get_elem(arr, 0, &error);
-    f_check(&x);
+    ASSERT_EQ(error, OK);
 
-    printf("func_get:   (2.2)**2 = %.3f %s\n\n", x, err_printf(error));
+    f_check = *(func_t*)get_elem(arr, 0, &error);
+
+    ASSERT_EQ(error, OK);
+    ASSERT_EQ(f_check, square);
     
 }
 
-void test_wrong_get_from_arr_DOUBLE(){
+TEST(test_wrong_get_from_arr_DOUBLE){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(1, get_double_info(), &error);
 
@@ -213,11 +234,13 @@ void test_wrong_get_from_arr_DOUBLE(){
     add_to_arr(arr, &x, &error);
     void *ptr = get_elem(arr, 1, &error);
 
-    printf("%s\n", err_printf(error));
+    ASSERT_EQ(error, ERROR_GET_ELEM_OUT_OF_RANGE);
 
 }
 
-void test_wrong_get_from_arr_FUNC(){
+TEST(test_wrong_get_from_arr_FUNC){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(1, get_func_info(), &error);
 
@@ -231,27 +254,33 @@ void test_wrong_get_from_arr_FUNC(){
 
     void *ptr = get_elem(arr, 1, &error);
     
-    printf("%s\n\n", err_printf(error));
+    ASSERT_EQ(error, ERROR_GET_ELEM_OUT_OF_RANGE);
     
 }
 
-void test_try_to_brake_malloc_DOUBLE(){
+TEST(test_try_to_brake_malloc_DOUBLE){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(999999999, get_double_info(), &error);
 
-    printf("%s\n", err_printf(error));
+    ASSERT_EQ(error, ERROR_MALLOC_FAILED);
     
 }
 
-void test_try_to_brake_malloc_FUNC(){
+TEST(test_try_to_brake_malloc_FUNC){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(999999999, get_func_info(), &error);
 
-    printf("%s\n\n", err_printf(error));
+    ASSERT_EQ(error, ERROR_MALLOC_FAILED);
     
 }
 
-void test_try_to_brake_realloc_DOUBLE(){
+TEST(test_try_to_brake_realloc_DOUBLE){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(1, get_double_info(), &error);
 
@@ -262,19 +291,22 @@ void test_try_to_brake_realloc_DOUBLE(){
 
         add_to_arr(arr, &x, &error);
 
-        if (error == ERROR_REALLOC_FAILED){
+        if (error != OK){
 
-            printf("%s\n", err_printf(error));
-
+            ASSERT_EQ(error, ERROR_REALLOC_FAILED);
             return;
 
         }
 
     }
-    
+
+    ASSERT(0);
+
 }
 
-void test_try_to_brake_realloc_FUNC(){
+TEST(test_try_to_brake_realloc_FUNC){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(1, get_func_info(), &error);
 
@@ -285,19 +317,22 @@ void test_try_to_brake_realloc_FUNC(){
 
         add_to_arr(arr, &f1, &error);
 
-        if (error == ERROR_REALLOC_FAILED){
+        if (error != OK){
 
-            printf("%s\n\n", err_printf(error));
-
+            ASSERT_EQ(error, ERROR_REALLOC_FAILED);
             return;
 
         }
 
     }
     
+    ASSERT(0);
+
 }
 
-void test_map_DOUBLE(){
+TEST(test_map_DOUBLE){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(3, get_double_info(), &error);
 
@@ -315,16 +350,24 @@ void test_map_DOUBLE(){
     add_to_arr(arr, &z, &error);
 
     dynamic_arr_t *res_arr = map(f1, arr, &error);
+    
+    ASSERT_EQ(error, OK);
 
     for (size_t i = 0; i < res_arr->size; ++i){
 
-        printf("double map:   %d:  %f %s\n", i, *(double*)get_elem(res_arr, i, &error), err_printf(error));
+        double res =  *(double*)get_elem(res_arr, i, &error);
+        double curr = *(double*)get_elem(arr, i, &error);
+
+        ASSERT_EQ(error, OK);
+        ASSERT_DOUBLE_EQ(res, curr * curr);
 
     }
 
 }
 
-void test_map_FUNC(){
+TEST(test_map_FUNC){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(1, get_func_info(), &error);
 
@@ -339,16 +382,21 @@ void test_map_FUNC(){
 
     dynamic_arr_t *res_arr = map(do_nothing, arr, &error);
 
+    ASSERT_EQ(error, OK);
+
     check = *(func_t*)get_elem(res_arr, 0, &error);
     
     check(&x);
     check(&x);
     
-    printf("func map:   (2.5)**4 = %f %s\n\n", x, err_printf(error));
+    ASSERT_EQ(error, OK);
+    ASSERT_DOUBLE_EQ(x, 2.5*2.5*2.5*2.5);
 
 }
 
-void test_where_DOUBLE(){
+TEST(test_where_DOUBLE){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(3, get_double_info(), &error);
 
@@ -367,19 +415,22 @@ void test_where_DOUBLE(){
 
     dynamic_arr_t *res_arr = where(pred, arr, &error);
 
-    printf("double where:   %.2f %s\n", *(double*)get_elem(res_arr, 0, &error), err_printf(error));
+    ASSERT_EQ(error, OK);
+
+    double curr = *(double*)get_elem(res_arr, 0, &error);
+    ASSERT_DOUBLE_EQ(curr, 1.71);
 
 }
 
-void test_where_FUNC(){
+TEST(test_where_FUNC){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr = create_arr(3, get_func_info(), &error);
 
-    double x;
     predicate_t pred;
     func_t f1, f2, f3, f_check;
 
-    x = 2.5;
     f1 = square; 
     f2 = do_nothing;
     f3 = square;
@@ -392,19 +443,19 @@ void test_where_FUNC(){
 
     dynamic_arr_t *res_arr = where(pred, arr, &error);
 
-    f_check = *(func_t*)get_elem(res_arr, 0, &error);
-    f_check(&x);
-    printf("func where:   0: %f %s\n", x, err_printf(error));
+    ASSERT_EQ(error, OK);
 
-    x = 2.5;
+    f_check = *(func_t*)get_elem(res_arr, 0, &error);
+    ASSERT_EQ(f_check, square);
 
     f_check = *(func_t*)get_elem(res_arr, 1, &error);
-    f_check(&x);
-    printf("func where:   1: %f %s\n\n", x, err_printf(error));
+    ASSERT_EQ(f_check, square);
 
 }
 
-void test_concatenate_null_arr(){
+TEST(test_concatenate_null_arr){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr1, *arr2;
 
@@ -412,23 +463,25 @@ void test_concatenate_null_arr(){
     arr2 = NULL;
 
     dynamic_arr_t *res_arr = concatenate(arr1, arr2, &error);
-
-    printf("%s\n\n", err_printf(error));
+    ASSERT_EQ(error, ERROR_NULL);
 
 }
 
-void test_concatenate_diff_types_arrays(){
+TEST(test_concatenate_diff_types_arrays){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr1 = create_arr(10, get_double_info(), &error);
     dynamic_arr_t *arr2 = create_arr(10, get_func_info(), &error);
 
     dynamic_arr_t *res_arr = concatenate(arr1, arr2, &error);
-
-    printf("%s\n\n", err_printf(error));
+    ASSERT_EQ(error, ERROR_DIFF_TYPES);
 
 }
 
-void test_concatenate_DOUBLE(){
+TEST(test_concatenate_DOUBLE){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr1 = create_arr(2, get_double_info(), &error);
     dynamic_arr_t *arr2 = create_arr(3, get_double_info(), &error);
@@ -443,29 +496,38 @@ void test_concatenate_DOUBLE(){
 
     add_to_arr(arr1, &a, &error);
     add_to_arr(arr1, &b, &error);
-    add_to_arr(arr1, &x, &error);
-    add_to_arr(arr1, &y, &error);
-    add_to_arr(arr1, &z, &error);
+    add_to_arr(arr2, &x, &error);
+    add_to_arr(arr2, &y, &error);
+    add_to_arr(arr2, &z, &error);
 
     dynamic_arr_t *res_arr = concatenate(arr1, arr2, &error);
+    ASSERT_EQ(error, OK);
 
-    for (size_t i = 0; i < res_arr->size; ++i){
+    double curr = *(double*)get_elem(res_arr, 0, &error);
+    ASSERT_DOUBLE_EQ(curr, a);
 
-        printf("double concatenate:   %d:  %f %s\n", i, *(double*)get_elem(res_arr, i, &error), err_printf(error));
+    curr = *(double*)get_elem(res_arr, 1, &error);
+    ASSERT_DOUBLE_EQ(curr, b);
 
-    }
+    curr = *(double*)get_elem(res_arr, 2, &error);
+    ASSERT_DOUBLE_EQ(curr, x);
+
+    curr = *(double*)get_elem(res_arr, 3, &error);
+    ASSERT_DOUBLE_EQ(curr, y);
+
+    curr = *(double*)get_elem(res_arr, 4, &error);
+    ASSERT_DOUBLE_EQ(curr, z);
 
 }
 
-void test_concatenate_FUNC(){
+TEST(test_concatenate_FUNC){
+
+    error_code error = OK;
 
     dynamic_arr_t *arr1 = create_arr(2, get_func_info(), &error);
     dynamic_arr_t *arr2 = create_arr(3, get_func_info(), &error);
 
     func_t f1, f2, f3, f4, f5, f_check;
-    double x;
-
-    x = 3.3;
 
     f1 = square;
     f2 = square_square;
@@ -475,22 +537,86 @@ void test_concatenate_FUNC(){
 
     add_to_arr(arr1, &f1, &error);
     add_to_arr(arr1, &f2, &error);
-    add_to_arr(arr1, &f3, &error);
-    add_to_arr(arr1, &f4, &error);
-    add_to_arr(arr1, &f5, &error);
+    add_to_arr(arr2, &f3, &error);
+    add_to_arr(arr2, &f4, &error);
+    add_to_arr(arr2, &f5, &error);
 
     dynamic_arr_t *res_arr = concatenate(arr1, arr2, &error);
+    ASSERT_EQ(error, OK);
 
-    for (size_t i = 0; i < res_arr->size; ++i){
+    f_check = *(func_t*)get_elem(res_arr, 0, &error);
+    ASSERT_EQ(f_check, square);
 
-        f_check = *(func_t*)get_elem(res_arr, i, &error);
-        f_check(&x);
-        printf("func concatenate:   %d:  %f %s\n", i, x, err_printf(error));
+    f_check = *(func_t*)get_elem(res_arr, 1, &error);
+    ASSERT_EQ(f_check, square_square);
 
-        x = 3.3;
+    f_check = *(func_t*)get_elem(res_arr, 2, &error);
+    ASSERT_EQ(f_check, num_negative);
+
+    f_check = *(func_t*)get_elem(res_arr, 3, &error);
+    ASSERT_EQ(f_check, num_minus_2);
+
+    f_check = *(func_t*)get_elem(res_arr, 4, &error);
+    ASSERT_EQ(f_check, num_plus_322);
+
+}
+
+static test_t *head = NULL;
+static test_t *tail = NULL;
+
+void register_test(const char *name, test_func test)
+{
+    test_t *tmp = malloc(sizeof(test_t));
+    
+    tmp->name = name;
+    tmp->this_test = test;
+    tmp->next_test = NULL;
+    
+    if (head == NULL && tail == NULL){
+        
+        head = tmp;
+        tail = tmp;
+        
+        return;
+    }
+    
+    tail->next_test = tmp;
+    tail = tmp;
+}
+
+void run_tests(){
+
+    int failed_tests, all_tests;
+
+    failed_tests = 0;
+    all_tests = 0;
+
+    for (test_t *t = head; t != NULL; t = t->next_test){
+
+        t->this_test();
+        ++all_tests;
+
+        int fail = fail_result();
+
+        if (fail > 0){
+
+            ++failed_tests;
+
+        }
 
     }
 
-    printf("\n");
+    if (failed_tests > 0){
+
+        printf("FAILED TESTS :  %d      PASSED TESTS :  %d\n", failed_tests, all_tests - failed_tests);
+
+    }
+    else{
+
+        printf("ALL %d TESTS PASSED :)\n", all_tests);
+
+    }
 
 }
+
+TEST_ENTRY_POINT
