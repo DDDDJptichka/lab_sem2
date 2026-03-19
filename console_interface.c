@@ -298,7 +298,7 @@ dynamic_arr_t* do_map_console(dynamic_arr_t *arr){
             }
             else{
 
-                printf("%.9f ]", *(double*)get_elem(new_arr, i, &error));
+                printf("%.9f", *(double*)get_elem(new_arr, i, &error));
 
             }
 
@@ -470,7 +470,7 @@ dynamic_arr_t* do_where_console(dynamic_arr_t *arr){
                 }
                 else{
 
-                    printf("%.9f ]", *(double*)get_elem(new_arr, i, &error));
+                    printf("%.9f", *(double*)get_elem(new_arr, i, &error));
 
                 }
 
@@ -620,5 +620,4 @@ dynamic_arr_t* do_interface(){
 
 }
 ///доделать выбор ф-ций ++++++++
-//доделать визуализацию функций
-//gcc main.c console_interface.c dynamic_array.c dynamic_arr_operations.c field_info.c checker_printf.c test.c -o a.exe 
+//доделать визуализацию функций -----
