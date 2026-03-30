@@ -61,7 +61,7 @@ template <class T> class Dynamic_array{
 
         }
 
-        int get_size(){
+        size_t get_size(){
 
             return size;
 
@@ -83,7 +83,7 @@ template <class T> class Dynamic_array{
 
             T *new_data = new T[new_size];
 
-            for (size_t i = 0; i < min(size, new_size); ++i){
+            for (size_t i = 0; i < std::min(size, new_size); ++i){
 
                 new_data[i] = data[i];
 
