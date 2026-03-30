@@ -58,6 +58,20 @@ template <class T> class Linked_list{
 
         }
 
+        ~Linked_list(){
+
+            Node<T> *curr_node = head;
+
+            while (curr_node != nullptr){
+
+                Node<T> *next_node = curr_node->next;
+                delete curr_node;
+                curr_node = next_node;
+
+            }
+
+        }
+
         T get_first(){
 
             if (head == nullptr){
