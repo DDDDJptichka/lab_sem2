@@ -4,8 +4,8 @@
 template <class T> struct Node{
 
     T data;
-    Node *next;
-    Node *prev;
+    Node<T> *next;
+    Node<T> *prev;
 
 };
 
@@ -25,7 +25,7 @@ template <class T> class Linked_list{
             tail = nullptr;
             size = 0;
 
-            for (size_t i = 0; i < 0; ++i){
+            for (size_t i = 0; i < count; ++i){
 
                 append(items[i]);
 
@@ -41,7 +41,7 @@ template <class T> class Linked_list{
 
         }
 
-        Linked_list(const linked_list<T> &other){
+        Linked_list(const Linked_list<T> &other){
 
             head = nullptr;
             tail = nullptr;
@@ -179,7 +179,7 @@ template <class T> class Linked_list{
 
         }
 
-        size_t get_lenght(){
+        size_t get_length(){
 
             return size;
 
