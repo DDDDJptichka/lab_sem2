@@ -1,23 +1,17 @@
 #include <cstdio>
 #include <iostream>
 
-template <class T> class DynamicArray{
+template <class T> class Dynamic_array{
 
     private: 
 
-        int size;
+        size_t size;
         T *data;
 
     public:
 
-        DynamicArray(T *items, int count){
+        Dynamic_array(T *items, size_t count){
 
-            if (count < 0){
-
-                throw std::out_of_range("Attempting to copy NEGATIVE count of elements");
-
-            }
-            
             size = count;
             data = new T[size];
 
@@ -29,20 +23,14 @@ template <class T> class DynamicArray{
 
         }
 
-        DynamicArray(int size){
-
-            if (size < 0){
-
-                throw std::out_of_range("Attempting to create DynamicArray with NEGATIVE size");
-
-            }
+        Dynamic_array(size_t size){
 
             this->size = size;
             this->data = new T[size];
 
         }
 
-        DynamicArray(const DynamicArray<T> &other){
+        Dynamic_array(const Dynamic_array<T> &other){
 
             size = other.size;
             data = new T[size];
@@ -55,13 +43,13 @@ template <class T> class DynamicArray{
 
         }
 
-        ~DynamicArray(){
+        ~Dynamic_array(){
 
             delete[] data;
 
         }
 
-        T Get(int index){
+        T get(int index){
 
             if ((index < 0) || (index >= size)){
 
@@ -73,13 +61,13 @@ template <class T> class DynamicArray{
 
         }
 
-        int GetSize(){
+        int get_size(){
 
             return size;
 
         }
 
-        void Set(int index, T value){
+        void set(int index, T value){
 
             if ((index < 0) || (index >= size)){
 
@@ -91,13 +79,7 @@ template <class T> class DynamicArray{
 
         }
 
-        void Resize(int new_size){
-
-            if (new_size < 0){
-
-                throw std::out_of_range("Index Out Of Range");
-
-            }
+        void resize(size_t new_size){
 
             T *new_data = new T[new_size];
 
