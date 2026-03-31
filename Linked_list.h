@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstdio>
 #include <iostream>
 
@@ -72,7 +74,7 @@ template <class T> class Linked_list{
 
         }
 
-        T get_first(){
+        T get_first() const{
 
             if (head == nullptr){
 
@@ -84,7 +86,7 @@ template <class T> class Linked_list{
 
         }
 
-        T get_last(){
+        T get_last() const{
 
             if (tail == nullptr){
 
@@ -96,7 +98,7 @@ template <class T> class Linked_list{
 
         }
 
-        T get(int index){
+        T get(int index) const{
 
             if ((index < 0) || (index >= size)){
 
@@ -179,7 +181,7 @@ template <class T> class Linked_list{
 
         }
 
-        size_t get_length(){
+        size_t get_length() const{
 
             return size;
 

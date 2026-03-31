@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstdio>
 #include <iostream>
 
@@ -49,7 +51,7 @@ template <class T> class Dynamic_array{
 
         }
 
-        T get(int index){
+        T get(int index) const{
 
             if ((index < 0) || (index >= size)){
 
@@ -61,7 +63,7 @@ template <class T> class Dynamic_array{
 
         }
 
-        size_t get_size(){
+        size_t get_size() const{
 
             return size;
 
