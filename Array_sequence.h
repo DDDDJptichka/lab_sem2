@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Dynamic_array.h"
-#include "Linked_list.h"
 #include "Sequence.h"
 
 template <class T> class Array_sequence : public Sequence<T>{
