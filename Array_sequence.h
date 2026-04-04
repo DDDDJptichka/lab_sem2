@@ -14,7 +14,7 @@ template <class T> class Array_sequence : public Sequence<T>{
 
         Array_sequence(T *items, size_t count){
 
-            array = new Dynamic_array<T>(items, count)  ;
+            array = new Dynamic_array<T>(items, count);
 
         }
 
@@ -24,14 +24,14 @@ template <class T> class Array_sequence : public Sequence<T>{
 
         }
 
-        Array_sequence(const Linked_list<T> &list){
+        Array_sequence(const Dynamic_array<T> &arr){
 
-            size_t arr_size = list.get_length();
+            size_t arr_size = arr.get_size();
             array = new Dynamic_array<T>(arr_size);
             
             for (size_t i = 0; i < arr_size; ++i){
 
-                array->set(i, list.get(i));
+                array->set(i, arr.get(i));
 
             }
 
@@ -102,7 +102,7 @@ template <class T> class Array_sequence : public Sequence<T>{
 
             array->resize(size);
 
-            for (size_t i = size - 1; i > 0; --i){
+            for (int i = size - 1; i > 0; --i){
 
                 array->set(i, array->get(i - 1))
 
@@ -138,7 +138,7 @@ template <class T> class Array_sequence : public Sequence<T>{
 
             array->resize(size + 1);
 
-            for (size_t i = size; i > index; --i){
+            for (int i = size; i > index; --i){
 
                 array->set(i, array->get(i - 1));
 
@@ -160,7 +160,59 @@ template <class T> class Array_sequence : public Sequence<T>{
 
             }
 
-            if ()
+            T *items = new T[abs(start_index - end_index) + 1];
+
+            if (start_index <= end_index){
+
+                for (size_t i = start_index; i <= end_index; ++i){
+
+                    items[i - start_index] = array->get(i);
+
+                }
+
+            }
+            else{
+
+                for (int i = end_index; i >= start_index; --i){
+
+                    items[abs(i - end_index)] = array->get(i);
+
+                }
+
+            }
+
+            Sequence<T> *sub_sequence = new Array_sequence<T>(items, abs(end_index - start_index) + 1);
+            delete[] items;
+
+            return sub_sequence;
+
+        }
+
+        Sequence<T> *concat(Sequence<T> *list) override{
+
+            if (list == nullptr){
+
+                Sequence<T> *res_sequence = new Array_sequence<T>(*array);
+
+                return res_sequence;
+
+            }
+
+            size_t list_size = list->get_length();
+            size_t this_size = this->get_length();
+
+            Dynamic_array<T> res_arr(*this->array);
+            res_arr.resize(this_size + list_size);
+
+            for (size_t i = 0; i < list_size; ++i){
+
+                res_arr.set(this_size + i, list->get(i));
+
+            }
+
+            Sequence<T> *res_sequence = new Array_sequence<T>(res_arr);
+
+            return res_sequence;
 
         }
 
