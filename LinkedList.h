@@ -11,7 +11,7 @@ template <class T> struct Node{
 
 };
 
-template <class T> class Linked_list{
+template <class T> class LinkedList{
 
     private:
 
@@ -21,7 +21,7 @@ template <class T> class Linked_list{
 
     public:
 
-        Linked_list(T *items, size_t count){
+        LinkedList(T *items, size_t count){
 
             head = nullptr;
             tail = nullptr;
@@ -35,7 +35,7 @@ template <class T> class Linked_list{
 
         }
 
-        Linked_list(){
+        LinkedList(){
 
             head = nullptr;
             tail = nullptr;
@@ -43,7 +43,7 @@ template <class T> class Linked_list{
 
         }
 
-        Linked_list(const Linked_list<T> &other){
+        LinkedList(const LinkedList<T> &other){
 
             head = nullptr;
             tail = nullptr;
@@ -60,7 +60,7 @@ template <class T> class Linked_list{
 
         }
 
-        ~Linked_list(){
+        ~LinkedList(){
 
             Node<T> *curr_node = head;
 
@@ -121,7 +121,7 @@ template <class T> class Linked_list{
 
         }
 
-        Linked_list<T> *get_sub_list(int start_index, int end_index){
+        LinkedList<T> *get_sub_list(int start_index, int end_index){
 
             if ((start_index < 0) || (start_index >= size) || (end_index < 0) || (end_index >= size)){
 
@@ -129,7 +129,7 @@ template <class T> class Linked_list{
 
             }
 
-            Linked_list<T> *list = new Linked_list<T>();
+            LinkedList<T> *list = new LinkedList<T>();
 
             if (start_index > end_index){
 
@@ -281,9 +281,9 @@ template <class T> class Linked_list{
         
         }
 
-        Linked_list<T> *concat(Linked_list<T> *list){
+        LinkedList<T> *concat(LinkedList<T> *list){
 
-            Linked_list<T> *res_list = new Linked_list<T>;
+            LinkedList<T> *res_list = new LinkedList<T>;
             Node<T> *curr_node = this->head;
             
             while (curr_node != nullptr){

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Linked_list.h"
+#include "LinkedList.h"
 #include "Sequence.h"
 
-template <class T> class List_sequence : public Sequence<T>{
+template <class T> class ListSequence : public Sequence<T>{
 
     private:
 
@@ -11,19 +11,19 @@ template <class T> class List_sequence : public Sequence<T>{
 
     public:
 
-        List_sequence(T *items, size_t count){
+        ListSequence(T *items, size_t count){
 
             list = new Linked_list<T>(items, count);
 
         }
         
-        List_sequence(){
+        ListSequence(){
 
             list = new Linked_list<T>();
 
         }
 
-        List_sequence(const Linked_list<T> &another_list){
+        ListSequence(const Linked_list<T> &another_list){
 
             size_t size = another_list.get_length();
             list = new Linked_list<T>();
@@ -36,7 +36,7 @@ template <class T> class List_sequence : public Sequence<T>{
 
         }
 
-        ~List_sequence() override{
+        ~ListSequence() override{
 
             delete list;
 
@@ -93,7 +93,7 @@ template <class T> class List_sequence : public Sequence<T>{
         Sequence<T> *get_sub_sequence(int start_index, int end_idnex) override{
 
             Linked_list<T> *res_list = list->get_sub_list(start_index, end_idnex);
-            Sequence<T> *res_sequence = new List_sequence<T>(*res_list);
+            Sequence<T> *res_sequence = new ListSequence<T>(*res_list);
 
             delete res_list;
 
@@ -105,7 +105,7 @@ template <class T> class List_sequence : public Sequence<T>{
 
             if (another_list == nullptr){
 
-                Sequence<T> *res_sequence = new List_sequence<T>(*list);
+                Sequence<T> *res_sequence = new ListSequence<T>(*list);
 
                 return res_sequence;
 
@@ -121,7 +121,7 @@ template <class T> class List_sequence : public Sequence<T>{
             }
 
             Linked_list<T> *concatenated_list = list->concat(l_list);
-            Sequence<T> *res_sequence = new List_sequence<T>(*concatenated_list);
+            Sequence<T> *res_sequence = new ListSequence<T>(*concatenated_list);
             
             delete l_list;
             delete concatenated_list;

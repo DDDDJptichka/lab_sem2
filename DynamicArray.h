@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <iostream>
 
-template <class T> class Dynamic_array{
+template <class T> class DynamicArray{
 
     private: 
 
@@ -12,7 +12,7 @@ template <class T> class Dynamic_array{
 
     public:
 
-        Dynamic_array(T *items, size_t count){
+        DynamicArray(T *items, size_t count){
 
             size = count;
             data = new T[size];
@@ -25,14 +25,14 @@ template <class T> class Dynamic_array{
 
         }
 
-        Dynamic_array(size_t size){
+        DynamicArray(size_t size){
 
             this->size = size;
             this->data = new T[size];
 
         }
 
-        Dynamic_array(const Dynamic_array<T> &other){
+        DynamicArray(const DynamicArray<T> &other){
 
             size = other.size;
             data = new T[size];
@@ -45,7 +45,7 @@ template <class T> class Dynamic_array{
 
         }
 
-        ~Dynamic_array(){
+        ~DynamicArray(){
 
             delete[] data;
 

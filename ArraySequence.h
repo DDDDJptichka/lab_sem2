@@ -1,32 +1,32 @@
 #pragma once
 
-#include "Dynamic_array.h"
+#include "DynamicArray.h"
 #include "Sequence.h"
 
-template <class T> class Array_sequence : public Sequence<T>{
+template <class T> class ArraySequence : public Sequence<T>{
 
     private:
 
-        Dynamic_array<T> *array;
+        DynamicArray<T> *array;
 
     public:
 
-        Array_sequence(T *items, size_t count){
+        ArraySequence(T *items, size_t count){
 
-            array = new Dynamic_array<T>(items, count);
-
-        }
-
-        Array_sequence(){
-
-            array = new Dynamic_array<T>(0);
+            array = new DynamicArray<T>(items, count);
 
         }
 
-        Array_sequence(const Dynamic_array<T> &arr){
+        ArraySequence(){
+
+            array = new DynamicArray<T>(0);
+
+        }
+
+        ArraySequence(const DynamicArray<T> &arr){
 
             size_t arr_size = arr.get_size();
-            array = new Dynamic_array<T>(arr_size);
+            array = new DynamicArray<T>(arr_size);
             
             for (size_t i = 0; i < arr_size; ++i){
 
@@ -36,7 +36,7 @@ template <class T> class Array_sequence : public Sequence<T>{
 
         }
 
-        ~Array_sequence() override{
+        ~ArraySequence() override{
 
             delete array;
 
@@ -180,7 +180,7 @@ template <class T> class Array_sequence : public Sequence<T>{
 
             }
 
-            Sequence<T> *sub_sequence = new Array_sequence<T>(items, abs(end_index - start_index) + 1);
+            Sequence<T> *sub_sequence = new ArraySequence<T>(items, abs(end_index - start_index) + 1);
             delete[] items;
 
             return sub_sequence;
@@ -191,7 +191,7 @@ template <class T> class Array_sequence : public Sequence<T>{
 
             if (list == nullptr){
 
-                Sequence<T> *res_sequence = new Array_sequence<T>(*array);
+                Sequence<T> *res_sequence = new ArraySequence<T>(*array);
 
                 return res_sequence;
 
@@ -200,7 +200,7 @@ template <class T> class Array_sequence : public Sequence<T>{
             size_t list_size = list->get_length();
             size_t this_size = this->get_length();
 
-            Dynamic_array<T> res_arr(*this->array);
+            DynamicArray<T> res_arr(*this->array);
             res_arr.resize(this_size + list_size);
 
             for (size_t i = 0; i < list_size; ++i){
@@ -209,7 +209,7 @@ template <class T> class Array_sequence : public Sequence<T>{
 
             }
 
-            Sequence<T> *res_sequence = new Array_sequence<T>(res_arr);
+            Sequence<T> *res_sequence = new ArraySequence<T>(res_arr);
 
             return res_sequence;
 
