@@ -35,10 +35,10 @@ template <class T> class ImmutableArraySequence : public ArraySequence<T>{
 
         }
 
-        Sequence<T> *insert_at(int index, T item) override{
+        Sequence<T> *insert_at(T item, int index) override{
 
             ImmutableArraySequence<T> *copy = clone();
-            copy->insert_at_internal(index, item);
+            copy->insert_at_internal(item, index);
 
             return copy;
 

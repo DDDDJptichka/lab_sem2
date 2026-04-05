@@ -34,7 +34,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         }
 
-        void insert_at_internal(int index, T item){
+        void insert_at_internal(T item, int index){
 
             size_t size = array->get_size();
 
@@ -48,11 +48,15 @@ template <class T> class ArraySequence : public Sequence<T>{
 
                 prepend_internal(item);
 
+                return;
+
             }
 
             if (index == size){
 
                 append_internal(item);
+
+                return;
 
             }
 
@@ -98,6 +102,12 @@ template <class T> class ArraySequence : public Sequence<T>{
                 array->set(i, arr.get(i));
 
             }
+
+        }
+
+        ArraySequence(const ArraySequence<T> &another){
+
+            array = new DynamicArray<T>(*another.array);
 
         }
 
@@ -165,9 +175,9 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         }
 
-        Sequence<T> *insert_at(int index, T item) override{
+        Sequence<T> *insert_at(T item, int index) override{
 
-            insert_at_internal(index, item);
+            insert_at_internal(item, index);
 
             return this;
 
@@ -196,9 +206,9 @@ template <class T> class ArraySequence : public Sequence<T>{
             }
             else{
 
-                for (int i = end_index; i >= start_index; --i){
+                for (int i = start_index; i >= end_index; --i){
 
-                    items[abs(i - end_index)] = array->get(i);
+                    items[abs(start_index - i)] = array->get(i);
 
                 }
 
@@ -211,9 +221,9 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         }
 
-        Sequence<T> *concat(Sequence<T> *list) override{
+        Sequence<T> *concat(Sequence<T> *sequence) override{
 
-            if (list == nullptr){
+            if (sequence == nullptr){
 
                 Sequence<T> *res_sequence = new ArraySequence<T>(*array);
 
@@ -221,15 +231,15 @@ template <class T> class ArraySequence : public Sequence<T>{
 
             }
 
-            size_t list_size = list->get_length();
+            size_t seq_size = sequence->get_length();
             size_t this_size = this->get_length();
 
             DynamicArray<T> res_arr(*this->array);
-            res_arr.resize(this_size + list_size);
+            res_arr.resize(this_size + seq_size);
 
-            for (size_t i = 0; i < list_size; ++i){
+            for (size_t i = 0; i < seq_size; ++i){
 
-                res_arr.set(this_size + i, list->get(i));
+                res_arr.set(this_size + i, sequence->get(i));
 
             }
 

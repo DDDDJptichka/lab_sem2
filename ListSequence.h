@@ -54,6 +54,12 @@ template <class T> class ListSequence : public Sequence<T>{
 
         }
 
+        ListSequence(const ListSequence<T> &another){
+
+            list = new LinkedList<T>(*another.list);
+
+        }
+
         ~ListSequence() override{
 
             delete list;
@@ -119,9 +125,9 @@ template <class T> class ListSequence : public Sequence<T>{
 
         }
 
-        Sequence<T> *concat(Sequence<T> *another_list) override{
+        Sequence<T> *concat(Sequence<T> *sequence) override{
 
-            if (another_list == nullptr){
+            if (sequence == nullptr){
 
                 Sequence<T> *res_sequence = new ListSequence<T>(*list);
 
@@ -130,11 +136,11 @@ template <class T> class ListSequence : public Sequence<T>{
             }
 
             LinkedList<T> *l_list = new LinkedList<T>();
-            size_t size = another_list->get_length();
+            size_t size = sequence->get_length();
 
             for (size_t i = 0; i < size ; ++i){
 
-                l_list->append(another_list->get(i));
+                l_list->append(sequence->get(i));
 
             }
 

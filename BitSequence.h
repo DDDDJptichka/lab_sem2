@@ -1,11 +1,13 @@
 #pragma once
 
+#include <iostream>
+#include <algorithm>
 #include "Sequence.h"
 #include "ArraySequence.h"
 
 struct Bit{
 
-    bool value;
+    bool value = false;
 
 };
 
@@ -26,7 +28,6 @@ class BitSequence : public Sequence<Bit>{
         BitSequence(size_t size){
 
             Bit item;
-            item.value = 0;
 
             sequence = new ArraySequence<Bit>();
 
@@ -58,7 +59,19 @@ class BitSequence : public Sequence<Bit>{
 
         }
 
-        BitSequence(int *data, size_t count){
+        BitSequence(const BitSequence &another){
+
+            sequence = new ArraySequence<Bit>();
+
+            for(int i = 0; i < another.get_length(); ++i){
+
+                sequence->append(another.get(i));
+
+            }
+
+        }
+
+        BitSequence(const int *data, size_t count){
 
             Bit item;
             sequence = new ArraySequence<Bit>();
@@ -72,7 +85,7 @@ class BitSequence : public Sequence<Bit>{
 
         }
 
-        BitSequence(Bit *data, size_t count){
+        BitSequence(const Bit *data, size_t count){
 
             sequence = new ArraySequence<Bit>();
 
@@ -84,7 +97,7 @@ class BitSequence : public Sequence<Bit>{
 
         }
 
-        BitSequence(bool *data, size_t count){
+        BitSequence(const bool *data, size_t count){
 
             Bit item;
             sequence = new ArraySequence<Bit>();
@@ -128,7 +141,7 @@ class BitSequence : public Sequence<Bit>{
 
         }
 
-        Sequence<Bit> *append(Bit item) override{
+        BitSequence *append(Bit item) override{
 
             this->sequence->append(item);
 
@@ -136,5 +149,68 @@ class BitSequence : public Sequence<Bit>{
 
         }
 
+        BitSequence *prepend(Bit item) override{
+
+            this->sequence->prepend(item);
+
+            return this;
+
+        }
+
+        BitSequence *insert_at(Bit item, int index) override{
+
+            this->sequence->insert_at(item, index);
+
+            return this;
+
+        }
+
+        BitSequence *get_sub_sequence(int start_index, int end_index) override{
+
+            Sequence<Bit> *res_seq = sequence->get_sub_sequence(start_index, end_index);
+            BitSequence *res_bit = new BitSequence(*res_seq);
+
+            delete res_seq;
+
+            return res_bit;
+
+        }
+
+        BitSequence *concat(Sequence<Bit> *another_seq) override{
+
+            Sequence<Bit> *res_seq = sequence->concat(another_seq);
+            BitSequence *res_bit = new BitSequence(*res_seq);
+
+            delete res_seq;
+
+            return res_bit;
+
+        }
     
+        BitSequence *AND(Sequence<Bit> *another_seq){
+
+            size_t seq_size = sequence->get_length();
+            size_t anthr_seq_size = another_seq->get_length();
+
+            BitSequence *res_seq = new BitSequence();
+
+            for(size_t i = 0; i < std::min(seq_size, anthr_seq_size); ++i){
+
+                Bit item;
+                item.value = sequence->get(i).value && another_seq->get(i).value;
+                res_seq->append(item);
+
+            }
+
+            for (size_t i = std::min(seq_size, anthr_seq_size); i < std::max(seq_size, anthr_seq_size); ++i){
+
+                Bit item;
+                res_seq->append(item);
+
+            }
+
+            return res_seq;
+
+        }
+
 };
