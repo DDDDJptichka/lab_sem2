@@ -312,4 +312,10 @@ template <class T> class LinkedList{
 
         }
 
+        T operator[](const size_t index){
+
+            return get(index);
+
+        }
+
 };

@@ -97,4 +97,10 @@ template <class T> class DynamicArray{
 
         }
 
+        T operator[](const size_t index){
+
+            return get(index);
+
+        }
+
 };

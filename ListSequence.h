@@ -5,28 +5,46 @@
 
 template <class T> class ListSequence : public Sequence<T>{
 
-    private:
+    protected:
 
-        Linked_list<T> *list;
+        LinkedList<T> *list;
+
+        void append_internal(T item){
+
+            this->list->append(item);
+
+        }
+
+        void prepend_internal(T item){
+
+            this->list->prepend(item);
+
+        }
+
+        void insert_at_internal(T item, int index){
+
+            this->list->insert_at(item, index);
+
+        }
 
     public:
 
         ListSequence(T *items, size_t count){
 
-            list = new Linked_list<T>(items, count);
+            list = new LinkedList<T>(items, count);
 
         }
         
         ListSequence(){
 
-            list = new Linked_list<T>();
+            list = new LinkedList<T>();
 
         }
 
-        ListSequence(const Linked_list<T> &another_list){
+        ListSequence(const LinkedList<T> &another_list){
 
             size_t size = another_list.get_length();
-            list = new Linked_list<T>();
+            list = new LinkedList<T>();
             
             for (size_t i = 0; i < size; ++i){
 
@@ -68,7 +86,7 @@ template <class T> class ListSequence : public Sequence<T>{
 
         Sequence<T> *append(T item) override{
 
-            this->list->append(item);
+            append_internal(item);
 
             return this;
 
@@ -76,7 +94,7 @@ template <class T> class ListSequence : public Sequence<T>{
 
         Sequence<T> *prepend(T item) override{
 
-            this->list->prepend(item);
+            prepend_internal(item);
 
             return this;
 
@@ -84,7 +102,7 @@ template <class T> class ListSequence : public Sequence<T>{
 
         Sequence<T> *insert_at(T item, int index) override{
 
-            this->list->insert_at(item, index);
+            insert_at_internal(item, index);
 
             return this;
 
@@ -92,7 +110,7 @@ template <class T> class ListSequence : public Sequence<T>{
 
         Sequence<T> *get_sub_sequence(int start_index, int end_idnex) override{
 
-            Linked_list<T> *res_list = list->get_sub_list(start_index, end_idnex);
+            LinkedList<T> *res_list = list->get_sub_list(start_index, end_idnex);
             Sequence<T> *res_sequence = new ListSequence<T>(*res_list);
 
             delete res_list;
@@ -111,7 +129,7 @@ template <class T> class ListSequence : public Sequence<T>{
 
             }
 
-            Linked_list<T> *l_list = new Linked_list<T>();
+            LinkedList<T> *l_list = new LinkedList<T>();
             size_t size = another_list->get_length();
 
             for (size_t i = 0; i < size ; ++i){
@@ -120,13 +138,19 @@ template <class T> class ListSequence : public Sequence<T>{
 
             }
 
-            Linked_list<T> *concatenated_list = list->concat(l_list);
+            LinkedList<T> *concatenated_list = list->concat(l_list);
             Sequence<T> *res_sequence = new ListSequence<T>(*concatenated_list);
             
             delete l_list;
             delete concatenated_list;
 
             return res_sequence;
+
+        }
+
+        T operator[](const size_t index){
+
+            return get(index);
 
         }
 

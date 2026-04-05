@@ -5,9 +5,68 @@
 
 template <class T> class ArraySequence : public Sequence<T>{
 
-    private:
+    protected:
 
         DynamicArray<T> *array;
+
+        void append_internal(T item){
+
+            size_t size = array->get_size() + 1;
+            
+            array->resize(size);
+            array->set(size - 1, item);
+
+        }
+
+        void prepend_internal(T item){
+
+            size_t size = array->get_size() + 1;
+
+            array->resize(size);
+
+            for (int i = size - 1; i > 0; --i){
+
+                array->set(i, array->get(i - 1));
+
+            }
+
+            array->set(0, item);
+
+        }
+
+        void insert_at_internal(int index, T item){
+
+            size_t size = array->get_size();
+
+            if ((index < 0) || (index > size)){
+
+                throw std::out_of_range("Index Out Of Range");
+
+            }
+
+            if (index == 0){
+
+                prepend_internal(item);
+
+            }
+
+            if (index == size){
+
+                append_internal(item);
+
+            }
+
+            array->resize(size + 1);
+
+            for (int i = size; i > index; --i){
+
+                array->set(i, array->get(i - 1));
+
+            }
+
+            array->set(index, item);
+
+        }
 
     public:
 
@@ -20,6 +79,12 @@ template <class T> class ArraySequence : public Sequence<T>{
         ArraySequence(){
 
             array = new DynamicArray<T>(0);
+
+        }
+
+        ArraySequence(size_t size){
+
+            array = new DynamicArray<T>(size);
 
         }
 
@@ -86,10 +151,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         Sequence<T> *append(T item) override{
 
-            size_t size = array->get_size() + 1;
-            
-            array->resize(size);
-            array->set(size - 1, item);
+            append_internal(item);
 
             return this;
 
@@ -97,53 +159,15 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         Sequence<T> *prepend(T item) override{
 
-            size_t size = array->get_size() + 1;
-
-            array->resize(size);
-
-            for (int i = size - 1; i > 0; --i){
-
-                array->set(i, array->get(i - 1))
-
-            }
-
-            array->set(0, item);
+            prepend_internal(item);
 
             return this;
 
         }
 
-        Sequence<T> *insert_at(T item, int index) override{
+        Sequence<T> *insert_at(int index, T item) override{
 
-            size_t size = array->get_size();
-
-            if ((index < 0) || (index > size)){
-
-                throw std::out_of_range("Index Out Of Range");
-
-            }
-
-            if (index == 0){
-
-                return this->prepend(item);
-
-            }
-            
-            if (index == size){
-
-                return this->append(item);
-
-            }
-
-            array->resize(size + 1);
-
-            for (int i = size; i > index; --i){
-
-                array->set(i, array->get(i - 1));
-
-            }
-
-            array->set(index, item);
+            insert_at_internal(index, item);
 
             return this;
 
@@ -212,6 +236,12 @@ template <class T> class ArraySequence : public Sequence<T>{
             Sequence<T> *res_sequence = new ArraySequence<T>(res_arr);
 
             return res_sequence;
+
+        }
+
+        T operator[](size_t index){
+
+            return array->get(index);
 
         }
 
