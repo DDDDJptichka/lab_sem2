@@ -2,21 +2,24 @@
 
 #include <cstdio>
 #include <iostream>
-
-template <class T> struct Node{
-
-    T data;
-    Node<T> *next;
-    Node<T> *prev;
-
-};
+#include <memory>
 
 template <class T> class LinkedList{
 
     private:
 
-        Node<T> *head;
-        Node<T> *tail;
+        struct Node{
+
+            T data;
+            std::unique_ptr<Node> next = nullptr;
+            Node *prev = nullptr;
+
+            Node(const T &value) : data(value), next(nullptr), prev(nullptr){}
+
+        };
+
+        std::unique_ptr<Node> head;
+        Node *tail;
         size_t size;
 
     public:
@@ -49,30 +52,18 @@ template <class T> class LinkedList{
             tail = nullptr;
             size = 0;
 
-            Node<T> *curr = other.head;
+            Node *curr = other.head.get();
 
             while (curr != nullptr){
 
                 append(curr->data);
-                curr = curr->next;
+                curr = curr->next.get();
 
             }
 
         }
 
-        ~LinkedList(){
-
-            Node<T> *curr_node = head;
-
-            while (curr_node != nullptr){
-
-                Node<T> *next_node = curr_node->next;
-                delete curr_node;
-                curr_node = next_node;
-
-            }
-
-        }
+        ~LinkedList(){}
 
         T get_first() const{
 
@@ -108,11 +99,11 @@ template <class T> class LinkedList{
             
 
             size_t curr_ind = 0;
-            Node<T> *curr_node = head;
+            Node *curr_node = head.get();
 
             while (curr_ind != index){
 
-                curr_node = curr_node->next;
+                curr_node = curr_node->next.get();
                 ++curr_ind;
 
             }
@@ -133,7 +124,7 @@ template <class T> class LinkedList{
 
             if (start_index > end_index){
 
-                Node<T> *curr_node = tail;
+                Node *curr_node = tail;
                 size_t curr_ind = size - 1;
 
                 while (curr_ind >= end_index){
@@ -159,7 +150,7 @@ template <class T> class LinkedList{
             }
             else{
 
-                Node<T> *curr_node = head;
+                Node *curr_node = head.get();
                 size_t curr_ind = 0;
 
                 while (curr_ind <= end_index){
@@ -170,7 +161,7 @@ template <class T> class LinkedList{
 
                     }
 
-                    curr_node = curr_node->next;
+                    curr_node = curr_node->next.get();
                     ++curr_ind;
 
                 }
@@ -189,22 +180,20 @@ template <class T> class LinkedList{
 
         void append(T value){
 
-            Node<T> *new_node = new Node<T>;
-            new_node->data = value;
-            new_node->next = nullptr;
-            new_node->prev = nullptr;
+            std::unique_ptr<Node> new_node = std::make_unique<Node>(value);
+            Node *ptr_new_node = new_node.get();
 
             if (head == nullptr){
 
-                head = new_node;
-                tail = new_node;
+                head = std::move(new_node);
+                tail = ptr_new_node;
 
             }
             else{
 
-                tail->next = new_node;
-                new_node->prev = tail;
-                tail = new_node;
+                tail->next = std::move(new_node);
+                ptr_new_node->prev = tail;
+                tail = ptr_new_node;
 
             }
 
@@ -214,22 +203,20 @@ template <class T> class LinkedList{
 
         void prepend(T value){
 
-            Node<T> *new_node = new Node<T>;
-            new_node->data = value;
-            new_node->next = nullptr;
-            new_node->prev = nullptr;
+            std::unique_ptr<Node> new_node = std::make_unique<Node>(value);
+            Node *ptr_new_node = new_node.get();
 
             if (head == nullptr){
 
-                head = new_node;
-                tail = new_node;
+                head = std::move(new_node);
+                tail = ptr_new_node;
 
             }
             else{
 
-                head->prev = new_node;
-                new_node->next = head;
-                head = new_node;
+                head->prev = ptr_new_node;
+                new_node->next = std::move(head);
+                head = std::move(new_node);
 
             }
 
@@ -259,24 +246,24 @@ template <class T> class LinkedList{
 
             }
 
-            Node<T> *new_node = new Node<T>;
-            Node<T> *curr_node = head;
+            Node *curr_node = head.get();
             size_t curr_ind = 0;
 
             while (curr_ind != index){
 
-                curr_node = curr_node->next;
+                curr_node = curr_node->next.get();
                 ++curr_ind;
 
             }
 
+            std::unique_ptr<Node> new_node = std::make_unique<Node>(item);
+            Node *ptr_new_node = new_node.get();
+            
+            ptr_new_node->prev = curr_node->prev;
+            ptr_new_node->next = std::move(curr_node->prev->next);
+            ptr_new_node->next->prev = ptr_new_node;
+            curr_node->prev->next = std::move(new_node);
 
-            curr_node->prev->next = new_node;
-            new_node->prev = curr_node->prev;
-            new_node->next = curr_node;
-            curr_node->prev = new_node;
-
-            new_node->data = item;
             ++size;
         
         }
@@ -284,12 +271,12 @@ template <class T> class LinkedList{
         LinkedList<T> *concat(LinkedList<T> *list){
 
             LinkedList<T> *res_list = new LinkedList<T>;
-            Node<T> *curr_node = this->head;
+            Node *curr_node = this->head.get();
             
             while (curr_node != nullptr){
 
                 res_list->append(curr_node->data);
-                curr_node = curr_node->next;
+                curr_node = curr_node->next.get();
 
             }
 
@@ -299,12 +286,12 @@ template <class T> class LinkedList{
 
             }
 
-            curr_node = list->head;
+            curr_node = list->head.get();
 
             while (curr_node != nullptr){
 
                 res_list->append(curr_node->data);
-                curr_node = curr_node->next;
+                curr_node = curr_node->next.get();
 
             }
 
@@ -312,7 +299,7 @@ template <class T> class LinkedList{
 
         }
 
-        T operator[](const size_t index){
+        T operator[](const size_t index) const{
 
             return get(index);
 

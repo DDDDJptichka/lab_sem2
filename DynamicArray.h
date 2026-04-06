@@ -97,7 +97,7 @@ template <class T> class DynamicArray{
 
         }
 
-        T operator[](const size_t index){
+        T operator[](const size_t index) const{
 
             return get(index);
 
