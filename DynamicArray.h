@@ -103,4 +103,47 @@ template <class T> class DynamicArray{
 
         }
 
+        DynamicArray<T> &operator=(const DynamicArray<T> &other){
+
+            if (this == &other){
+
+                return *this;
+
+            }
+
+            size_t new_size = other.get_size();
+            T *new_data = new T[new_size];
+
+            for (size_t i = 0; i < new_size; ++i){
+
+                new_data[i] = other.data[i];
+
+            }
+
+            delete[] data;
+
+            data = new_data;
+            size = new_size;
+
+            return *this;
+
+        }
+
+        DynamicArray<T> operator+(const DynamicArray<T> &other) const{
+
+            DynamicArray<T> res_arr(*this);
+            size_t new_size = size + other.get_size();
+
+            res_arr.resize(new_size);
+
+            for (size_t i = size; i < new_size; ++i){
+
+                res_arr.data[i] = other.data[i - size];
+
+            }
+
+            return res_arr;
+
+        }
+
 };

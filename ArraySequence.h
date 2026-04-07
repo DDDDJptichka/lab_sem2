@@ -255,4 +255,28 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         }
 
+        ArraySequence<T> &operator=(const ArraySequence<T> &other){
+
+            if (this == &other){
+
+                return *this;
+
+            }
+            
+            DynamicArray<T> *new_array = new DynamicArray<T>(*other.array);
+            delete array;
+            array = new_array;
+
+            return *this;
+
+        }
+
+        ArraySequence<T> operator+(const ArraySequence<T> &other) const{
+
+            ArraySequence<T> new_seq(*array + *other.array);
+
+            return new_seq;
+
+        }
+
 };

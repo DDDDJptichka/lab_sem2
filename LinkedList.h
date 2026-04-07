@@ -11,15 +11,15 @@ template <class T> class LinkedList{
         struct Node{
 
             T data;
-            std::unique_ptr<Node> next = nullptr;
-            Node *prev = nullptr;
+            std::shared_ptr<Node> next;
+            std::weak_ptr<Node> prev;
 
-            Node(const T &value) : data(value), next(nullptr), prev(nullptr){}
+            Node(const T &value) : data(value){}
 
         };
 
-        std::unique_ptr<Node> head;
-        Node *tail;
+        std::shared_ptr<Node> head;
+        std::weak_ptr<Node> tail;
         size_t size;
 
     public:
@@ -27,7 +27,7 @@ template <class T> class LinkedList{
         LinkedList(T *items, size_t count){
 
             head = nullptr;
-            tail = nullptr;
+            tail.reset();
             size = 0;
 
             for (size_t i = 0; i < count; ++i){
@@ -41,7 +41,7 @@ template <class T> class LinkedList{
         LinkedList(){
 
             head = nullptr;
-            tail = nullptr;
+            tail.reset();
             size = 0;
 
         }
@@ -49,7 +49,7 @@ template <class T> class LinkedList{
         LinkedList(const LinkedList<T> &other){
 
             head = nullptr;
-            tail = nullptr;
+            tail.reset();
             size = 0;
 
             Node *curr = other.head.get();
@@ -79,13 +79,15 @@ template <class T> class LinkedList{
 
         T get_last() const{
 
-            if (tail == nullptr){
+            std::shared_ptr<Node> locked_tail = tail.lock();
+
+            if (locked_tail == nullptr){
 
                 throw std::out_of_range("It is not possible to get LAST element, because LIST is empty!");
 
             }
 
-            return tail->data;
+            return locked_tail->data;
 
         }
 
@@ -124,7 +126,7 @@ template <class T> class LinkedList{
 
             if (start_index > end_index){
 
-                Node *curr_node = tail;
+                Node *curr_node = tail.lock().get();
                 size_t curr_ind = size - 1;
 
                 while (curr_ind >= end_index){
@@ -135,7 +137,7 @@ template <class T> class LinkedList{
 
                     }
 
-                    curr_node = curr_node->prev;
+                    curr_node = curr_node->prev.lock().get();
 
                     if (curr_ind == 0){
 
@@ -180,20 +182,21 @@ template <class T> class LinkedList{
 
         void append(T value){
 
-            std::unique_ptr<Node> new_node = std::make_unique<Node>(value);
-            Node *ptr_new_node = new_node.get();
+            std::shared_ptr<Node> new_node = std::make_shared<Node>(value);
 
             if (head == nullptr){
 
-                head = std::move(new_node);
-                tail = ptr_new_node;
+                head = new_node;
+                tail = new_node;
 
             }
             else{
 
-                tail->next = std::move(new_node);
-                ptr_new_node->prev = tail;
-                tail = ptr_new_node;
+                std::shared_ptr<Node> locked_tail = tail.lock();
+
+                locked_tail->next = new_node;
+                new_node->prev = locked_tail;
+                tail = new_node;
 
             }
 
@@ -203,20 +206,19 @@ template <class T> class LinkedList{
 
         void prepend(T value){
 
-            std::unique_ptr<Node> new_node = std::make_unique<Node>(value);
-            Node *ptr_new_node = new_node.get();
+            std::shared_ptr<Node> new_node = std::make_shared<Node>(value);
 
             if (head == nullptr){
 
-                head = std::move(new_node);
-                tail = ptr_new_node;
+                head = new_node;
+                tail = new_node;
 
             }
             else{
 
-                head->prev = ptr_new_node;
-                new_node->next = std::move(head);
-                head = std::move(new_node);
+                head->prev = new_node;
+                new_node->next = head;
+                head = new_node;
 
             }
 
@@ -256,14 +258,14 @@ template <class T> class LinkedList{
 
             }
 
-            std::unique_ptr<Node> new_node = std::make_unique<Node>(item);
-            Node *ptr_new_node = new_node.get();
+            std::shared_ptr<Node> new_node = std::make_shared<Node>(item);
+            std::shared_ptr<Node> locked_prev = curr_node->prev.lock();
             
-            ptr_new_node->prev = curr_node->prev;
-            ptr_new_node->next = std::move(curr_node->prev->next);
-            ptr_new_node->next->prev = ptr_new_node;
-            curr_node->prev->next = std::move(new_node);
-
+            new_node->prev = locked_prev;
+            new_node->next = curr_node;
+            new_node->next->prev = new_node;
+            locked_prev->next = new_node;
+            
             ++size;
         
         }
@@ -302,6 +304,47 @@ template <class T> class LinkedList{
         T operator[](const size_t index) const{
 
             return get(index);
+
+        }
+
+        LinkedList<T> &operator=(const LinkedList<T> &other){
+
+            if (this == &other){
+
+                return *this;
+
+            }
+
+            head = nullptr;
+            tail.reset();
+            size = 0;
+
+            Node *curr_node = other.head.get();
+
+            while (curr_node != nullptr){
+
+                append(curr_node->data);
+                curr_node = curr_node->next.get();
+
+            }
+
+            return *this;
+
+        }
+
+        LinkedList<T> operator+(const LinkedList<T> &other) const{
+
+            LinkedList<T> res_list(*this);
+            Node *curr_node = other.head.get();
+
+            while (curr_node != nullptr){
+
+                res_list.append(curr_node->data);
+                curr_node = curr_node->next.get();
+
+            }
+
+            return res_list;
 
         }
 
