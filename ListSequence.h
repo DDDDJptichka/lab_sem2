@@ -154,9 +154,31 @@ template <class T> class ListSequence : public Sequence<T>{
 
         }
 
-        T operator[](const size_t index){
+        T operator[](const size_t index) const{
 
             return get(index);
+
+        }
+
+        ListSequence<T> &operator=(const ListSequence<T> &other){
+
+            if (this == &other){
+
+                return *this;
+
+            }
+
+            *list = *other.list;
+
+            return *this;
+
+        }
+
+        ListSequence<T> operator+(const ListSequence<T> &other) const{
+
+            ListSequence<T> new_seq(*list + *other.list);
+
+            return new_seq;
 
         }
 

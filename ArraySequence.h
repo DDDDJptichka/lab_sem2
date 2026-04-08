@@ -263,9 +263,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
             }
             
-            DynamicArray<T> *new_array = new DynamicArray<T>(*other.array);
-            delete array;
-            array = new_array;
+            *array = *other.array;
 
             return *this;
 

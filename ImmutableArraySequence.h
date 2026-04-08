@@ -17,7 +17,7 @@ template <class T> class ImmutableArraySequence : public ArraySequence<T>{
 
         }
 
-        Sequence<T> *append(T item) override{
+        ImmutableArraySequence<T> *append(T item) override{
 
             ImmutableArraySequence<T> *copy = clone();
             copy->append_internal(item);
@@ -26,7 +26,7 @@ template <class T> class ImmutableArraySequence : public ArraySequence<T>{
 
         }
 
-        Sequence<T> *prepend(T item) override{
+        ImmutableArraySequence<T> *prepend(T item) override{
 
             ImmutableArraySequence<T> *copy = clone();
             copy->prepend_internal(item);
@@ -35,12 +35,40 @@ template <class T> class ImmutableArraySequence : public ArraySequence<T>{
 
         }
 
-        Sequence<T> *insert_at(T item, int index) override{
+        ImmutableArraySequence<T> *insert_at(T item, int index) override{
 
             ImmutableArraySequence<T> *copy = clone();
             copy->insert_at_internal(item, index);
 
             return copy;
+
+        }
+
+        T operator[](const size_t index) const{
+
+            return this->get(index);
+
+        }
+
+        ImmutableArraySequence<T> &operator=(const ImmutableArraySequence<T> &other){
+
+            if (this == &other){
+
+                return *this;
+
+            }
+
+            *this->array = *other.array;
+
+            return *this;
+
+        }
+
+        ImmutableArraySequence<T> operator+(const ImmutableArraySequence<T> &other) const{
+
+            ImmutableArraySequence<T> new_im_seq(*this->array + *other.array);
+
+            return new_im_seq;
 
         }
 
