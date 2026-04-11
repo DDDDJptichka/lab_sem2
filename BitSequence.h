@@ -13,7 +13,7 @@ struct Bit{
 
 class BitSequence : public Sequence<Bit>{
 
-    protected:
+    private:
 
         Sequence<Bit> *sequence;
 
