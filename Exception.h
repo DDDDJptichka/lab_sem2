@@ -3,7 +3,7 @@
 #include <string>
 #include <exception>
 
-class Exception : public std::exception{
+class exception : public std::exception{
 
     protected:
 
@@ -11,7 +11,7 @@ class Exception : public std::exception{
 
     public:
 
-        explicit Exception(const std::string &mssg) : message(mssg){}
+        explicit exception(const std::string &msg) : message(msg){}
 
         const char *what() const noexcept override{
 
@@ -21,6 +21,18 @@ class Exception : public std::exception{
 
 };
 
-class IndexOutOfRange : public Exception{};
+class index_out_of_range : public exception{
 
-class InvalidArgument : public Exception{};
+    public:
+
+        explicit index_out_of_range(const std::string &msg) : exception(msg){}
+
+};
+
+class empty_container : public exception{
+
+    public:
+
+        explicit empty_container(const std::string &msg) : exception(msg){}
+
+};

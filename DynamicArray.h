@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <iostream>
 
+#include "Exception.h"
+
 template <class T> class DynamicArray{
 
     private: 
@@ -55,7 +57,7 @@ template <class T> class DynamicArray{
 
             if ((index < 0) || (index >= size)){
 
-                throw std::out_of_range("Index Out Of Range");
+                throw index_out_of_range("Index Out Of Range");
 
             }
 
@@ -73,7 +75,7 @@ template <class T> class DynamicArray{
 
             if ((index < 0) || (index >= size)){
 
-                throw std::out_of_range("Index Out Of Range");
+                throw index_out_of_range("Index Out Of Range");
 
             }
 

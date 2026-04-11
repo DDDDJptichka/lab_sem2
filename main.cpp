@@ -1,5 +1,7 @@
 #include <cstdio>
 #include <iostream>
+
+#include "Exception.h"
 #include "DynamicArray.h"
 #include "LinkedList.h"
 #include "Sequence.h"

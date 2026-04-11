@@ -3,6 +3,8 @@
 #include "DynamicArray.h"
 #include "Sequence.h"
 
+#include "Exception.h"
+
 template <class T> class ArraySequence : public Sequence<T>{
 
     protected:
@@ -40,7 +42,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
             if ((index < 0) || (index > size)){
 
-                throw std::out_of_range("Index Out Of Range");
+                throw index_out_of_range("Index Out Of Range");
 
             }
 
@@ -121,7 +123,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
             if (array->get_size() == 0){
 
-                throw std::out_of_range("Array is empty!");
+                throw empty_container("Array is empty!");
 
             }
 
@@ -133,7 +135,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
             if (array->get_size() == 0){
 
-                throw std::out_of_range("Array is empty");
+                throw empty_container("Array is empty");
 
             }
 
@@ -145,7 +147,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
             if ((index < 0) || (index >= array->get_size())){
 
-                throw std::out_of_range("index Out Of Range");
+                throw index_out_of_range("index Out Of Range");
 
             }
 
@@ -189,7 +191,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
             if ((start_index < 0) || (end_index < 0) || (start_index >= size) || (end_index >= size)){
 
-                throw std::out_of_range("Inde Out Of Range");
+                throw index_out_of_range("Index Out Of Range");
 
             }
 

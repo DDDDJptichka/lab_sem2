@@ -4,6 +4,8 @@
 #include <iostream>
 #include <memory>
 
+#include "Exception.h"
+
 template <class T> class LinkedList{
 
     private:
@@ -69,7 +71,7 @@ template <class T> class LinkedList{
 
             if (head == nullptr){
 
-                throw std::out_of_range("It is not possible to get FIRST element, because LIST is empty!");
+                throw empty_container("It is not possible to get FIRST element, because LIST is empty!");
 
             }
 
@@ -83,7 +85,7 @@ template <class T> class LinkedList{
 
             if (locked_tail == nullptr){
 
-                throw std::out_of_range("It is not possible to get LAST element, because LIST is empty!");
+                throw empty_container("It is not possible to get LAST element, because LIST is empty!");
 
             }
 
@@ -95,7 +97,7 @@ template <class T> class LinkedList{
 
             if ((index < 0) || (index >= size)){
 
-                throw std::out_of_range("Index Out Of Range");
+                throw index_out_of_range("Index Out Of Range");
 
             }
             
@@ -118,7 +120,7 @@ template <class T> class LinkedList{
 
             if ((start_index < 0) || (start_index >= size) || (end_index < 0) || (end_index >= size)){
 
-                throw std::out_of_range("Index Out Of Range");
+                throw index_out_of_range("Index Out Of Range");
 
             }
 
@@ -230,7 +232,7 @@ template <class T> class LinkedList{
 
             if ((index < 0) || (index > size)){
 
-                throw std::out_of_range("Index Out Of Range");
+                throw index_out_of_range("Index Out Of Range");
 
             }
 
