@@ -117,31 +117,31 @@ class BitSequence : public Sequence<Bit>{
 
         }
 
-        Bit get_first() const override{
+        Bit get_first() const override{//+
 
             return sequence->get_first();
 
         }
 
-        Bit get_last() const override{
+        Bit get_last() const override{//+
 
             return sequence->get_last();
 
         }
 
-        Bit get(int index) const override{
+        Bit get(int index) const override{//+
 
             return sequence->get(index);
 
         }
 
-        int get_length() const override{
+        int get_length() const override{//+
 
             return sequence->get_length();
 
         }
 
-        BitSequence *append(Bit item) override{
+        BitSequence *append(Bit item) override{//+
 
             this->sequence->append(item);
 
@@ -149,7 +149,7 @@ class BitSequence : public Sequence<Bit>{
 
         }
 
-        BitSequence *prepend(Bit item) override{
+        BitSequence *prepend(Bit item) override{//+
 
             this->sequence->prepend(item);
 
@@ -157,7 +157,7 @@ class BitSequence : public Sequence<Bit>{
 
         }
 
-        BitSequence *insert_at(Bit item, int index) override{
+        BitSequence *insert_at(Bit item, int index) override{//+
 
             this->sequence->insert_at(item, index);
 

@@ -119,6 +119,18 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         }
 
+        void set(int index, T item){
+
+            if ((index < 0) || (index >= size)){
+
+                throw index_out_of_range("Index Out Of Range");
+
+            }
+
+            return array->set(index, item);
+
+        }
+
         T get_first() const override{
 
             if (array->get_size() == 0){

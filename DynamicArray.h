@@ -99,6 +99,14 @@ template <class T> class DynamicArray{
 
         }
 
+        void append(T value){
+
+            resize(size + 1);
+            
+            data[size - 1] = value;
+
+        }
+
         T operator[](const size_t index) const{
 
             return get(index);
