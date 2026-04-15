@@ -9,24 +9,24 @@
 #include "LinkedList.h"
 #include "ListSequence.h"
 
-#define UINT_SIZE 32 
-
-class NormalBitSequence{
+template <class T> class NormalBitSequence{
 
     private:
 
-        ArraySequence<uint32_t> *array;
+        ArraySequence<T> *array;
         size_t bit_count;
+        size_t block_size = sizeof(T) * 8;
+    
 
         void append_bit(const bool bit){
 
             size_t block, offset;
-            uint32_t curr;
+            T curr;
 
-            block = bit_count / UINT_SIZE;
-            offset = bit_count % UINT_SIZE;
+            block = bit_count / block_size;
+            offset = bit_count % block_size;
 
-            if (bit_count % UINT_SIZE == 0){
+            if (bit_count % block_size == 0){
 
                 array->append(0);
 
@@ -36,12 +36,12 @@ class NormalBitSequence{
 
             if (bit == 1){
 
-                curr |= (1U << offset);
+                curr |= (T(1) << offset);
 
             }
             else{
 
-                curr &= ~(1U << offset);
+                curr &= ~(T(1) << offset);
 
             }
 
@@ -60,11 +60,11 @@ class NormalBitSequence{
 
         }
 
-        template <class T> void append_internal(const T &value){
+        template <class A> void append_internal(const A &value){
 
             const unsigned char *bytes = reinterpret_cast<const unsigned char*>(&value);
 
-            for (size_t i = 0; i < sizeof(T); ++i){
+            for (size_t i = 0; i < sizeof(A); ++i){
 
                 append_bytes(bytes[i]);
 
@@ -76,35 +76,77 @@ class NormalBitSequence{
 
         NormalBitSequence(){
 
-            array = new ArraySequence<uint32_t>(0);
+            array = new ArraySequence<T>(0);
             bit_count = 0;
 
         }
 
-        NormalBitSequence(size_t size){
+        NormalBitSequence(const NormalBitSequence &another){
 
-            array = new ArraySequence<uint32_t>((size / UINT_SIZE) + ((size % UINT_SIZE) > 0));
-            bit_count = UINT_SIZE * ((size / UINT_SIZE) + ((size % UINT_SIZE) > 0));
+            array = new ArraySequence<T>(*another.array);
+            bit_count = another.bit_count;
 
         }
 
-        //NormalBitSequence(const NormalBitSequence &another){}
+        template <class A> NormalBitSequence(const DynamicArray<A> &arr){
 
-        /*template <class T> NormalBitSequence(const DynamicArray<T> &arr){
+            array = new ArraySequence<T>(0);
+            bit_count = 0;
 
-            for (size_t i = 0; i < arr.get_size(); ++i){
+            size_t arr_size = arr.get_size();
 
-                
+            for (size_t i = 0; i < arr_size; ++ i){
+
+                append_internal(arr.get(i));
 
             }
 
-        }*/
+        }
 
-        //template <class T> NormalBitSequence(const ArraySequence<T> &arr){}
+        template <class A> NormalBitSequence(const ArraySequence<A> &arr){
 
-        //template <class T> NormalBitSequence(const LinkedList<T> &arr){}
+            array = new ArraySequence<T>(0);
+            bit_count = 0;
 
-        //template <class T> NormalBitSequence(const ListSequence<T> &arr){}
+            size_t arr_size = arr.get_length();
+
+            for (size_t i = 0; i < arr_size; ++i){
+
+                append_internal(arr.get(i));
+
+            }
+
+        }
+
+        template <class A> NormalBitSequence(const LinkedList<A> &list){
+
+            array = new ArraySequence<T>(0);
+            bit_count = 0;
+
+            size_t list_size = list.get_length();
+
+            for (size_t i = 0; i < list_size; ++i){
+
+                append_internal(list.get(i));
+
+            }
+
+        }
+
+        template <class A> NormalBitSequence(const ListSequence<A> &list){
+
+            array = new ArraySequence<T>(0);
+            bit_count = 0;
+
+            size_t list_size = list.get_length();
+
+            for (size_t i = 0; i < list_size; ++i){
+
+                append_internal(list.get(i));
+
+            }         
+
+        }
  
         ~NormalBitSequence(){
 
@@ -122,12 +164,12 @@ class NormalBitSequence{
 
             size_t block, offset;   
             
-            block = index / UINT_SIZE;
-            offset = index % UINT_SIZE;
+            block = index / block_size;
+            offset = index % block_size;
 
-            uint32_t curr = array->get(block);
+            T curr = array->get(block);
 
-            return (curr >> offset) & 1U;
+            return (curr >> offset) & T(1);
 
         }
         
@@ -161,7 +203,7 @@ class NormalBitSequence{
 
         }
 
-        template <class T> NormalBitSequence *append(const T &value){
+        template <class A> NormalBitSequence<T> *append(const A &value){
 
             append_internal(value);
 
@@ -169,23 +211,25 @@ class NormalBitSequence{
 
         }
 
-        template <class T> NormalBitSequence *prepend(const T &value){
+        template <class A> NormalBitSequence<T> *prepend(const A &value){
 
-            NormalBitSequence *res = new NormalBitSequence();
+            NormalBitSequence<T> res;
 
-            res->append(value);
+            res.append(value);
 
             for (size_t i = 0; i < bit_count; ++i){
 
-                res->append_bit(get(i));
+                res.append_bit(get(i));
 
             }
 
-            return res;
+            *this = res;
+
+            return this;
 
         }
 
-        NormalBitSequence *insert_at(const bool bit, int index){
+        NormalBitSequence<T> *insert_at(const bool bit, int index){
 
             if ((index < 0) || (index > bit_count)){
 
@@ -205,23 +249,47 @@ class NormalBitSequence{
 
             }
 
-            NormalBitSequence *res = new NormalBitSequence();
+            NormalBitSequence<T> res;
 
             for (size_t i = 0; i < index; ++i){
 
-                res->append_bit(get(i));
+                res.append_bit(get(i));
 
             }
 
-            res->append_bit(bit);
+            res.append_bit(bit);
 
             for (size_t i = index; i < bit_count; ++i){
 
-                res->append_bit(get(i));
+                res.append_bit(get(i));
 
             }
 
-            return res;
+            *this = res;
+
+            return this;
+
+        }
+
+        //NormalBitSequence<T> *get_sub_sequence(int start_index, int end_index){
+
+
+            
+        //}
+
+        NormalBitSequence<T> &operator=(const NormalBitSequence<T> &another){
+
+            if (this == &another){
+
+                return *this;
+
+            }
+
+            delete array;
+            array = new ArraySequence<T>(*another.array);
+            bit_count = another.bit_count;
+
+            return *this;
 
         }
 
