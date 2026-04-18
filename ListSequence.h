@@ -78,13 +78,19 @@ template <class T> class ListSequence : public Sequence<T>{
 
         }
 
+        void set(int index, T item){
+
+            list->set(index, item);
+
+        }
+
         T get(int index) const override{
 
             return list->get(index);
 
         }
 
-        int get_length() const override{
+        size_t get_length() const override{
 
             return list->get_length();
 

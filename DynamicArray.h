@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <iostream>
+#include <algorithm>
 
 #include "Exception.h"
 
@@ -30,7 +31,7 @@ template <class T> class DynamicArray{
         DynamicArray(size_t size){
 
             this->size = size;
-            this->data = new T[size];
+            this->data = new T[size]();
 
         }
 

@@ -93,6 +93,26 @@ template <class T> class LinkedList{
 
         }
 
+        void set(int index, T item){
+
+            if ((index < 0) || (index >= size)){
+
+                throw index_out_of_range("Index Out Of Range");
+
+            }
+            
+            Node *curr = head.get();
+
+            for (size_t i = 0; i < index; ++i){
+
+                curr = curr->next.get();
+
+            }
+
+            curr->data = item;
+
+        }
+
         T get(int index) const{
 
             if ((index < 0) || (index >= size)){

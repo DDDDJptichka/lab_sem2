@@ -165,7 +165,7 @@ class BitSequence : public Sequence<Bit>{
 
         }
 
-        BitSequence *get_sub_sequence(int start_index, int end_index) override{
+        BitSequence *get_sub_sequence(int start_index, int end_index) override{//+
 
             Sequence<Bit> *res_seq = sequence->get_sub_sequence(start_index, end_index);
             BitSequence *res_bit = new BitSequence(*res_seq);
@@ -176,7 +176,7 @@ class BitSequence : public Sequence<Bit>{
 
         }
 
-        BitSequence *concat(Sequence<Bit> *another_seq) override{
+        BitSequence *concat(Sequence<Bit> *another_seq) override{//+
 
             Sequence<Bit> *res_seq = sequence->concat(another_seq);
             BitSequence *res_bit = new BitSequence(*res_seq);
@@ -187,7 +187,7 @@ class BitSequence : public Sequence<Bit>{
 
         }
     
-        BitSequence *AND(Sequence<Bit> *another_seq){
+        BitSequence *AND(Sequence<Bit> *another_seq){//+
 
             size_t seq_size = sequence->get_length();
             size_t anthr_seq_size = another_seq->get_length();

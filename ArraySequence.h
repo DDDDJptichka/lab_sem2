@@ -121,13 +121,13 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         void set(int index, T item){
 
-            if ((index < 0) || (index >= size)){
+            if ((index < 0) || (index >= array->get_size())){
 
                 throw index_out_of_range("Index Out Of Range");
 
             }
 
-            return array->set(index, item);
+            array->set(index, item);
 
         }
 
@@ -167,7 +167,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         }
 
-        int get_length() const override{
+        size_t get_length() const override{
 
             return array->get_size();
 

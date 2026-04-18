@@ -3,6 +3,7 @@
 #include <type_traits>
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 #include "Sequence.h"
 #include "ArraySequence.h"
@@ -154,6 +155,39 @@ template <class T> class NormalBitSequence{
 
         }
 
+        void set(bool bit, int index){
+
+            if ((index < 0) || (index  > bit_count)){
+
+                throw index_out_of_range("Index Out Of Range");
+
+            }
+            else if (index == bit_count){
+
+                this->append_bit(bit);
+                return;
+
+            }
+            
+            size_t block_index = index / block_size;
+            size_t offset = index % block_size;
+            T block = array->get(block_index);
+
+            if (bit == 1){
+
+                block |= (T(1) << offset);
+
+            }
+            else{
+
+                block &= ~(T(1) << offset);
+
+            }
+
+            array->set(block_index, block);
+
+        }
+
         int get(size_t index) const{
 
             if (index >= bit_count){
@@ -271,11 +305,142 @@ template <class T> class NormalBitSequence{
 
         }
 
-        //NormalBitSequence<T> *get_sub_sequence(int start_index, int end_index){
+        NormalBitSequence<T> *get_sub_sequence(int start_index, int end_index){
 
+            if ((start_index < 0) || (end_index < 0) || (start_index + 1 > bit_count) || (end_index + 1> bit_count)){
 
+                throw index_out_of_range("Index Out Of Range");
+
+            }
             
-        //}
+            NormalBitSequence<T> res;
+
+            if (start_index >= end_index){
+
+                for (int i = start_index; i >= end_index; --i){
+
+                    res.append_bit(this->get(i));
+
+                }
+
+            }
+            else{
+
+                for (size_t i = start_index; i <= end_index; ++i){
+
+                    res.append_bit(this->get(i));
+
+                }    
+
+            }
+
+            *this = res;
+
+            return this;
+        }
+
+        NormalBitSequence<T> *concat(const NormalBitSequence<T> *another){
+
+            if (another == nullptr){
+
+                throw empty_container("Container is empty");
+
+            }
+
+            size_t another_length = another->get_length();
+
+            for (size_t i = 0; i < another_length; ++i){
+
+                append_bit(another->get(i));
+
+            }
+
+            return this;
+
+        }
+
+        NormalBitSequence<T> *AND(const NormalBitSequence<T> *another){
+
+            if (another == nullptr){
+
+                throw empty_container("Container is empty");
+
+            }
+
+            size_t another_length = another->get_length();
+
+            for (size_t i = 0; i < bit_count; ++i){
+
+                if (i >= another_length){
+
+                    this->set(0, i);                    
+
+                }
+                else{
+
+                    this->set(this->get(i) && another->get(i), i);
+
+                }
+
+            }
+
+            return this;
+
+        }
+
+        NormalBitSequence<T> *OR(const NormalBitSequence<T> *another){
+
+            if (another == nullptr){
+
+                throw empty_container("Container is empty");
+
+            }
+
+            size_t another_length = another->get_length();
+            size_t finish = std::min(bit_count, another_length);
+
+            for (size_t i = 0; i < finish; ++i){
+
+                this->set(this->get(i) || another->get(i), i);
+
+            }
+
+            return this;
+
+        }
+
+        NormalBitSequence<T> *NOT(){
+
+            for (size_t i = 0; i < bit_count; ++i){
+
+                this->set(!(this->get(i)), i);
+
+            }
+
+            return this;
+
+        }
+
+        NormalBitSequence<T> *XOR(const NormalBitSequence<T> *another){
+
+            if (another == nullptr){
+
+                throw empty_container("Container is empty");
+
+            }
+
+            size_t another_length = another->get_length();
+            size_t finish = std::min(bit_count, another_length);
+
+            for (size_t i = 0; i < finish; ++i){
+
+                this->set(this->get(i) ^ another->get(i), i);
+
+            }
+
+            return this;
+
+        }
 
         NormalBitSequence<T> &operator=(const NormalBitSequence<T> &another){
 

@@ -44,6 +44,24 @@ template <class T> class ImmutableArraySequence : public ArraySequence<T>{
 
         }
 
+        ImmutableArraySequence<T> *get_sub_sequence(int start_index, int end_index){
+
+            ImmutableArraySequence<T> *copy = clone();
+            copy->get_sub_sequence(start_index, end_index);
+
+            return copy;
+
+        }
+
+        ImmutableArraySequence<T> *concat(Sequence<T> *sequence){
+
+            ImmutableArraySequence<T> *copy = clone();
+            copy->concat(sequence);
+
+            return copy;
+
+        }
+
         T operator[](const size_t index) const{
 
             return this->get(index);

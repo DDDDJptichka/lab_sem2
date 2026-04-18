@@ -44,6 +44,24 @@ template <class T> class ImmutableListSequence : public ListSequence<T>{
 
         }
 
+        ImmutableListSequence<T> *get_sub_sequence(int start_index, int end_index) override{
+
+            ImmutableListSequence<T> *copy = clone();
+            copy->get_sub_sequence(start_index, end_index);
+
+            return copy;
+
+        }
+
+        ImmutableListSequence<T> *concat(Sequence<T> *sequence) override{
+
+            ImmutableListSequence<T> *copy = clone();
+            copy->concat(sequence);
+
+            return copy;
+
+        }
+
         T operator[](const size_t index) const{
 
             return this->get(index);
