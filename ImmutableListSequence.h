@@ -5,9 +5,7 @@
 
 template <class T> class ImmutableListSequence : public ListSequence<T>{
 
-    public:
-
-        using ListSequence<T>::ListSequence;
+    private:
 
         ImmutableListSequence<T> *clone() const{
 
@@ -17,7 +15,11 @@ template <class T> class ImmutableListSequence : public ListSequence<T>{
 
         }
 
-        ImmutableListSequence<T> *append(T item) override{
+    public:
+
+        using ListSequence<T>::ListSequence;
+
+        Sequence<T> *append(T item) override{
 
             ImmutableListSequence<T> *copy = clone();
             copy->append_internal(item);
@@ -26,7 +28,7 @@ template <class T> class ImmutableListSequence : public ListSequence<T>{
 
         }
 
-        ImmutableListSequence<T> *prepend(T item) override{
+       Sequence<T> *prepend(T item) override{
 
             ImmutableListSequence<T> *copy = clone();
             copy->prepend_internal(item);
@@ -35,28 +37,10 @@ template <class T> class ImmutableListSequence : public ListSequence<T>{
 
         }
 
-        ImmutableListSequence<T> *insert_at(T item, int index) override{
+        Sequence<T> *insert_at(T item, int index) override{
 
             ImmutableListSequence<T> *copy = clone();
             copy->insert_at_internal(item, index);
-
-            return copy;
-
-        }
-
-        ImmutableListSequence<T> *get_sub_sequence(int start_index, int end_index) override{
-
-            ImmutableListSequence<T> *copy = clone();
-            copy->get_sub_sequence(start_index, end_index);
-
-            return copy;
-
-        }
-
-        ImmutableListSequence<T> *concat(Sequence<T> *sequence) override{
-
-            ImmutableListSequence<T> *copy = clone();
-            copy->concat(sequence);
 
             return copy;
 

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdio>
-#include <iostream>
 #include <memory>
 
 #include "Exception.h"
@@ -64,7 +62,7 @@ template <class T> class LinkedList{
             }
 
         }
-
+        
         ~LinkedList(){}
 
         T get_first() const{
@@ -136,7 +134,7 @@ template <class T> class LinkedList{
 
         }
 
-        LinkedList<T> *get_sub_list(int start_index, int end_index){
+        LinkedList<T> *get_sub_list(int start_index, int end_index) const{
 
             if ((start_index < 0) || (start_index >= size) || (end_index < 0) || (end_index >= size)){
 
@@ -292,7 +290,7 @@ template <class T> class LinkedList{
         
         }
 
-        LinkedList<T> *concat(LinkedList<T> *list){
+        LinkedList<T> *concat(LinkedList<T> *list) const{
 
             LinkedList<T> *res_list = new LinkedList<T>;
             Node *curr_node = this->head.get();
@@ -323,7 +321,7 @@ template <class T> class LinkedList{
 
         }
 
-        T operator[](const size_t index) const{
+        T operator[](const int index) const{
 
             return get(index);
 

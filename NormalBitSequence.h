@@ -73,6 +73,21 @@ template <class T> class NormalBitSequence{
 
         }
 
+        void prepend_bit(const bool bit){
+
+            NormalBitSequence<T> res;
+            res.append_bit(bit);
+
+            for (size_t i = 0; i < bit_count; ++i){
+
+                res.append_bit(get(i));
+
+            }
+
+            *this = res;
+
+        }
+
     public:
 
         NormalBitSequence(){
@@ -272,7 +287,9 @@ template <class T> class NormalBitSequence{
             }
             else if (index == 0){
 
-                return this->prepend(bit);
+                this->prepend_bit(bit);
+
+                return this;
 
             }
             else if (index == bit_count){
@@ -305,7 +322,7 @@ template <class T> class NormalBitSequence{
 
         }
 
-        NormalBitSequence<T> *get_sub_sequence(int start_index, int end_index){
+        NormalBitSequence<T> *get_sub_sequence(int start_index, int end_index) const{
 
             if ((start_index < 0) || (end_index < 0) || (start_index + 1 > bit_count) || (end_index + 1> bit_count)){
 
@@ -313,13 +330,13 @@ template <class T> class NormalBitSequence{
 
             }
             
-            NormalBitSequence<T> res;
+            NormalBitSequence<T> *res = new NormalBitSequence<T>();
 
             if (start_index >= end_index){
 
                 for (int i = start_index; i >= end_index; --i){
 
-                    res.append_bit(this->get(i));
+                    res->append_bit(this->get(i));
 
                 }
 
@@ -328,18 +345,16 @@ template <class T> class NormalBitSequence{
 
                 for (size_t i = start_index; i <= end_index; ++i){
 
-                    res.append_bit(this->get(i));
+                    res->append_bit(this->get(i));
 
                 }    
 
             }
 
-            *this = res;
-
-            return this;
+            return res;
         }
 
-        NormalBitSequence<T> *concat(const NormalBitSequence<T> *another){
+        NormalBitSequence<T> *concat(const NormalBitSequence<T> *another) const{
 
             if (another == nullptr){
 
@@ -348,14 +363,15 @@ template <class T> class NormalBitSequence{
             }
 
             size_t another_length = another->get_length();
+            NormalBitSequence<T> *res = new NormalBitSequence<T>(*this);
 
             for (size_t i = 0; i < another_length; ++i){
 
-                append_bit(another->get(i));
+                res->append_bit(another->get(i));
 
             }
 
-            return this;
+            return res;
 
         }
 

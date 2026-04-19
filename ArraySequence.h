@@ -197,7 +197,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         }
 
-        Sequence<T> *get_sub_sequence(int start_index, int end_index) override{
+        Sequence<T> *get_sub_sequence(int start_index, int end_index) const override{
 
             size_t size = array->get_size();
 
@@ -235,7 +235,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         }
 
-        Sequence<T> *concat(Sequence<T> *sequence) override{
+        Sequence<T> *concat(Sequence<T> *sequence) const override{
 
             if (sequence == nullptr){
 

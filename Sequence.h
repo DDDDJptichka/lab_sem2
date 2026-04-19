@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 template <class T> class Sequence{
 
     public:
@@ -11,8 +13,8 @@ template <class T> class Sequence{
         virtual Sequence<T> *append(T item) = 0;
         virtual Sequence<T> *prepend(T item) = 0;
         virtual Sequence<T> *insert_at(T item, int index) = 0;
-        virtual Sequence<T> *get_sub_sequence(int start_index, int end_index) = 0;
-        virtual Sequence<T> *concat(Sequence<T> *sequence) = 0;
+        virtual Sequence<T> *get_sub_sequence(int start_index, int end_index) const = 0;
+        virtual Sequence<T> *concat(Sequence<T> *sequence) const = 0;
         
         virtual ~Sequence(){}
 

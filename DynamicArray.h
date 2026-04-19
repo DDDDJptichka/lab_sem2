@@ -18,7 +18,7 @@ template <class T> class DynamicArray{
         DynamicArray(T *items, size_t count){
 
             size = count;
-            data = new T[size];
+            data = new T[size]();
 
             for (size_t i = 0; i < count; ++i){
 
@@ -86,7 +86,13 @@ template <class T> class DynamicArray{
 
         void resize(size_t new_size){
 
-            T *new_data = new T[new_size];
+            if (new_size == size){
+
+                return;
+
+            }
+
+            T *new_data = new T[new_size]();
 
             for (size_t i = 0; i < std::min(size, new_size); ++i){
 
@@ -108,7 +114,7 @@ template <class T> class DynamicArray{
 
         }
 
-        T operator[](const size_t index) const{
+        T operator[](const int index) const{
 
             return get(index);
 

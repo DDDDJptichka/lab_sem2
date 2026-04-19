@@ -120,7 +120,7 @@ template <class T> class ListSequence : public Sequence<T>{
 
         }
 
-        Sequence<T> *get_sub_sequence(int start_index, int end_idnex) override{
+        Sequence<T> *get_sub_sequence(int start_index, int end_idnex) const override{
 
             LinkedList<T> *res_list = list->get_sub_list(start_index, end_idnex);
             Sequence<T> *res_sequence = new ListSequence<T>(*res_list);
@@ -131,7 +131,7 @@ template <class T> class ListSequence : public Sequence<T>{
 
         }
 
-        Sequence<T> *concat(Sequence<T> *sequence) override{
+        Sequence<T> *concat(Sequence<T> *sequence) const override{
 
             if (sequence == nullptr){
 
