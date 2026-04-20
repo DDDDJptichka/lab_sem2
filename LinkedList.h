@@ -268,12 +268,12 @@ template <class T> class LinkedList{
 
             }
 
-            Node *curr_node = head.get();
+            std::shared_ptr<Node> curr_node = head;
             size_t curr_ind = 0;
 
             while (curr_ind != index){
 
-                curr_node = curr_node->next.get();
+                curr_node = curr_node->next;
                 ++curr_ind;
 
             }

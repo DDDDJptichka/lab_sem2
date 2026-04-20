@@ -10,16 +10,14 @@
 #include "ImmutableArraySequence.h"
 #include "ImmutableListSequence.h"
 
-int main(){
+#include <gtest/gtest.h>
 
-    DynamicArray<int> array(3);
-    ArraySequence<int> arr(3);
+int main(int argc, char **argv){
 
-    array.set(0, 1);
-    arr.insert_at(0, -10);
+    ::testing::InitGoogleTest(&argc, argv);
 
-    std::cout << array[0] << "  " << arr[0];
-
-    return 0;
+    return RUN_ALL_TESTS();
 
 }
+
+//g++ tests.cpp googletest/googletest/src/gtest-all.cc googletest/googletest/src/gtest_main.cc -I googletest/googletest/include -I googletest/googletest -o test.exe -pthread
