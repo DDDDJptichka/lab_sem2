@@ -946,3 +946,428 @@ TEST(TestListSequence, check_operators){
     EXPECT_THROW(a[0], index_out_of_range);
 
 }
+
+TEST(TestImmutableArraySequence, create_from_array){
+
+    int items[] = {67, 52, 42, 228, 141};
+    ImmutableArraySequence<int> arr(items, 3);
+
+    EXPECT_EQ(arr.get_length(), 3);
+    EXPECT_EQ(arr.get(0), 67);
+    EXPECT_EQ(arr.get(1), 52);
+    EXPECT_EQ(arr.get(2), 42);
+    EXPECT_THROW(arr.get(3), index_out_of_range);
+    
+}
+
+TEST(TestImmutableArraySequence, check_immutability){
+
+    int items[] = {67, 52, 42, 228, 141};
+    ImmutableArraySequence<int> arr(items, 3);
+
+    EXPECT_EQ(arr.get_length(), 3);
+    EXPECT_EQ(arr.get(0), 67);
+    EXPECT_EQ(arr.get(1), 52);
+    EXPECT_EQ(arr.get(2), 42);
+    EXPECT_THROW(arr.get(3), index_out_of_range);
+
+    Sequence<int> *seq = arr.append(10);
+    Sequence<int> *seq2 = seq->insert_at(11, 2);
+
+    EXPECT_EQ(arr.get_length(), 3);
+    EXPECT_EQ(arr.get(0), 67);
+    EXPECT_EQ(arr.get(1), 52);
+    EXPECT_EQ(arr.get(2), 42);
+    EXPECT_THROW(arr.get(3), index_out_of_range);
+    EXPECT_EQ(seq->get_length(), 4);
+    EXPECT_EQ(seq->get(0), 67);
+    EXPECT_EQ(seq->get(1), 52);
+    EXPECT_EQ(seq->get(2), 42);
+    EXPECT_EQ(seq->get(3), 10);
+    EXPECT_THROW(seq->get(4), index_out_of_range);
+    EXPECT_EQ(seq2->get_length(), 5);
+    EXPECT_EQ(seq2->get(0), 67);
+    EXPECT_EQ(seq2->get(1), 52);
+    EXPECT_EQ(seq2->get(2), 11);
+    EXPECT_EQ(seq2->get(3), 42);
+    EXPECT_EQ(seq2->get(4), 10);
+    EXPECT_THROW(seq2->get(5), index_out_of_range);
+
+    delete seq;
+    delete seq2;
+
+    Sequence<int> *res = arr.prepend(337);
+    Sequence<int> *res2 = res->insert_at(22, 1);
+
+    EXPECT_EQ(arr.get_length(), 3);
+    EXPECT_EQ(arr.get(0), 67);
+    EXPECT_EQ(arr.get(1), 52);
+    EXPECT_EQ(arr.get(2), 42);
+    EXPECT_THROW(arr.get(3), index_out_of_range);
+    EXPECT_EQ(res->get_length(), 4);
+    EXPECT_EQ(res->get(0), 337);
+    EXPECT_EQ(res->get(1), 67);
+    EXPECT_EQ(res->get(2), 52);
+    EXPECT_EQ(res->get(3), 42);
+    EXPECT_THROW(res->get(4),index_out_of_range);
+    EXPECT_EQ(res2->get_length(), 5);
+    EXPECT_EQ(res2->get(0), 337);
+    EXPECT_EQ(res2->get(1), 22);
+    EXPECT_EQ(res2->get(2), 67);
+    EXPECT_EQ(res2->get(3), 52);
+    EXPECT_EQ(res2->get(4), 42);
+    EXPECT_THROW(res2->get(5),index_out_of_range);
+
+    delete res;
+    delete res2;
+
+    Sequence<int> *ans = arr.insert_at(32, 2);
+    Sequence<int> *ans2 = ans->insert_at(222, 1);
+
+    EXPECT_EQ(arr.get_length(), 3);
+    EXPECT_EQ(arr.get(0), 67);
+    EXPECT_EQ(arr.get(1), 52);
+    EXPECT_EQ(arr.get(2), 42);
+    EXPECT_THROW(arr.get(3), index_out_of_range);
+    EXPECT_EQ(ans->get_length(), 4);
+    EXPECT_EQ(ans->get(0), 67);
+    EXPECT_EQ(ans->get(1), 52);
+    EXPECT_EQ(ans->get(2), 32);
+    EXPECT_EQ(ans->get(3), 42);
+    EXPECT_THROW(ans->get(4),index_out_of_range);
+    EXPECT_EQ(ans2->get_length(), 5);
+    EXPECT_EQ(ans2->get(0), 67);
+    EXPECT_EQ(ans2->get(1), 222);
+    EXPECT_EQ(ans2->get(2), 52);
+    EXPECT_EQ(ans2->get(3), 32);
+    EXPECT_EQ(ans2->get(4), 42);
+    EXPECT_THROW(ans2->get(5),index_out_of_range);
+
+    delete ans;
+    delete ans2;
+
+}
+
+TEST(TestImmutableArraySequence, check_operators){
+
+    int items[] = {67, 52, 42, 228, 141};
+    ImmutableArraySequence<int> arr(items, 3);
+
+    EXPECT_EQ(arr.get_length(), 3);
+    EXPECT_EQ(arr.get(0), 67);
+    EXPECT_EQ(arr.get(1), 52);
+    EXPECT_EQ(arr.get(2), 42);
+    EXPECT_THROW(arr.get(3), index_out_of_range);
+    EXPECT_EQ(arr[0], 67);
+    EXPECT_EQ(arr[1], 52);
+    EXPECT_EQ(arr[2], 42);
+    EXPECT_THROW(arr[-1], index_out_of_range);
+    EXPECT_THROW(arr[3], index_out_of_range);
+
+    ImmutableArraySequence<int> seq;
+    seq = arr;
+    Sequence<int> *ans = arr.append(10);
+    Sequence<int> *ans2 = seq.prepend(-10);
+
+    EXPECT_EQ(arr.get_length(), 3);
+    EXPECT_EQ(arr[0], 67);
+    EXPECT_EQ(arr[1], 52);
+    EXPECT_EQ(arr[2], 42);
+    EXPECT_THROW(arr[-1], index_out_of_range);
+    EXPECT_THROW(arr[3], index_out_of_range);
+    EXPECT_EQ(seq.get_length(), 3);
+    EXPECT_EQ(seq[0], 67);
+    EXPECT_EQ(seq[1], 52);
+    EXPECT_EQ(seq[2], 42);
+    EXPECT_THROW(seq[-1], index_out_of_range);
+    EXPECT_THROW(seq[3], index_out_of_range);
+    EXPECT_EQ(ans->get_length(), 4);
+    EXPECT_EQ(ans->get(0), 67);
+    EXPECT_EQ(ans->get(1), 52);
+    EXPECT_EQ(ans->get(2), 42);
+    EXPECT_EQ(ans->get(3), 10);
+    EXPECT_THROW(ans->get(-1), index_out_of_range);
+    EXPECT_THROW(ans->get(4), index_out_of_range);
+    EXPECT_EQ(ans2->get_length(), 4);
+    EXPECT_EQ(ans2->get(0), -10);
+    EXPECT_EQ(ans2->get(1), 67);
+    EXPECT_EQ(ans2->get(2), 52);
+    EXPECT_EQ(ans2->get(3), 42);
+    EXPECT_THROW(ans2->get(-1), index_out_of_range);
+    EXPECT_THROW(ans2->get(4), index_out_of_range);
+
+    delete ans;
+    delete ans2;
+
+    arr = arr;
+
+    EXPECT_EQ(arr.get_length(), 3);
+    EXPECT_EQ(arr[0], 67);
+    EXPECT_EQ(arr[1], 52);
+    EXPECT_EQ(arr[2], 42);
+    EXPECT_THROW(arr[-1], index_out_of_range);
+    EXPECT_THROW(arr[3], index_out_of_range);
+
+    ImmutableArraySequence<int> res;
+    res = arr + seq;
+
+    EXPECT_EQ(res.get_length(), 6);
+    EXPECT_EQ(res[0], 67);
+    EXPECT_EQ(res[1], 52);
+    EXPECT_EQ(res[2], 42);
+    EXPECT_EQ(res[3], 67);
+    EXPECT_EQ(res[4], 52);
+    EXPECT_EQ(res[5], 42);
+    EXPECT_THROW(res[-1], index_out_of_range);
+    EXPECT_THROW(res[6], index_out_of_range);
+
+    res = arr + arr;
+
+    EXPECT_EQ(res.get_length(), 6);
+    EXPECT_EQ(res[0], 67);
+    EXPECT_EQ(res[1], 52);
+    EXPECT_EQ(res[2], 42);
+    EXPECT_EQ(res[3], 67);
+    EXPECT_EQ(res[4], 52);
+    EXPECT_EQ(res[5], 42);
+    EXPECT_THROW(res[-1], index_out_of_range);
+    EXPECT_THROW(res[6], index_out_of_range);
+ 
+    res = res + res;
+
+    EXPECT_EQ(res.get_length(), 12);
+    EXPECT_EQ(res[0], 67);
+    EXPECT_EQ(res[1], 52);
+    EXPECT_EQ(res[2], 42);
+    EXPECT_EQ(res[3], 67);
+    EXPECT_EQ(res[4], 52);
+    EXPECT_EQ(res[5], 42);
+    EXPECT_EQ(res[6], 67);
+    EXPECT_EQ(res[7], 52);
+    EXPECT_EQ(res[8], 42);
+    EXPECT_EQ(res[9], 67);
+    EXPECT_EQ(res[10], 52);
+    EXPECT_EQ(res[11], 42);
+    EXPECT_THROW(res[-1], index_out_of_range);
+    EXPECT_THROW(res[12], index_out_of_range);
+
+}
+
+TEST(TestImmutableListSequence, create_from_array){
+
+    int items[] = {67, 52, 42, 228, 141};
+    ImmutableListSequence<int> list(items, 3);
+
+    EXPECT_EQ(list.get_length(), 3);
+    EXPECT_EQ(list.get(0), 67);
+    EXPECT_EQ(list.get(1), 52);
+    EXPECT_EQ(list.get(2), 42);
+    EXPECT_THROW(list.get(3), index_out_of_range);
+    
+}
+
+TEST(TestImmutableListSequence, check_immutability){
+
+    int items[] = {67, 52, 42, 228, 141};
+    ImmutableListSequence<int> list(items, 3);
+
+    EXPECT_EQ(list.get_length(), 3);
+    EXPECT_EQ(list.get(0), 67);
+    EXPECT_EQ(list.get(1), 52);
+    EXPECT_EQ(list.get(2), 42);
+    EXPECT_THROW(list.get(3), index_out_of_range);
+
+    Sequence<int> *seq = list.append(10);
+    Sequence<int> *seq2 = seq->insert_at(11, 2);
+
+    EXPECT_EQ(list.get_length(), 3);
+    EXPECT_EQ(list.get(0), 67);
+    EXPECT_EQ(list.get(1), 52);
+    EXPECT_EQ(list.get(2), 42);
+    EXPECT_THROW(list.get(3), index_out_of_range);
+    EXPECT_EQ(seq->get_length(), 4);
+    EXPECT_EQ(seq->get(0), 67);
+    EXPECT_EQ(seq->get(1), 52);
+    EXPECT_EQ(seq->get(2), 42);
+    EXPECT_EQ(seq->get(3), 10);
+    EXPECT_THROW(seq->get(4), index_out_of_range);
+    EXPECT_EQ(seq2->get_length(), 5);
+    EXPECT_EQ(seq2->get(0), 67);
+    EXPECT_EQ(seq2->get(1), 52);
+    EXPECT_EQ(seq2->get(2), 11);
+    EXPECT_EQ(seq2->get(3), 42);
+    EXPECT_EQ(seq2->get(4), 10);
+    EXPECT_THROW(seq2->get(5), index_out_of_range);
+
+    delete seq;
+    delete seq2;
+
+    Sequence<int> *res = list.prepend(337);
+    Sequence<int> *res2 = res->insert_at(22, 1);
+
+    EXPECT_EQ(list.get_length(), 3);
+    EXPECT_EQ(list.get(0), 67);
+    EXPECT_EQ(list.get(1), 52);
+    EXPECT_EQ(list.get(2), 42);
+    EXPECT_THROW(list.get(3), index_out_of_range);
+    EXPECT_EQ(res->get_length(), 4);
+    EXPECT_EQ(res->get(0), 337);
+    EXPECT_EQ(res->get(1), 67);
+    EXPECT_EQ(res->get(2), 52);
+    EXPECT_EQ(res->get(3), 42);
+    EXPECT_THROW(res->get(4),index_out_of_range);
+    EXPECT_EQ(res2->get_length(), 5);
+    EXPECT_EQ(res2->get(0), 337);
+    EXPECT_EQ(res2->get(1), 22);
+    EXPECT_EQ(res2->get(2), 67);
+    EXPECT_EQ(res2->get(3), 52);
+    EXPECT_EQ(res2->get(4), 42);
+    EXPECT_THROW(res2->get(5),index_out_of_range);
+
+    delete res;
+    delete res2;
+
+    Sequence<int> *ans = list.insert_at(32, 2);
+    Sequence<int> *ans2 = ans->insert_at(222, 1);
+
+    EXPECT_EQ(list.get_length(), 3);
+    EXPECT_EQ(list.get(0), 67);
+    EXPECT_EQ(list.get(1), 52);
+    EXPECT_EQ(list.get(2), 42);
+    EXPECT_THROW(list.get(3), index_out_of_range);
+    EXPECT_EQ(ans->get_length(), 4);
+    EXPECT_EQ(ans->get(0), 67);
+    EXPECT_EQ(ans->get(1), 52);
+    EXPECT_EQ(ans->get(2), 32);
+    EXPECT_EQ(ans->get(3), 42);
+    EXPECT_THROW(ans->get(4),index_out_of_range);
+    EXPECT_EQ(ans2->get_length(), 5);
+    EXPECT_EQ(ans2->get(0), 67);
+    EXPECT_EQ(ans2->get(1), 222);
+    EXPECT_EQ(ans2->get(2), 52);
+    EXPECT_EQ(ans2->get(3), 32);
+    EXPECT_EQ(ans2->get(4), 42);
+    EXPECT_THROW(ans2->get(5),index_out_of_range);
+
+    delete ans;
+    delete ans2;
+
+}
+
+TEST(TestImmutableListSequence, check_operators){
+
+    int items[] = {67, 52, 42, 228, 141};
+    ImmutableListSequence<int> list(items, 3);
+
+    EXPECT_EQ(list.get_length(), 3);
+    EXPECT_EQ(list.get(0), 67);
+    EXPECT_EQ(list.get(1), 52);
+    EXPECT_EQ(list.get(2), 42);
+    EXPECT_THROW(list.get(3), index_out_of_range);
+    EXPECT_EQ(list[0], 67);
+    EXPECT_EQ(list[1], 52);
+    EXPECT_EQ(list[2], 42);
+    EXPECT_THROW(list[-1], index_out_of_range);
+    EXPECT_THROW(list[3], index_out_of_range);
+
+    ImmutableListSequence<int> seq;
+    seq = list;
+    Sequence<int> *ans = list.append(10);
+    Sequence<int> *ans2 = seq.prepend(-10);
+
+    EXPECT_EQ(list.get_length(), 3);
+    EXPECT_EQ(list[0], 67);
+    EXPECT_EQ(list[1], 52);
+    EXPECT_EQ(list[2], 42);
+    EXPECT_THROW(list[-1], index_out_of_range);
+    EXPECT_THROW(list[3], index_out_of_range);
+    EXPECT_EQ(seq.get_length(), 3);
+    EXPECT_EQ(seq[0], 67);
+    EXPECT_EQ(seq[1], 52);
+    EXPECT_EQ(seq[2], 42);
+    EXPECT_THROW(seq[-1], index_out_of_range);
+    EXPECT_THROW(seq[3], index_out_of_range);
+    EXPECT_EQ(ans->get_length(), 4);
+    EXPECT_EQ(ans->get(0), 67);
+    EXPECT_EQ(ans->get(1), 52);
+    EXPECT_EQ(ans->get(2), 42);
+    EXPECT_EQ(ans->get(3), 10);
+    EXPECT_THROW(ans->get(-1), index_out_of_range);
+    EXPECT_THROW(ans->get(4), index_out_of_range);
+    EXPECT_EQ(ans2->get_length(), 4);
+    EXPECT_EQ(ans2->get(0), -10);
+    EXPECT_EQ(ans2->get(1), 67);
+    EXPECT_EQ(ans2->get(2), 52);
+    EXPECT_EQ(ans2->get(3), 42);
+    EXPECT_THROW(ans2->get(-1), index_out_of_range);
+    EXPECT_THROW(ans2->get(4), index_out_of_range);
+
+    delete ans;
+    delete ans2;
+
+    list = list;
+
+    EXPECT_EQ(list.get_length(), 3);
+    EXPECT_EQ(list[0], 67);
+    EXPECT_EQ(list[1], 52);
+    EXPECT_EQ(list[2], 42);
+    EXPECT_THROW(list[-1], index_out_of_range);
+    EXPECT_THROW(list[3], index_out_of_range);
+
+    ImmutableListSequence<int> res;
+    res = list + seq;
+
+    EXPECT_EQ(res.get_length(), 6);
+    EXPECT_EQ(res[0], 67);
+    EXPECT_EQ(res[1], 52);
+    EXPECT_EQ(res[2], 42);
+    EXPECT_EQ(res[3], 67);
+    EXPECT_EQ(res[4], 52);
+    EXPECT_EQ(res[5], 42);
+    EXPECT_THROW(res[-1], index_out_of_range);
+    EXPECT_THROW(res[6], index_out_of_range);
+
+    res = list + list;
+
+    EXPECT_EQ(res.get_length(), 6);
+    EXPECT_EQ(res[0], 67);
+    EXPECT_EQ(res[1], 52);
+    EXPECT_EQ(res[2], 42);
+    EXPECT_EQ(res[3], 67);
+    EXPECT_EQ(res[4], 52);
+    EXPECT_EQ(res[5], 42);
+    EXPECT_THROW(res[-1], index_out_of_range);
+    EXPECT_THROW(res[6], index_out_of_range);
+ 
+    res = res + res;
+
+    EXPECT_EQ(res.get_length(), 12);
+    EXPECT_EQ(res[0], 67);
+    EXPECT_EQ(res[1], 52);
+    EXPECT_EQ(res[2], 42);
+    EXPECT_EQ(res[3], 67);
+    EXPECT_EQ(res[4], 52);
+    EXPECT_EQ(res[5], 42);
+    EXPECT_EQ(res[6], 67);
+    EXPECT_EQ(res[7], 52);
+    EXPECT_EQ(res[8], 42);
+    EXPECT_EQ(res[9], 67);
+    EXPECT_EQ(res[10], 52);
+    EXPECT_EQ(res[11], 42);
+    EXPECT_THROW(res[-1], index_out_of_range);
+    EXPECT_THROW(res[12], index_out_of_range);
+
+}
+
+TEST(TestNormalBitSequence, create_empty_seq){
+
+    NormalBitSequence<uint64_t> seq;
+
+    EXPECT_EQ(seq.get_length(), 0);
+    EXPECT_THROW(seq.get(0), empty_container);
+    EXPECT_THROW(seq.get(10), empty_container);
+    EXPECT_THROW(seq.get_first(), empty_container);
+    EXPECT_THROW(seq.get_last(), empty_container);
+    EXPECT_THROW(seq.insert_at(1, 10), empty_container);
+
+}
