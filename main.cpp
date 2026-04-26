@@ -25,6 +25,8 @@ int main(int argc, char **argv){
 
     delete seq;
 
+    return 0;
+
 }
 
 //g++ main.cpp SequenceInterface.cpp tests.cpp googletest/googletest/src/gtest-all.cc -I googletest/googletest/include -I googletest/googletest -o a.exe -pthread

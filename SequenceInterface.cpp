@@ -153,115 +153,154 @@ void do_operations(Sequence<double> *&seq){
             break;
 
         }
+        try {
 
-        if (arg == 1){
+            if (arg == 1){
 
-            std::cout << "value: ";
-            double value = input_double();
+                std::cout << "value: ";
+                double value = input_double();
 
-            Sequence<double> *old = seq;
-            Sequence<double> *res = seq->append(value);
+                Sequence<double> *old = seq;
+                Sequence<double> *res = seq->append(value);
 
-            if (res != old){
+                if (res != old){
 
-                seq = res;
-                delete old;
+                    seq = res;
+                    delete old;
+
+                }
+
+                print_seq(seq);
 
             }
+            else if (arg == 2){
 
-            print_seq(seq);
+                std::cout << "value: ";
+                double value = input_double();
 
-        }
-        else if (arg == 2){
+                Sequence<double> *old = seq;
+                Sequence<double> *res = seq->prepend(value);
 
-            std::cout << "value: ";
-            double value = input_double();
+                if (res != old){
 
-            Sequence<double> *res = seq->prepend(value);
+                    seq = res;
+                    delete old;
 
-            print_seq(res);
+                }
 
-            delete res;
+                print_seq(seq);
 
-        }
-        else if (arg == 3){
+            }
+            else if (arg == 3){
 
-            std::cout << "value: ";
-            double value = input_double();
+                std::cout << "value: ";
+                double value = input_double();
 
-            std::cout << "index: ";
-            int index = input_int();
+                std::cout << "index: ";
+                int index = input_int();
 
-            Sequence<double> *res = seq->insert_at(value, index);
+                Sequence<double> *old = seq;
+                Sequence<double> *res = seq->insert_at(value, index);
 
-            print_seq(res);
+                if (res != old){
 
-            delete res;
+                    seq = res;
+                    delete old;
 
-        }
-        else if (arg == 4){
+                }
 
-            std::cout << seq->get_first();
+                print_seq(seq);
 
-        }
-        else if (arg == 5){
+            }
+            else if (arg == 4){
 
-            std::cout << seq->get_last();
+                std::cout << seq->get_first();
 
-        }
-        else if (arg == 6){
+            }
+            else if (arg == 5){
 
-            std::cout << seq->get_length();
+                std::cout << seq->get_last();
 
-        }
-        else if (arg == 7){
+            }
+            else if (arg == 6){
 
-            std::cout << "index: ";
-            int index = input_int();
+                std::cout << seq->get_length();
 
-            std::cout << seq->get(index);
+            }
+            else if (arg == 7){
 
-        }
-        else if (arg == 8){
+                std::cout << "index: ";
+                int index = input_int();
 
-            std::cout << "start index: ";
-            int start_index = input_int();
+                std::cout << seq->get(index);
 
-            std::cout << "end index: ";
-            int end_index = input_int();
+            }
+            else if (arg == 8){
 
-            Sequence<double> *res = seq->get_sub_sequence(start_index, end_index);
-            
-            print_seq(res);
+                std::cout << "start index: ";
+                int start_index = input_int();
 
-            delete res;
+                std::cout << "end index: ";
+                int end_index = input_int();
 
-        }
-        else if (arg == 9){
-
-            std::cout << "\nCreate second sequence:\n";
-            Sequence<double> *other = choose_seq();
-
-            std::cout << "How many elements: ";
-            int size = input_int();
-
-            for (size_t i = 0; i < size; ++i){
+                Sequence<double> *res = seq->get_sub_sequence(start_index, end_index);
                 
-                std::cout << "value[" << i << "]: ";
-                other->append(input_double());
-            
+                print_seq(res);
+
+                delete res;
+
             }
+            else if (arg == 9){
 
-            Sequence<double> *res = seq->concat(other);
+                std::cout << "\nCreate second sequence:\n";
+                Sequence<double> *other = choose_seq();
 
-            print_seq(res);
+                std::cout << "How many elements: ";
+                int size = input_int();
+                double value;
 
-            delete res;
+                for (size_t i = 0; i < size; ++i){
+                    
+                    std::cout << "value[" << i << "]: ";
+                    value = input_double();
 
+                    Sequence<double> *old_other = other;
+                    Sequence<double> *res_other = other->append(value);
+
+                    if (res_other != old_other){
+
+                        other = res_other;
+                        delete old_other;
+                
+                    }
+                   
+                }
+
+                Sequence<double> *old = seq;
+                Sequence<double> *res = seq->concat(other);
+
+                if (res != old){
+
+                    seq = res;
+                    delete old;
+
+                }
+
+                print_seq(seq);
+                delete other;
+
+            }
+            else if (arg == 10){
+
+                print_seq(seq);
+
+            }
+    
         }
-        else if (arg == 10){
 
-            print_seq(seq);
+        catch(const std::exception &error){
+
+            std::cout << "\nError: " << error.what() << "\n";
 
         }
 
