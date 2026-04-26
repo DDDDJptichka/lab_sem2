@@ -12,7 +12,9 @@
 
 template <class T> class NormalBitSequence{
 
-    protected:
+    static_assert(std::is_integral_v<T> && std::is_unsigned_v<T>, "Wrong buffer type");
+
+    private:
 
         ArraySequence<T> *array;
         size_t bit_count;
