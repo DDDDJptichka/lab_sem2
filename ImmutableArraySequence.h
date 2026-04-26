@@ -46,12 +46,6 @@ template <class T> class ImmutableArraySequence : public ArraySequence<T>{
 
         }
 
-        T operator[](const size_t index) const{
-
-            return this->get(index);
-
-        }
-
         ImmutableArraySequence<T> &operator=(const ImmutableArraySequence<T> &other){
 
             if (this == &other){

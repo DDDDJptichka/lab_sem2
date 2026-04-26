@@ -12,7 +12,7 @@
 
 template <class T> class NormalBitSequence{
 
-    private:
+    protected:
 
         ArraySequence<T> *array;
         size_t bit_count;
@@ -97,10 +97,38 @@ template <class T> class NormalBitSequence{
 
         }
 
-        NormalBitSequence(const NormalBitSequence &another){
+        NormalBitSequence(const NormalBitSequence<T> &another){
 
             array = new ArraySequence<T>(*another.array);
             bit_count = another.bit_count;
+
+        }
+
+        template <class A> NormalBitSequence(A *items, int size){
+
+            array = new ArraySequence<T>(0);
+            bit_count = 0;
+
+            for (size_t i = 0; i < size; ++i){
+
+                append_internal(items[i]);
+
+            }
+
+        }
+
+        template <class A> NormalBitSequence(const Sequence<A> &seq){
+
+            array = new ArraySequence<T>(0);
+            bit_count = 0;
+
+            size_t seq_length = seq.get_length();
+
+            for (size_t i = 0; i < seq_length; ++i){
+
+                append_internal(seq.get(i));
+
+            }
 
         }
 
@@ -112,21 +140,6 @@ template <class T> class NormalBitSequence{
             size_t arr_size = arr.get_size();
 
             for (size_t i = 0; i < arr_size; ++ i){
-
-                append_internal(arr.get(i));
-
-            }
-
-        }
-
-        template <class A> NormalBitSequence(const ArraySequence<A> &arr){
-
-            array = new ArraySequence<T>(0);
-            bit_count = 0;
-
-            size_t arr_size = arr.get_length();
-
-            for (size_t i = 0; i < arr_size; ++i){
 
                 append_internal(arr.get(i));
 
@@ -146,21 +159,6 @@ template <class T> class NormalBitSequence{
                 append_internal(list.get(i));
 
             }
-
-        }
-
-        template <class A> NormalBitSequence(const ListSequence<A> &list){
-
-            array = new ArraySequence<T>(0);
-            bit_count = 0;
-
-            size_t list_size = list.get_length();
-
-            for (size_t i = 0; i < list_size; ++i){
-
-                append_internal(list.get(i));
-
-            }         
 
         }
  
@@ -278,23 +276,23 @@ template <class T> class NormalBitSequence{
 
         }
 
-        NormalBitSequence<T> *insert_at(const bool bit, int index){
+       template <class A> NormalBitSequence<T> *insert_at(const A &value, int block_index){
 
-            if ((index < 0) || (index > bit_count)){
+            if ((block_index < 0) || (block_index * block_size > bit_count)){
 
                 throw index_out_of_range("Index Out Of Range");
 
             }
-            else if (index == 0){
+            else if (block_index == 0){
 
-                this->prepend_bit(bit);
+                this->prepend(value);
 
                 return this;
 
             }
-            else if (index == bit_count){
+            else if (block_index * block_size == bit_count){
 
-                this->append_bit(bit);
+                this->append(value);
 
                 return this;
 
@@ -302,15 +300,15 @@ template <class T> class NormalBitSequence{
 
             NormalBitSequence<T> res;
 
-            for (size_t i = 0; i < index; ++i){
+            for (size_t i = 0; i < block_index * block_size; ++i){
 
                 res.append_bit(get(i));
 
             }
 
-            res.append_bit(bit);
+            res.append(value);
 
-            for (size_t i = index; i < bit_count; ++i){
+            for (size_t i = (block_index * block_size); i < bit_count; ++i){
 
                 res.append_bit(get(i));
 
@@ -358,7 +356,7 @@ template <class T> class NormalBitSequence{
 
             if (another == nullptr){
 
-                throw empty_container("Container is empty");
+                throw nullptr_argument("Argument is nullptr");
 
             }
 
@@ -379,7 +377,7 @@ template <class T> class NormalBitSequence{
 
             if (another == nullptr){
 
-                throw empty_container("Container is empty");
+                throw nullptr_argument("Argument is nullptr");
 
             }
 
@@ -408,7 +406,7 @@ template <class T> class NormalBitSequence{
 
             if (another == nullptr){
 
-                throw empty_container("Container is empty");
+                throw nullptr_argument("Argument is nullptr");
 
             }
 
@@ -441,7 +439,7 @@ template <class T> class NormalBitSequence{
 
             if (another == nullptr){
 
-                throw empty_container("Container is empty");
+                throw nullptr_argument("Argument is nullptr");
 
             }
 
@@ -473,5 +471,29 @@ template <class T> class NormalBitSequence{
             return *this;
 
         }
-
+  
 };
+
+template <class T> const bool operator==(const NormalBitSequence<T> &seq1, const NormalBitSequence<T> &seq2){
+
+    if (seq1.get_length() != seq2.get_length()){
+
+        return false;
+
+    }
+
+    size_t length = seq1.get_length();
+
+    for (size_t i = 0; i < length; ++i){
+
+        if (seq1.get(i) != seq2.get(i)){
+
+            return false;
+
+        }
+
+    }
+
+    return true;
+
+}

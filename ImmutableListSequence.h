@@ -46,12 +46,6 @@ template <class T> class ImmutableListSequence : public ListSequence<T>{
 
         }
 
-        T operator[](const size_t index) const{
-
-            return this->get(index);
-
-        }
-
         ImmutableListSequence<T> &operator=(const ImmutableListSequence<T> &other){
 
             if (this == &other){

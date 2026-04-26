@@ -263,12 +263,6 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         }
 
-        T operator[](size_t index){
-
-            return array->get(index);
-
-        }
-
         ArraySequence<T> &operator=(const ArraySequence<T> &other){
 
             if (this == &other){

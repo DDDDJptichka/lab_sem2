@@ -36,3 +36,11 @@ class empty_container : public exception{
         explicit empty_container(const std::string &msg) : exception(msg){}
 
 };
+
+class nullptr_argument : public exception{
+
+    public:
+
+        explicit nullptr_argument(const std::string &msg) : exception(msg){}
+
+};

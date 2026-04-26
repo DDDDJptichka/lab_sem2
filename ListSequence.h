@@ -160,12 +160,6 @@ template <class T> class ListSequence : public Sequence<T>{
 
         }
 
-        T operator[](const size_t index) const{
-
-            return get(index);
-
-        }
-
         ListSequence<T> &operator=(const ListSequence<T> &other){
 
             if (this == &other){

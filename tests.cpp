@@ -1370,7 +1370,14 @@ TEST(TestNormalBitSequence, create_empty_seq_check_throws){
     EXPECT_THROW(seq.get_last(), empty_container);
     EXPECT_THROW(seq.insert_at(1, 10), index_out_of_range);
     EXPECT_THROW(seq.set(1, 10), index_out_of_range);
-    
+    EXPECT_THROW(seq.get_sub_sequence(-10, 10), index_out_of_range);
+    EXPECT_THROW(seq.get_sub_sequence(-10, 0), index_out_of_range);
+    EXPECT_THROW(seq.get_sub_sequence(0, 0), index_out_of_range);
+    EXPECT_THROW(seq.concat(nullptr), nullptr_argument);
+    EXPECT_THROW(seq.AND(nullptr), nullptr_argument);
+    EXPECT_THROW(seq.OR(nullptr), nullptr_argument);
+    EXPECT_THROW(seq.XOR(nullptr), nullptr_argument);
+
     seq.append(3);
 
     EXPECT_EQ(seq.get_length(), 32);
@@ -1390,4 +1397,472 @@ TEST(TestNormalBitSequence, create_empty_seq_check_throws){
 
 }
 
-//im tired
+TEST(TestNormalBitSequence, create_from_dynamic_array){
+
+    int a[] = {2, 1, 3};
+    DynamicArray<int> arr(a, 1);
+
+    EXPECT_EQ(arr.get_size(), 1);
+    EXPECT_EQ(arr[0], 2);
+
+    NormalBitSequence<uint8_t> seq(arr);
+
+    EXPECT_EQ(seq.get_length(), 32);
+    EXPECT_EQ(seq.get(0), 0);
+    EXPECT_EQ(seq.get(1), 0);
+    EXPECT_EQ(seq.get(2), 0);
+    EXPECT_EQ(seq.get(3), 0);
+    EXPECT_EQ(seq.get(4), 0);
+    EXPECT_EQ(seq.get(5), 0);
+    EXPECT_EQ(seq.get(6), 1);
+    EXPECT_EQ(seq.get(7), 0);
+    EXPECT_EQ(seq.get(8), 0);
+    EXPECT_EQ(seq.get(15), 0);
+    EXPECT_EQ(seq.get(24), 0);
+    EXPECT_EQ(seq.get(31), 0);
+    EXPECT_THROW(seq.get(32), index_out_of_range);
+
+    arr.append(1); 
+    seq.append(uint8_t(4));
+
+    EXPECT_EQ(arr.get_size(), 2);
+    EXPECT_EQ(arr[0], 2);
+    EXPECT_EQ(arr[1], 1);
+
+    EXPECT_EQ(seq.get_length(), 40);
+    EXPECT_EQ(seq.get(0), 0);
+    EXPECT_EQ(seq.get(1), 0);
+    EXPECT_EQ(seq.get(2), 0);
+    EXPECT_EQ(seq.get(3), 0);
+    EXPECT_EQ(seq.get(4), 0);
+    EXPECT_EQ(seq.get(5), 0);
+    EXPECT_EQ(seq.get(6), 1);
+    EXPECT_EQ(seq.get(7), 0);
+    EXPECT_EQ(seq.get(8), 0);
+    EXPECT_EQ(seq.get(15), 0);
+    EXPECT_EQ(seq.get(24), 0);
+    EXPECT_EQ(seq.get(31), 0);
+    EXPECT_EQ(seq.get(32), 0);
+    EXPECT_EQ(seq.get(33), 0);
+    EXPECT_EQ(seq.get(34), 0);
+    EXPECT_EQ(seq.get(35), 0);
+    EXPECT_EQ(seq.get(36), 0);
+    EXPECT_EQ(seq.get(37), 1);
+    EXPECT_EQ(seq.get(38), 0);
+    EXPECT_EQ(seq.get(39), 0);
+    EXPECT_THROW(seq.get(40), index_out_of_range);
+
+}
+
+TEST(TestNormalBitSequence, create_from_linked_list){
+
+    int a[] = {2, 1, 3};
+    LinkedList<int> list(a, 1);
+
+    EXPECT_EQ(list.get_length(), 1);
+    EXPECT_EQ(list[0], 2);
+
+    NormalBitSequence<uint8_t> seq(list);
+
+    EXPECT_EQ(seq.get_length(), 32);
+    EXPECT_EQ(seq.get(0), 0);
+    EXPECT_EQ(seq.get(1), 0);
+    EXPECT_EQ(seq.get(2), 0);
+    EXPECT_EQ(seq.get(3), 0);
+    EXPECT_EQ(seq.get(4), 0);
+    EXPECT_EQ(seq.get(5), 0);
+    EXPECT_EQ(seq.get(6), 1);
+    EXPECT_EQ(seq.get(7), 0);
+    EXPECT_EQ(seq.get(8), 0);
+    EXPECT_EQ(seq.get(15), 0);
+    EXPECT_EQ(seq.get(24), 0);
+    EXPECT_EQ(seq.get(31), 0);
+    EXPECT_THROW(seq.get(32), index_out_of_range);
+
+    list.append(1); 
+    seq.append(uint8_t(4));
+
+    EXPECT_EQ(list.get_length(), 2);
+    EXPECT_EQ(list[0], 2);
+    EXPECT_EQ(list[1], 1);
+
+    EXPECT_EQ(seq.get_length(), 40);
+    EXPECT_EQ(seq.get(0), 0);
+    EXPECT_EQ(seq.get(1), 0);
+    EXPECT_EQ(seq.get(2), 0);
+    EXPECT_EQ(seq.get(3), 0);
+    EXPECT_EQ(seq.get(4), 0);
+    EXPECT_EQ(seq.get(5), 0);
+    EXPECT_EQ(seq.get(6), 1);
+    EXPECT_EQ(seq.get(7), 0);
+    EXPECT_EQ(seq.get(8), 0);
+    EXPECT_EQ(seq.get(15), 0);
+    EXPECT_EQ(seq.get(24), 0);
+    EXPECT_EQ(seq.get(31), 0);
+    EXPECT_EQ(seq.get(32), 0);
+    EXPECT_EQ(seq.get(33), 0);
+    EXPECT_EQ(seq.get(34), 0);
+    EXPECT_EQ(seq.get(35), 0);
+    EXPECT_EQ(seq.get(36), 0);
+    EXPECT_EQ(seq.get(37), 1);
+    EXPECT_EQ(seq.get(38), 0);
+    EXPECT_EQ(seq.get(39), 0);
+    EXPECT_THROW(seq.get(40), index_out_of_range);
+
+}
+
+TEST(TestNormalBitSequence, create_from_sequence){
+
+    int a[] = {2};
+    int b[] = {3};
+    ArraySequence<int> arr(a, 1);
+    ListSequence<int> list(b, 1);
+    Sequence<int> *seq = arr.concat(&list);
+
+
+    EXPECT_EQ(arr.get_length(), 1);
+    EXPECT_EQ(arr[0], 2);
+
+    EXPECT_EQ(list.get_length(), 1);
+    EXPECT_EQ(list[0], 3);
+
+    NormalBitSequence<uint8_t> seq_arr(arr);
+    NormalBitSequence<uint8_t> seq_list(list);
+    NormalBitSequence<uint8_t> seq_seq(*seq);
+
+    EXPECT_EQ(seq_arr.get_length(), 32);
+    EXPECT_EQ(seq_arr.get(0), 0);
+    EXPECT_EQ(seq_arr.get(1), 0);
+    EXPECT_EQ(seq_arr.get(2), 0);
+    EXPECT_EQ(seq_arr.get(3), 0);
+    EXPECT_EQ(seq_arr.get(4), 0);
+    EXPECT_EQ(seq_arr.get(5), 0);
+    EXPECT_EQ(seq_arr.get(6), 1);
+    EXPECT_EQ(seq_arr.get(7), 0);
+    EXPECT_EQ(seq_arr.get(8), 0);
+    EXPECT_EQ(seq_arr.get(15), 0);
+    EXPECT_EQ(seq_arr.get(24), 0);
+    EXPECT_EQ(seq_arr.get(31), 0);
+    EXPECT_THROW(seq_arr.get(32), index_out_of_range);
+
+    EXPECT_EQ(seq_list.get_length(), 32);
+    EXPECT_EQ(seq_list.get(0), 0);
+    EXPECT_EQ(seq_list.get(1), 0);
+    EXPECT_EQ(seq_list.get(2), 0);
+    EXPECT_EQ(seq_list.get(3), 0);
+    EXPECT_EQ(seq_list.get(4), 0);
+    EXPECT_EQ(seq_list.get(5), 0);
+    EXPECT_EQ(seq_list.get(6), 1);
+    EXPECT_EQ(seq_list.get(7), 1);
+    EXPECT_EQ(seq_list.get(8), 0);
+    EXPECT_EQ(seq_list.get(15), 0);
+    EXPECT_EQ(seq_list.get(24), 0);
+    EXPECT_EQ(seq_list.get(31), 0);
+    EXPECT_THROW(seq_list.get(32), index_out_of_range);
+
+    EXPECT_EQ(seq_seq.get_length(), 64);
+    EXPECT_EQ(seq_seq.get(0), 0);
+    EXPECT_EQ(seq_seq.get(1), 0);
+    EXPECT_EQ(seq_seq.get(2), 0);
+    EXPECT_EQ(seq_seq.get(3), 0);
+    EXPECT_EQ(seq_seq.get(4), 0);
+    EXPECT_EQ(seq_seq.get(5), 0);
+    EXPECT_EQ(seq_seq.get(6), 1);
+    EXPECT_EQ(seq_seq.get(7), 0);
+    EXPECT_EQ(seq_seq.get(8), 0);
+    EXPECT_EQ(seq_seq.get(15), 0);
+    EXPECT_EQ(seq_seq.get(24), 0);
+    EXPECT_EQ(seq_seq.get(31), 0);
+    EXPECT_EQ(seq_seq.get(32), 0);
+    EXPECT_EQ(seq_seq.get(33), 0);
+    EXPECT_EQ(seq_seq.get(34), 0);
+    EXPECT_EQ(seq_seq.get(35), 0);
+    EXPECT_EQ(seq_seq.get(36), 0);
+    EXPECT_EQ(seq_seq.get(37), 0);
+    EXPECT_EQ(seq_seq.get(38), 1);
+    EXPECT_EQ(seq_seq.get(39), 1);
+    EXPECT_EQ(seq_seq.get(40), 0);
+    EXPECT_EQ(seq_seq.get(47), 0);
+    EXPECT_EQ(seq_seq.get(48), 0);
+    EXPECT_EQ(seq_seq.get(55), 0);
+    EXPECT_EQ(seq_seq.get(56), 0);
+    EXPECT_EQ(seq_seq.get(63), 0);
+    EXPECT_THROW(seq_seq.get(64), index_out_of_range);
+
+    arr.append(1);
+    list.append(1);
+    seq->append(1);
+    seq_seq.append(uint8_t(5));
+
+
+    EXPECT_EQ(arr.get_length(), 2);
+    EXPECT_EQ(arr[0], 2);
+    EXPECT_EQ(arr[1], 1);
+
+    EXPECT_EQ(list.get_length(), 2);
+    EXPECT_EQ(list[0], 3);
+    EXPECT_EQ(list[1], 1);
+
+    EXPECT_EQ(seq->get_length(), 3);
+    EXPECT_EQ((*seq)[0], 2);
+    EXPECT_EQ((*seq)[1], 3);
+    EXPECT_EQ((*seq)[2], 1);
+
+    delete seq;
+
+    EXPECT_EQ(seq_seq.get_length(), 72);
+    EXPECT_EQ(seq_seq.get(0), 0);
+    EXPECT_EQ(seq_seq.get(1), 0);
+    EXPECT_EQ(seq_seq.get(2), 0);
+    EXPECT_EQ(seq_seq.get(3), 0);
+    EXPECT_EQ(seq_seq.get(4), 0);
+    EXPECT_EQ(seq_seq.get(5), 0);
+    EXPECT_EQ(seq_seq.get(6), 1);
+    EXPECT_EQ(seq_seq.get(7), 0);
+    EXPECT_EQ(seq_seq.get(8), 0);
+    EXPECT_EQ(seq_seq.get(15), 0);
+    EXPECT_EQ(seq_seq.get(24), 0);
+    EXPECT_EQ(seq_seq.get(31), 0);
+    EXPECT_EQ(seq_seq.get(32), 0);
+    EXPECT_EQ(seq_seq.get(33), 0);
+    EXPECT_EQ(seq_seq.get(34), 0);
+    EXPECT_EQ(seq_seq.get(35), 0);
+    EXPECT_EQ(seq_seq.get(36), 0);
+    EXPECT_EQ(seq_seq.get(37), 0);
+    EXPECT_EQ(seq_seq.get(38), 1);
+    EXPECT_EQ(seq_seq.get(39), 1);
+    EXPECT_EQ(seq_seq.get(40), 0);
+    EXPECT_EQ(seq_seq.get(47), 0);
+    EXPECT_EQ(seq_seq.get(48), 0);
+    EXPECT_EQ(seq_seq.get(55), 0);
+    EXPECT_EQ(seq_seq.get(56), 0);
+    EXPECT_EQ(seq_seq.get(63), 0);
+
+    EXPECT_EQ(seq_seq.get(64), 0);
+    EXPECT_EQ(seq_seq.get(65), 0);
+    EXPECT_EQ(seq_seq.get(66), 0);
+    EXPECT_EQ(seq_seq.get(67), 0);
+    EXPECT_EQ(seq_seq.get(68), 0);
+    EXPECT_EQ(seq_seq.get(69), 1);
+    EXPECT_EQ(seq_seq.get(70), 0);
+    EXPECT_EQ(seq_seq.get(71), 1);
+
+    EXPECT_THROW(seq_seq.get(72), index_out_of_range);
+
+}
+
+TEST(TestNormalBitSequence, create_from_arr){
+
+    int a[] = {2, 1, 3};
+
+    NormalBitSequence<uint8_t> seq(a, 1);
+
+    EXPECT_EQ(seq.get_length(), 32);
+    EXPECT_EQ(seq.get(0), 0);
+    EXPECT_EQ(seq.get(1), 0);
+    EXPECT_EQ(seq.get(2), 0);
+    EXPECT_EQ(seq.get(3), 0);
+    EXPECT_EQ(seq.get(4), 0);
+    EXPECT_EQ(seq.get(5), 0);
+    EXPECT_EQ(seq.get(6), 1);
+    EXPECT_EQ(seq.get(7), 0);
+    EXPECT_EQ(seq.get(8), 0);
+    EXPECT_EQ(seq.get(15), 0);
+    EXPECT_EQ(seq.get(24), 0);
+    EXPECT_EQ(seq.get(31), 0);
+    EXPECT_THROW(seq.get(32), index_out_of_range);
+
+}
+
+TEST(TestNormalBitSequence, create_from_another){
+
+    int a[] = {2, 1, 3};
+
+    NormalBitSequence<uint8_t> seq(a, 1);
+
+    EXPECT_EQ(seq.get_length(), 32);
+    EXPECT_EQ(seq.get(0), 0);
+    EXPECT_EQ(seq.get(1), 0);
+    EXPECT_EQ(seq.get(2), 0);
+    EXPECT_EQ(seq.get(3), 0);
+    EXPECT_EQ(seq.get(4), 0);
+    EXPECT_EQ(seq.get(5), 0);
+    EXPECT_EQ(seq.get(6), 1);
+    EXPECT_EQ(seq.get(7), 0);
+    EXPECT_EQ(seq.get(8), 0);
+    EXPECT_EQ(seq.get(15), 0);
+    EXPECT_EQ(seq.get(24), 0);
+    EXPECT_EQ(seq.get(31), 0);
+    EXPECT_THROW(seq.get(32), index_out_of_range);
+
+    NormalBitSequence<uint8_t> seq1(seq);
+
+    EXPECT_EQ(seq1.get_length(), 32);
+    EXPECT_TRUE(seq == seq);
+
+    seq.append(uint8_t(2));
+
+    EXPECT_TRUE(!(seq == seq1));
+
+}
+
+TEST(TestNormalBitSequence, check_methods){
+
+    uint8_t a[] = {2, 1};
+
+    NormalBitSequence<uint8_t> seq;
+    NormalBitSequence<uint8_t> res(a, 2);
+
+    seq.append(uint8_t(1))->prepend(uint8_t(2));
+    
+    EXPECT_EQ(seq.get_length(), 16);
+    EXPECT_TRUE(seq == res);
+
+    seq.set(1, 7);
+    a[0] = 3;
+    NormalBitSequence<uint8_t> ress(a, 2);
+
+    EXPECT_TRUE(seq == ress);
+    
+    EXPECT_EQ(seq.get(0), 0);
+    EXPECT_EQ(seq.get(15), 1);
+    EXPECT_EQ(seq.get_first(), 0);
+    EXPECT_EQ(seq.get_last(), 1);
+
+    seq.insert_at(5, 1);
+
+    NormalBitSequence<uint8_t> resss;
+    resss.append(uint8_t(3))->append(5)->append(uint8_t(1));
+
+    EXPECT_TRUE(seq == resss);
+
+
+    NormalBitSequence<uint8_t> seqq(a, 1);
+    NormalBitSequence<uint8_t> seqqq(a, 2);
+    NormalBitSequence<uint8_t> *conc = seqq.concat(&seqqq);
+    NormalBitSequence<uint8_t> exp(a, 1);
+
+    seqq.append(uint8_t(2));
+    seqqq.append(uint8_t(3));
+    exp.append(a[0])->append(a[1]);
+
+    EXPECT_TRUE(*conc == exp);
+    delete conc;
+
+    
+    NormalBitSequence<uint8_t> *conc2 = seqq.concat(&seqq);
+    NormalBitSequence<uint8_t> expp(seqq);
+    
+    expp.append(a[0])->append(uint8_t(2));
+
+    EXPECT_TRUE(*conc2 == expp);
+    delete conc2;
+
+
+    NormalBitSequence<uint8_t> nothing;
+    NormalBitSequence<uint8_t> *conc3 = seqq.concat(&nothing);
+
+    EXPECT_TRUE(*conc3 == seqq);
+    EXPECT_THROW(seqq.concat(nullptr), nullptr_argument);
+    delete conc3;
+
+
+    NormalBitSequence<uint8_t> bit(a, 1);
+    NormalBitSequence<uint8_t> *sub = bit.get_sub_sequence(0, 7);
+
+    EXPECT_TRUE(*sub == bit);
+
+    NormalBitSequence<uint8_t> *subb = bit.get_sub_sequence(7, 0);
+    NormalBitSequence<uint8_t> resu;
+
+    resu.append(uint8_t(128 + 64));
+    
+    EXPECT_TRUE(*subb == resu);
+    delete sub;
+    delete subb;
+
+    NormalBitSequence<uint8_t> *subbb = bit.get_sub_sequence(0, 0);
+
+    EXPECT_EQ(subbb->get(0), 0);
+    EXPECT_THROW(bit.get_sub_sequence(-1, 1), index_out_of_range);
+    EXPECT_THROW(bit.get_sub_sequence(-1, 10), index_out_of_range);
+    EXPECT_THROW(bit.get_sub_sequence(1, 10), index_out_of_range);
+    delete subbb;
+    
+    NormalBitSequence<uint8_t> b;
+    NormalBitSequence<uint8_t> c;
+    NormalBitSequence<uint8_t> d;
+
+    b.append(uint8_t(1));
+    c.append(uint8_t(0));
+    d.append(uint8_t(1));
+
+    b.AND(&c);
+
+    EXPECT_TRUE(b == c);
+
+    d.AND(&d);
+    c.set(1, 7);
+
+    EXPECT_TRUE(d == c);
+    EXPECT_THROW(b.AND(nullptr), nullptr_argument);
+
+    NormalBitSequence<uint8_t> e;
+    NormalBitSequence<uint8_t> f;
+    NormalBitSequence<uint8_t> g;
+
+    e.append(uint8_t(1));
+    f.append(uint8_t(0));
+    g.append(uint8_t(1));
+
+    e.OR(&f);
+
+    EXPECT_TRUE(e == g);
+
+    e.OR(&e);
+
+    EXPECT_TRUE(e == g);
+    EXPECT_THROW(e.OR(nullptr), nullptr_argument);
+
+    NormalBitSequence<uint8_t> i;
+    NormalBitSequence<uint8_t> k;
+
+    i.append(uint8_t(1));
+    k.append(uint8_t(254));
+
+    i.NOT();
+
+    EXPECT_TRUE(i == k);
+
+    NormalBitSequence<uint8_t> j;
+    NormalBitSequence<uint8_t> l;
+    NormalBitSequence<uint8_t> p;
+
+    j.append(uint8_t(1));
+    l.append(uint8_t(254));
+    p.append(uint8_t(0));
+
+    j.XOR(&l);
+    p.NOT();
+
+    EXPECT_TRUE(j == p);
+
+    j.XOR(&j);
+    p.NOT();
+
+    EXPECT_TRUE(j == p);
+    EXPECT_THROW(j.XOR(nullptr), nullptr_argument);
+
+}
+
+TEST(TestNormalBitSequence, check_operators){
+
+    uint8_t a[] = {2, 1};
+    NormalBitSequence<uint8_t> seq(a, 1);
+    NormalBitSequence<uint8_t> seqq;
+
+    seqq = seq;
+
+    EXPECT_TRUE(seqq == seq);
+
+}
