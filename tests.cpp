@@ -1359,15 +1359,35 @@ TEST(TestImmutableListSequence, check_operators){
 
 }
 
-TEST(TestNormalBitSequence, create_empty_seq){
+TEST(TestNormalBitSequence, create_empty_seq_check_throws){
 
-    NormalBitSequence<uint64_t> seq;
+    NormalBitSequence<uint8_t> seq;
 
     EXPECT_EQ(seq.get_length(), 0);
-    EXPECT_THROW(seq.get(0), empty_container);
-    EXPECT_THROW(seq.get(10), empty_container);
+    EXPECT_THROW(seq.get(0), index_out_of_range);
+    EXPECT_THROW(seq.get(10), index_out_of_range);
     EXPECT_THROW(seq.get_first(), empty_container);
     EXPECT_THROW(seq.get_last(), empty_container);
-    EXPECT_THROW(seq.insert_at(1, 10), empty_container);
+    EXPECT_THROW(seq.insert_at(1, 10), index_out_of_range);
+    EXPECT_THROW(seq.set(1, 10), index_out_of_range);
+    
+    seq.append(3);
+
+    EXPECT_EQ(seq.get_length(), 32);
+    EXPECT_EQ(seq.get(0), 0);
+    EXPECT_EQ(seq.get(1), 0);
+    EXPECT_EQ(seq.get(2), 0);
+    EXPECT_EQ(seq.get(3), 0);
+    EXPECT_EQ(seq.get(4), 0);
+    EXPECT_EQ(seq.get(5), 0);
+    EXPECT_EQ(seq.get(6), 1);
+    EXPECT_EQ(seq.get(7), 1);
+    EXPECT_EQ(seq.get(8), 0);
+    EXPECT_EQ(seq.get(15), 0);
+    EXPECT_EQ(seq.get(24), 0);
+    EXPECT_EQ(seq.get(31), 0);
+    EXPECT_THROW(seq.get(32), index_out_of_range);
 
 }
+
+//im tired

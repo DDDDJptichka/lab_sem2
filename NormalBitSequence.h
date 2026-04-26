@@ -205,12 +205,7 @@ template <class T> class NormalBitSequence{
 
         int get(size_t index) const{
 
-            if (bit_count == 0){
-
-                throw empty_container("Sequence is empty");
-
-            }
-            else if (index >= bit_count){
+            if (index >= bit_count){
 
                 throw index_out_of_range("Index Out Of Range");
 
