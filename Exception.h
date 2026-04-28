@@ -44,3 +44,11 @@ class nullptr_argument : public exception{
         explicit nullptr_argument(const std::string &msg) : exception(msg){}
 
 };
+
+class not_usable : public exception{
+
+    public:
+
+        explicit not_usable(const std::string &msg) : exception(msg){}
+
+};

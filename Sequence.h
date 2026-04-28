@@ -15,7 +15,7 @@ template <class T> class Sequence{
         virtual Sequence<T> *insert_at(T item, int index) = 0;
         virtual Sequence<T> *get_sub_sequence(int start_index, int end_index) const = 0;
         virtual Sequence<T> *concat(Sequence<T> *sequence) const = 0;
-        
+
         T operator[](const int index) const{
 
             return get(index);

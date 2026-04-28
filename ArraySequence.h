@@ -285,4 +285,10 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         }
 
+        T& operator[](int index){
+
+            return (*array)[index];
+
+        }
+
 };

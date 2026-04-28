@@ -120,6 +120,18 @@ template <class T> class DynamicArray{
 
         }
 
+        T& operator[](int index){
+
+            if ((index < 0) || (index >= size)){
+
+                throw index_out_of_range("Index Out Of Range");
+
+            }
+
+            return data[index];
+
+        }
+
         DynamicArray<T> &operator=(const DynamicArray<T> &other){
 
             if (this == &other){

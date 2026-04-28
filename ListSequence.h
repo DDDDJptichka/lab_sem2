@@ -182,4 +182,10 @@ template <class T> class ListSequence : public Sequence<T>{
 
         }
 
+        T& operator[](int index){
+
+            return (*list)[index];
+
+        }
+
 };

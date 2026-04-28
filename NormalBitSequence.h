@@ -16,8 +16,8 @@ template <class T> class NormalBitSequence{
 
     private:
 
-        ArraySequence<T> *array;
-        size_t bit_count;
+        ArraySequence<T> array;
+        size_t bit_count = 0;
         size_t block_size = sizeof(T) * 8;
     
 
@@ -31,24 +31,24 @@ template <class T> class NormalBitSequence{
 
             if (bit_count % block_size == 0){
 
-                array->append(0);
+                array.append(0);
 
             }
 
-            curr = array->get(block);
+            curr = array.get(block);
 
-            if (bit == 1){
+            if (bit){
 
-                curr |= (T(1) << offset);
+                curr |= (static_cast<T>(1) << offset);
 
             }
             else{
 
-                curr &= ~(T(1) << offset);
+                curr &= ~(static_cast<T>(1) << offset);
 
             }
 
-            array->set(block, curr);
+            array.set(block, curr);
             ++bit_count;
 
         }
@@ -92,23 +92,12 @@ template <class T> class NormalBitSequence{
 
     public:
 
-        NormalBitSequence(){
+        NormalBitSequence() = default;
 
-            array = new ArraySequence<T>(0);
-            bit_count = 0;
-
-        }
-
-        NormalBitSequence(const NormalBitSequence<T> &another){
-
-            array = new ArraySequence<T>(*another.array);
-            bit_count = another.bit_count;
-
-        }
+        NormalBitSequence(const NormalBitSequence<T> &another) = default;
 
         template <class A> NormalBitSequence(A *items, int size){
 
-            array = new ArraySequence<T>(0);
             bit_count = 0;
 
             for (size_t i = 0; i < size; ++i){
@@ -121,7 +110,6 @@ template <class T> class NormalBitSequence{
 
         template <class A> NormalBitSequence(const Sequence<A> &seq){
 
-            array = new ArraySequence<T>(0);
             bit_count = 0;
 
             size_t seq_length = seq.get_length();
@@ -136,7 +124,6 @@ template <class T> class NormalBitSequence{
 
         template <class A> NormalBitSequence(const DynamicArray<A> &arr){
 
-            array = new ArraySequence<T>(0);
             bit_count = 0;
 
             size_t arr_size = arr.get_size();
@@ -151,7 +138,6 @@ template <class T> class NormalBitSequence{
 
         template <class A> NormalBitSequence(const LinkedList<A> &list){
 
-            array = new ArraySequence<T>(0);
             bit_count = 0;
 
             size_t list_size = list.get_length();
@@ -164,11 +150,7 @@ template <class T> class NormalBitSequence{
 
         }
  
-        ~NormalBitSequence(){
-
-            delete array;
-
-        }
+        ~NormalBitSequence(){}
 
         void set(bool bit, int index){
 
@@ -186,7 +168,7 @@ template <class T> class NormalBitSequence{
             
             size_t block_index = index / block_size;
             size_t offset = index % block_size;
-            T block = array->get(block_index);
+            T block = array.get(block_index);
 
             if (bit == 1){
 
@@ -199,7 +181,7 @@ template <class T> class NormalBitSequence{
 
             }
 
-            array->set(block_index, block);
+            array.set(block_index, block);
 
         }
 
@@ -216,7 +198,7 @@ template <class T> class NormalBitSequence{
             block = index / block_size;
             offset = index % block_size;
 
-            T curr = array->get(block);
+            T curr = array.get(block);
 
             return (curr >> offset) & T(1);
 
@@ -466,8 +448,7 @@ template <class T> class NormalBitSequence{
 
             }
 
-            delete array;
-            array = new ArraySequence<T>(*another.array);
+            array = another.array;
             bit_count = another.bit_count;
 
             return *this;
