@@ -8,13 +8,47 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->MethodTypeBox->addItems({"append", "prepend", "insert_at", "get", "get_first", "get_last", "get_length", "print", "get_sub_sequence", "concat"});
     ui->DataTypeBox->addItems({"double"});
 
-    create_sequence();
+    arr_seq = std::make_unique<ArraySequence<double>>();
+    list_seq = std::make_unique<ListSequence<double>>();
+    imm_arr_seq = std::make_unique<ImmutableArraySequence<double>>();
+    imm_list_seq = std::make_unique<ImmutableListSequence<double>>();
+
+    update_output(curr_seq());
 
 }
 
 MainWindow::~MainWindow(){
 
     delete ui;
+
+}
+
+Sequence<double> *MainWindow::curr_seq(){
+
+    QString seq_kind = ui->SequenceTypeBox->currentText();
+
+    if (seq_kind == "ArraySequence"){
+
+        return arr_seq.get();
+
+    }
+    else if (seq_kind == "ListSequence"){
+
+        return list_seq.get();
+
+    }
+    else if (seq_kind == "ImmutableArraySequence"){
+
+        return imm_arr_seq.get();
+
+    }
+    else if (seq_kind == "ImmutableListSequence"){
+
+        return imm_list_seq.get();
+
+    }
+
+    return nullptr;
 
 }
 
@@ -40,57 +74,62 @@ void MainWindow::update_output(const Sequence<double> *seqq) const{
 
 }
 
-void MainWindow::replace_sequence(Sequence<double> *res){
-
-    if (res != seq.get()){
-
-        seq.reset(res);
-
-    }
-
-}
-
-void MainWindow::create_sequence(){
+void MainWindow::replace_current_sequence(Sequence<double> *res){
 
     QString seq_kind = ui->SequenceTypeBox->currentText();
 
     if (seq_kind == "ArraySequence"){
 
-        seq = std::make_unique<ArraySequence<double>>();
+        if (res != arr_seq.get()){
+
+            arr_seq.reset(res);
+
+        }
 
     }
     else if (seq_kind == "ListSequence"){
 
-        seq = std::make_unique<ListSequence<double>>();
+        if (res != list_seq.get()){
+
+            list_seq.reset(res);
+
+        }
 
     }
     else if (seq_kind == "ImmutableArraySequence"){
 
-        seq = std::make_unique<ImmutableArraySequence<double>>();
+        if (res != imm_arr_seq.get()){
+
+            imm_arr_seq.reset(res);
+
+        }
 
     }
-    else if (seq_kind == "ImmutablelistSequence"){
+    else if (seq_kind == "ImmutableListSequence"){
 
-        seq = std::make_unique<ImmutableListSequence<double>>();
+        if (res != imm_list_seq.get()){
+
+            imm_list_seq.reset(res);
+
+        }
 
     }
-
-    update_output(seq.get());
 
 }
 
-void MainWindow::on_sequenceTypeBox_clicked(){
 
-    create_sequence();
+void MainWindow::on_sequenceTypeBox_clicked(int){
+
+    update_output(curr_seq());
 
 }
 
 void MainWindow::on_executeButton_clicked(){
 
+    Sequence<double> *seq = curr_seq();
+
     if (seq == nullptr){
-
         return;
-
     }
 
     QString method = ui->MethodTypeBox->currentText();
@@ -102,8 +141,8 @@ void MainWindow::on_executeButton_clicked(){
             double value = ui->valueEdit->text().toDouble();
             Sequence<double> *res = seq->append(value);
 
-            replace_sequence(res);
-            update_output(res);
+            replace_current_sequence(res);
+            update_output(curr_seq());
 
         }
         else if (method == "prepend"){
@@ -111,8 +150,8 @@ void MainWindow::on_executeButton_clicked(){
             double value = ui->valueEdit->text().toDouble();
             Sequence<double> *res = seq->prepend(value);
 
-            replace_sequence(res);
-            update_output(res);
+            replace_current_sequence(res);
+            update_output(curr_seq());
 
         }
         else if (method == "insert_at"){
@@ -121,8 +160,8 @@ void MainWindow::on_executeButton_clicked(){
             int index = ui->indexEdit->text().toInt();
             Sequence<double> *res = seq->insert_at(value, index);
 
-            replace_sequence(res);
-            update_output(res);
+            replace_current_sequence(res);
+            update_output(curr_seq());
 
         }
         else if (method == "get"){
@@ -147,7 +186,7 @@ void MainWindow::on_executeButton_clicked(){
             ui->OutputText->setText(QString::number(seq->get_length()));
 
         }
-        else if (method == "get_sub_seq"){
+        else if (method == "get_sub_sequence"){
 
             int start_index = ui->startEdit->text().toInt();
             int end_index = ui->endEdit->text().toInt();
@@ -176,14 +215,13 @@ void MainWindow::on_executeButton_clicked(){
             }
 
             Sequence<double> *res = seq->concat(other.get());
-            replace_sequence(res);
-
-            update_output(res);
+            replace_current_sequence(res);
+            update_output(curr_seq());
 
         }
         else if (method == "print"){
 
-            update_output(seq.get());
+            update_output(curr_seq());
 
         }
 
