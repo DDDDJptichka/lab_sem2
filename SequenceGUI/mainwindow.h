@@ -32,12 +32,13 @@ class MainWindow : public QMainWindow
         std::unique_ptr<Sequence<double>> imm_list_seq;
         Sequence<double> *curr_seq();
 
-        void update_output(const Sequence<double> *seqq) const;
+        void update_output(const Sequence<double> *seqq, QString *res_txt) const;
         void replace_current_sequence(Sequence<double> *res);
+        void add_history(const QString &operation);
 
     private slots:
 
-        void on_sequenceTypeBox_clicked(int index);
+        void on_SequenceTypeBox_clicked(int index);
         void on_executeButton_clicked();
 
     public:
