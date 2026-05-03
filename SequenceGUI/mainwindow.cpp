@@ -212,7 +212,7 @@ void MainWindow::on_executeButton_clicked(){
             int end_index = ui->endEdit->text().toInt();
 
             std::unique_ptr<Sequence<double>> res(seq->get_sub_sequence(start_index, end_index));
-            update_output(curr_seq(), nullptr);
+            update_output(res.get(), nullptr);
 
         }
         else if (method == "concat"){
