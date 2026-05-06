@@ -9,7 +9,7 @@ template <class T> class ImmutableArraySequence : public ArraySequence<T>{
 
         ImmutableArraySequence<T> *clone() const{
 
-            ImmutableArraySequence<T> *copy = new ImmutableArraySequence<T>(*(this->array));
+            ImmutableArraySequence<T> *copy = new ImmutableArraySequence<T>(this->array);
 
             return copy;
 
@@ -54,7 +54,7 @@ template <class T> class ImmutableArraySequence : public ArraySequence<T>{
 
             }
 
-            *this->array = *other.array;
+            this->array = other.array;
 
             return *this;
 
@@ -62,7 +62,7 @@ template <class T> class ImmutableArraySequence : public ArraySequence<T>{
 
         ImmutableArraySequence<T> operator+(const ImmutableArraySequence<T> &other) const{
 
-            ImmutableArraySequence<T> new_im_seq(*this->array + *other.array);
+            ImmutableArraySequence<T> new_im_seq(this->array + other.array);
 
             return new_im_seq;
 

@@ -9,7 +9,7 @@ template <class T> class ImmutableListSequence : public ListSequence<T>{
 
         ImmutableListSequence<T> *clone() const{
 
-            ImmutableListSequence<T> *copy = new ImmutableListSequence<T>(*(this->list));
+            ImmutableListSequence<T> *copy = new ImmutableListSequence<T>(this->list);
 
             return copy;
 
@@ -54,7 +54,7 @@ template <class T> class ImmutableListSequence : public ListSequence<T>{
 
             }
 
-            *this->list = *other.list;
+            this->list = other.list;
 
             return *this;
 
@@ -62,7 +62,7 @@ template <class T> class ImmutableListSequence : public ListSequence<T>{
 
         ImmutableListSequence<T> operator+(const ImmutableListSequence<T> &other) const{
 
-            ImmutableListSequence<T> new_im_seq(*this->list + *other.list);
+            ImmutableListSequence<T> new_im_seq(this->list + other.list);
 
             return new_im_seq;
 

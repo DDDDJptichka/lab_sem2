@@ -7,92 +7,65 @@ template <class T> class ListSequence : public Sequence<T>{
 
     protected:
 
-        LinkedList<T> *list;
+        LinkedList<T> list;
 
         void append_internal(T item){
 
-            this->list->append(item);
+            this->list.append(item);
 
         }
 
         void prepend_internal(T item){
 
-            this->list->prepend(item);
+            this->list.prepend(item);
 
         }
 
         void insert_at_internal(T item, int index){
 
-            this->list->insert_at(item, index);
+            this->list.insert_at(item, index);
 
         }
 
     public:
 
-        ListSequence(T *items, size_t count){
+        ListSequence(){}
 
-            list = new LinkedList<T>(items, count);
-
-        }
+        ListSequence(T *items, size_t count) : list(items, count){}
         
-        ListSequence(){
+        ListSequence(const LinkedList<T> &another_list) : list(another_list){}
 
-            list = new LinkedList<T>();
+        ListSequence(const ListSequence<T> &another) : list(another.list){}
 
-        }
-
-        ListSequence(const LinkedList<T> &another_list){
-
-            size_t size = another_list.get_length();
-            list = new LinkedList<T>();
-            
-            for (size_t i = 0; i < size; ++i){
-
-                list->append(another_list.get(i));
-
-            }
-
-        }
-
-        ListSequence(const ListSequence<T> &another){
-
-            list = new LinkedList<T>(*another.list);
-
-        }
-
-        ~ListSequence() override{
-
-            delete list;
-
-        }
+        ~ListSequence() override{}
 
         T get_first() const override{
 
-            return list->get_first();
+            return list.get_first();
 
         }
 
         T get_last() const override{
 
-            return list->get_last();
+            return list.get_last();
 
         }
 
         void set(int index, T item){
 
-            list->set(index, item);
+            list.set(index, item);
 
         }
 
         T get(int index) const override{
 
-            return list->get(index);
+            return list.get(index);
 
         }
 
         size_t get_length() const override{
 
-            return list->get_length();
+            return list.get_length();
 
         }
 
@@ -120,9 +93,9 @@ template <class T> class ListSequence : public Sequence<T>{
 
         }
 
-        Sequence<T> *get_sub_sequence(int start_index, int end_idnex) const override{
+        Sequence<T> *get_sub_sequence(int start_index, int end_index) const override{
 
-            LinkedList<T> *res_list = list->get_sub_list(start_index, end_idnex);
+            LinkedList<T> *res_list = list.get_sub_list(start_index, end_index);
             Sequence<T> *res_sequence = new ListSequence<T>(*res_list);
 
             delete res_list;
@@ -135,27 +108,24 @@ template <class T> class ListSequence : public Sequence<T>{
 
             if (sequence == nullptr){
 
-                Sequence<T> *res_sequence = new ListSequence<T>(*list);
+                Sequence<T> *res_sequence = new ListSequence<T>(list);
 
                 return res_sequence;
 
             }
 
-            LinkedList<T> *l_list = new LinkedList<T>();
+            LinkedList<T> l_list;
             size_t size = sequence->get_length();
 
             for (size_t i = 0; i < size ; ++i){
 
-                l_list->append(sequence->get(i));
+                l_list.append(sequence->get(i));
 
             }
 
-            LinkedList<T> *concatenated_list = list->concat(l_list);
+            LinkedList<T> *concatenated_list = list.concat(&l_list);
             Sequence<T> *res_sequence = new ListSequence<T>(*concatenated_list);
             
-            delete l_list;
-            delete concatenated_list;
-
             return res_sequence;
 
         }
@@ -168,7 +138,7 @@ template <class T> class ListSequence : public Sequence<T>{
 
             }
 
-            *list = *other.list;
+            list = other.list;
 
             return *this;
 
@@ -176,7 +146,7 @@ template <class T> class ListSequence : public Sequence<T>{
 
         ListSequence<T> operator+(const ListSequence<T> &other) const{
 
-            ListSequence<T> new_seq(*list + *other.list);
+            ListSequence<T> new_seq(list + other.list);
 
             return new_seq;
 
@@ -184,7 +154,13 @@ template <class T> class ListSequence : public Sequence<T>{
 
         T& operator[](int index){
 
-            return (*list)[index];
+            return list[index];
+
+        }
+
+        const T& operator[](int index) const{
+
+            return list[index];
 
         }
 

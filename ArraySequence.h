@@ -9,36 +9,34 @@ template <class T> class ArraySequence : public Sequence<T>{
 
     protected:
 
-        DynamicArray<T> *array;
+        DynamicArray<T> array;
 
         void append_internal(T item){
 
-            size_t size = array->get_size() + 1;
-            
-            array->resize(size);
-            array->set(size - 1, item);
+            size_t size = array.get_size() + 1;
+            array.resize(size);
+            array.set(size - 1, item);
 
         }
 
         void prepend_internal(T item){
 
-            size_t size = array->get_size() + 1;
-
-            array->resize(size);
+            size_t size = array.get_size() + 1;
+            array.resize(size);
 
             for (int i = size - 1; i > 0; --i){
 
-                array->set(i, array->get(i - 1));
+                array.set(i, array.get(i - 1));
 
             }
 
-            array->set(0, item);
+            array.set(0, item);
 
         }
 
         void insert_at_internal(T item, int index){
 
-            size_t size = array->get_size();
+            size_t size = array.get_size();
 
             if ((index < 0) || (index > size)){
 
@@ -62,114 +60,83 @@ template <class T> class ArraySequence : public Sequence<T>{
 
             }
 
-            array->resize(size + 1);
+            array.resize(size + 1);
 
             for (int i = size; i > index; --i){
 
-                array->set(i, array->get(i - 1));
+                array.set(i, array.get(i - 1));
 
             }
 
-            array->set(index, item);
+            array.set(index, item);
 
         }
 
     public:
 
-        ArraySequence(T *items, size_t count){
+        ArraySequence() : array(0){}
 
-            array = new DynamicArray<T>(items, count);
+        ArraySequence(size_t size) : array(size){}
 
-        }
+        ArraySequence(T *items, size_t count) : array(items, count){}
 
-        ArraySequence(){
+        ArraySequence(const DynamicArray<T> &arr) : array(arr){}
 
-            array = new DynamicArray<T>(0);
+        ArraySequence(const ArraySequence<T> &another) : array(another.array){}
 
-        }
-
-        ArraySequence(size_t size){
-
-            array = new DynamicArray<T>(size);
-
-        }
-
-        ArraySequence(const DynamicArray<T> &arr){
-
-            size_t arr_size = arr.get_size();
-            array = new DynamicArray<T>(arr_size);
-            
-            for (size_t i = 0; i < arr_size; ++i){
-
-                array->set(i, arr.get(i));
-
-            }
-
-        }
-
-        ArraySequence(const ArraySequence<T> &another){
-
-            array = new DynamicArray<T>(*another.array);
-
-        }
-
-        ~ArraySequence() override{
-
-            delete array;
-
-        }
+        ~ArraySequence() override{}
 
         void set(int index, T item){
 
-            if ((index < 0) || (index >= array->get_size())){
+            if ((index < 0) || (index >= array.get_size())){
 
                 throw index_out_of_range("Index Out Of Range");
 
             }
 
-            array->set(index, item);
+            array.set(index, item);
 
         }
 
         T get_first() const override{
 
-            if (array->get_size() == 0){
+            if (array.get_size() == 0){
 
                 throw empty_container("Array is empty!");
 
             }
 
-            return array->get(0);
+            return array.get(0);
 
         }
 
         T get_last() const override{
 
-            if (array->get_size() == 0){
+            if (array.get_size() == 0){
 
                 throw empty_container("Array is empty");
 
             }
 
-            return array->get(array->get_size() - 1);
+            return array.get(array.get_size() - 1);
 
         }
 
         T get(int index) const override{
 
-            if ((index < 0) || (index >= array->get_size())){
+            if ((index < 0) || (index >= array.get_size())){
 
                 throw index_out_of_range("index Out Of Range");
 
             }
 
-            return array->get(index);
+            return array.get(index);
 
         }
 
         size_t get_length() const override{
 
-            return array->get_size();
+            return array.get_size();
 
         }
 
@@ -199,7 +166,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         Sequence<T> *get_sub_sequence(int start_index, int end_index) const override{
 
-            size_t size = array->get_size();
+            size_t size = array.get_size();
 
             if ((start_index < 0) || (end_index < 0) || (start_index >= size) || (end_index >= size)){
 
@@ -207,13 +174,13 @@ template <class T> class ArraySequence : public Sequence<T>{
 
             }
 
-            T *items = new T[abs(start_index - end_index) + 1];
+            ArraySequence<T> items(abs(start_index - end_index) + 1);
 
             if (start_index <= end_index){
 
                 for (size_t i = start_index; i <= end_index; ++i){
 
-                    items[i - start_index] = array->get(i);
+                    items.set(i - start_index, array.get(i));
 
                 }
 
@@ -222,14 +189,13 @@ template <class T> class ArraySequence : public Sequence<T>{
 
                 for (int i = start_index; i >= end_index; --i){
 
-                    items[abs(start_index - i)] = array->get(i);
+                    items.set(abs(start_index - i), array.get(i));
 
                 }
 
             }
 
-            Sequence<T> *sub_sequence = new ArraySequence<T>(items, abs(end_index - start_index) + 1);
-            delete[] items;
+            Sequence<T> *sub_sequence = new ArraySequence<T>(items);
 
             return sub_sequence;
 
@@ -239,7 +205,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
             if (sequence == nullptr){
 
-                Sequence<T> *res_sequence = new ArraySequence<T>(*array);
+                Sequence<T> *res_sequence = new ArraySequence<T>(array);
 
                 return res_sequence;
 
@@ -248,7 +214,7 @@ template <class T> class ArraySequence : public Sequence<T>{
             size_t seq_size = sequence->get_length();
             size_t this_size = this->get_length();
 
-            DynamicArray<T> res_arr(*this->array);
+            DynamicArray<T> res_arr(array);
             res_arr.resize(this_size + seq_size);
 
             for (size_t i = 0; i < seq_size; ++i){
@@ -271,7 +237,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
             }
             
-            *array = *other.array;
+            array = other.array;
 
             return *this;
 
@@ -279,7 +245,7 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         ArraySequence<T> operator+(const ArraySequence<T> &other) const{
 
-            ArraySequence<T> new_seq(*array + *other.array);
+            ArraySequence<T> new_seq(array + other.array);
 
             return new_seq;
 
@@ -287,7 +253,13 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         T& operator[](int index){
 
-            return (*array)[index];
+            return array[index];
+
+        }
+
+        const T& operator[](int index) const{
+
+            return array[index];
 
         }
 

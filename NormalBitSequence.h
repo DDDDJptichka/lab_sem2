@@ -19,7 +19,7 @@ template <class T> class NormalBitSequence{
         ArraySequence<T> array;
         size_t bit_count = 0;
         size_t block_size = sizeof(T) * 8;
-    
+        
 
         void append_bit(const bool bit){
 

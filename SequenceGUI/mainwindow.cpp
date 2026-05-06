@@ -29,7 +29,8 @@ void MainWindow::add_history(const QString &operation){
     QString seq_type = ui->SequenceTypeBox->currentText();
 
     update_output(curr_seq(), &text);
-    ui->historyList->addItem(seq_type + " -> " + operation + " -> " + text);
+    ui->historyList->addItem(seq_type + " -> " + operation + " -> " + text);//todo: std::format("lkfmemfmef {}", "то, что хочу кинуть в строку")
+    //или через std::stringsrteam s; s << "psqks" << "kwpdmw"
 
 }
 
@@ -42,7 +43,7 @@ void MainWindow::update_output(const Sequence<double> *seqq, QString *res_txt) c
 
     }
 
-    QString text = "[ ";
+    QString text = "[";
 
     for (size_t i = 0; i < seqq->get_length(); ++i){
 
