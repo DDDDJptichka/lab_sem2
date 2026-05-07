@@ -1,6 +1,7 @@
 #pragma once
 
 #include <concepts>
+#include <type_traits>
 
 #include "DynamicArray.h"
 #include "LinkedList.h"
@@ -23,6 +24,12 @@ template <template <typename> class Container, typename T> requires MatrixContai
         Container<T> buffer;
         size_t diag_count = 0;
         size_t matrix_size = 0;
+
+        size_t get_buff_size(){
+
+            return matrix_size + ((matrix_size - 1) + (matrix_size - ((diag_count - 1) / 2))) * ((diag_count - 1) / 2);
+
+        }
 
     public:
 
@@ -60,4 +67,34 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
         }
     
+        void set(int index, T item){
+
+            buffer.set(index, item);
+
+        }
+
+        template <class A> requires requires(T t, A a){{t * a} -> std::convertible_to<T>;} void multiply_by_scalar(A scalar){
+            
+            size_t buff_size = get_buff_size();
+
+            for (size_t i = 0; i < buff_size; ++i){
+
+                buffer[i] = buffer[i] * scalar;
+
+            }
+
+        }
+
+        template <class A> requires requires(T t, A a){{t + a} -> std::convertible_to<T>;} void summary_with_scalar(A scalar){
+            
+            size_t buff_size = get_buff_size();
+
+            for (size_t i = 0; i < buff_size; ++i){
+
+                buffer[i] = buffer[i] + scalar;
+
+            }
+
+        }
+
 };

@@ -1038,3 +1038,23 @@ TEST(TestDiagonalMatrix, create_from_another){
     EXPECT_THROW(mamatrix.get(3), index_out_of_range);
 
 }
+
+TEST(TestDiagonalMatrix, check_methods){
+
+    int items[] = {1, 2, 3};
+
+    ArraySequence<int> seq(items, 3);
+    DiagonalMatrix<ArraySequence, int> matrix(seq, 3, 1);
+
+    matrix.set(0, 7);
+    matrix.multiply_by_scalar(2);
+    matrix.summary_with_scalar(1);
+
+    EXPECT_EQ(matrix.get(0), 15);
+    EXPECT_EQ(matrix.get(1), 5);
+    EXPECT_EQ(matrix.get(2), 7);
+
+    EXPECT_THROW(matrix.get(3), index_out_of_range);
+    EXPECT_THROW(matrix.get(-1), index_out_of_range);
+
+}
