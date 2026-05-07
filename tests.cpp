@@ -949,37 +949,39 @@ TEST(TestListSequence, check_operators){
 
 }
 
-TEST(TestDiagonalMatrix, create_from_arr){
+TEST(TestDiagonalMatrix, create_from_array_sequence){
 
-    int items[] = {1, 2, 3, 4};
-    DiagonalMatrix<int> matrix(items, 3, 1);
+    int items[] = {1, 2, 3};
+
+    ArraySequence<int> seq(items, 3);
+    DiagonalMatrix<ArraySequence, int> matrix(seq, 3, 1);
 
     EXPECT_EQ(matrix.get_diag_count(), 1);
     EXPECT_EQ(matrix.get_matrix_size(), 3);
-    
     EXPECT_EQ(matrix.get(0), 1);
     EXPECT_EQ(matrix.get(1), 2);
     EXPECT_EQ(matrix.get(2), 3);
-    EXPECT_THROW(matrix.get(-1), index_out_of_range);
+
     EXPECT_THROW(matrix.get(3), index_out_of_range);
+    EXPECT_THROW(matrix.get(-1), index_out_of_range);
 
 }
 
-TEST(TestDiagonalMatrix, create_from_seq){
+TEST(TestDiagonalMatrix, create_from_list_sequence){
 
-    ArraySequence<int> seq;
-    seq.append(1)->append(2)->append(3);
+    int items[] = {1, 2, 3};
 
-    DiagonalMatrix<int> matrix(seq, 3, 1);
+    ListSequence<int> list(items, 3);
+    DiagonalMatrix<ListSequence, int> matrix(list, 3, 1);
 
     EXPECT_EQ(matrix.get_diag_count(), 1);
     EXPECT_EQ(matrix.get_matrix_size(), 3);
-    
     EXPECT_EQ(matrix.get(0), 1);
     EXPECT_EQ(matrix.get(1), 2);
     EXPECT_EQ(matrix.get(2), 3);
-    EXPECT_THROW(matrix.get(-1), index_out_of_range);
+
     EXPECT_THROW(matrix.get(3), index_out_of_range);
+    EXPECT_THROW(matrix.get(-1), index_out_of_range);
 
 }
 
@@ -988,7 +990,7 @@ TEST(TestDiagonalMatrix, create_from_linked_list){
     int items[] = {1, 2, 3, 4};
     LinkedList<int> list(items, 3);
 
-    DiagonalMatrix<int> matrix(list, 3, 1);
+    DiagonalMatrix<LinkedList, int> matrix(list, 3, 1);
 
     EXPECT_EQ(matrix.get_diag_count(), 1);
     EXPECT_EQ(matrix.get_matrix_size(), 3);
@@ -1006,7 +1008,7 @@ TEST(TestDiagonalMatrix, create_from_dynamic_array){
     int items[] = {1, 2, 3, 4};
     DynamicArray<int> array(items, 3);
 
-    DiagonalMatrix<int> matrix(array, 3, 1);
+    DiagonalMatrix<DynamicArray, int> matrix(array, 3, 1);
 
     EXPECT_EQ(matrix.get_diag_count(), 1);
     EXPECT_EQ(matrix.get_matrix_size(), 3);
@@ -1022,8 +1024,9 @@ TEST(TestDiagonalMatrix, create_from_dynamic_array){
 TEST(TestDiagonalMatrix, create_from_another){
 
     int items[] = {1, 2, 3, 4};
-    DiagonalMatrix<int> matrix(items, 3, 1);
-    DiagonalMatrix<int> mamatrix(matrix);
+    ArraySequence<int> array(items, 3);
+    DiagonalMatrix<ArraySequence, int> matrix(array, 3, 1);
+    DiagonalMatrix<ArraySequence, int> mamatrix(matrix);
 
     EXPECT_EQ(mamatrix.get_diag_count(), 1);
     EXPECT_EQ(mamatrix.get_matrix_size(), 3);
