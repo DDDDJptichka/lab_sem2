@@ -1,5 +1,8 @@
 #pragma once
 
+#include <complex>
+#include <cmath>
+
 #include <algorithm>
 #include <concepts>
 #include <type_traits>
@@ -244,6 +247,25 @@ template <template <typename> class Container, typename T> requires MatrixContai
                 copy_to_container(new_buff, this_size, another_size);
 
             }
+
+        }
+
+        double frobenius_norm() const{
+
+            double res = 0;
+            size_t size = get_buff_size();
+            
+            for (size_t i = 0; i < size; ++i){
+
+                T item = buffer[i];
+                double re = std::real(item);
+                double im = std::imag(item);
+
+                res += re * re + im * im;
+
+            }
+
+            return std::sqrt(res);
 
         }
 
