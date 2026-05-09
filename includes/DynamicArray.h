@@ -120,7 +120,7 @@ template <class T> class DynamicArray{
 
         }
 
-        void append(T value){
+        void append(T value){//честое слово, я помню, что это нифига не оптимально, но мне пока не платят, увы.
 
             resize(size + 1);
             
