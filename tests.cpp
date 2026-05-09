@@ -1,10 +1,12 @@
 #include <cstdio>
 #include <iostream>
 
+#include <complex>
+#include <cmath>
+
 #include <gtest/gtest.h>
 
 #include "includes/Exception.h"
-
 #include "includes/DynamicArray.h"
 #include "includes/LinkedList.h"
 #include "includes/ArraySequence.h"
@@ -1042,10 +1044,8 @@ TEST(TestDiagonalMatrix, create_from_another){
 TEST(TestDiagonalMatrix, check_methods){
 
     int items[] = {1, 2, 3, 4, 5, 6, 7};
-    double double_items[] = {1.1, 2.2, 3.3};
 
     ArraySequence<int> seq(items, 7);
-    ArraySequence<double> double_seq(double_items, 3);
     DiagonalMatrix<ArraySequence, int> matrix(seq, 3, 1);
     DiagonalMatrix<ArraySequence, int> fuller(seq, 7, 3);
     DiagonalMatrix<ArraySequence, int> bigger(seq, 4, 1);
@@ -1090,6 +1090,77 @@ TEST(TestDiagonalMatrix, check_methods){
     EXPECT_EQ(matrix.get(1, 2), 2);
     EXPECT_EQ(matrix.get(1, 0), 6);
     EXPECT_EQ(matrix.get(2, 1), 7);
+    EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
+    EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
+
+}
+
+TEST(TestDiagonalMatrix, check_methods_for_complex){
+
+    std::complex<int> items[] = {{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1}, {7, 1}};
+
+    ArraySequence<std::complex<int>> seq(items, 7);
+    DiagonalMatrix<ArraySequence, std::complex<int>> matrix(seq, 3, 1);
+    DiagonalMatrix<ArraySequence, std::complex<int>> fuller(seq, 7, 3);
+    DiagonalMatrix<ArraySequence, std::complex<int>> bigger(seq, 4, 1);
+
+    matrix.set(0, 0, std::complex<int>(7, 1));
+    matrix.multiply_by_scalar(std::complex<int>(2, 0));
+    matrix.summary_with_scalar(std::complex<int>(1, 0));
+
+    EXPECT_EQ(matrix.get(0, 2).real(), 0);
+    EXPECT_EQ(matrix.get(0, 2).imag(), 0);
+    EXPECT_EQ(matrix.get(0, 0).real(), 15);
+    EXPECT_EQ(matrix.get(0, 0).imag(), 2);
+    EXPECT_EQ(matrix.get(1, 1).real(), 5);
+    EXPECT_EQ(matrix.get(1, 1).imag(), 2);
+    EXPECT_EQ(matrix.get(2, 2).real(), 7);
+    EXPECT_EQ(matrix.get(2, 2).imag(), 2);
+
+    EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
+    EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
+
+    matrix.summary_with_scalar(std::complex<int>(1.5, 1.5));
+    matrix.multiply_by_scalar(std::complex<int>(2.5, 2.5));
+
+    EXPECT_EQ(matrix.get(0, 0).real(), 26);
+    EXPECT_EQ(matrix.get(0, 0).imag(), 38);
+    EXPECT_EQ(matrix.get(1, 1).real(), 6);
+    EXPECT_EQ(matrix.get(1, 1).imag(), 18);
+    EXPECT_EQ(matrix.get(2, 2).real(), 10);
+    EXPECT_EQ(matrix.get(2, 2).imag(), 22);
+
+    EXPECT_THROW(matrix.summary_with_matrix(bigger), different_matrix_size);
+    
+    matrix.summary_with_matrix(matrix);
+
+    EXPECT_EQ(matrix.get(0, 0).real(), 52);
+    EXPECT_EQ(matrix.get(0, 0).imag(), 76);
+    EXPECT_EQ(matrix.get(1, 1).real(), 12);
+    EXPECT_EQ(matrix.get(1, 1).imag(), 36);
+    EXPECT_EQ(matrix.get(2, 2).real(), 20);
+    EXPECT_EQ(matrix.get(2, 2).imag(), 44);
+    EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
+    EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
+
+    matrix.summary_with_matrix(fuller);
+
+    EXPECT_EQ(matrix.get_diag_count(), 3);
+    EXPECT_EQ(matrix.get_matrix_size(), 3);
+    EXPECT_EQ(matrix.get(0, 0).real(), 55);
+    EXPECT_EQ(matrix.get(0, 0).imag(), 77);
+    EXPECT_EQ(matrix.get(1, 1).real(), 16);
+    EXPECT_EQ(matrix.get(1, 1).imag(), 37);
+    EXPECT_EQ(matrix.get(2, 2).real(), 25);
+    EXPECT_EQ(matrix.get(2, 2).imag(), 45);
+    EXPECT_EQ(matrix.get(0, 1).real(), 1);
+    EXPECT_EQ(matrix.get(0, 1).imag(), 1);
+    EXPECT_EQ(matrix.get(1, 2).real(), 2);
+    EXPECT_EQ(matrix.get(1, 2).imag(), 1);
+    EXPECT_EQ(matrix.get(1, 0).real(), 6);
+    EXPECT_EQ(matrix.get(1, 0).imag(), 1);
+    EXPECT_EQ(matrix.get(2, 1).real(), 7);
+    EXPECT_EQ(matrix.get(2, 1).imag(), 1);
     EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
 
