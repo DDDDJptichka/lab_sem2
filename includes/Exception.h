@@ -52,3 +52,11 @@ class not_usable : public exception{
         explicit not_usable(const std::string &msg) : exception(msg){}
 
 };
+
+class different_matrix_size : public exception{
+
+    public:
+
+        explicit different_matrix_size(const std::string &msg) : exception(msg){}
+
+};

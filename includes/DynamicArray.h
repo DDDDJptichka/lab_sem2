@@ -15,6 +15,8 @@ template <class T> class DynamicArray{
 
     public:
 
+        DynamicArray() : size(0), data(nullptr){}
+
         DynamicArray(T *items, size_t count){
 
             size = count;

@@ -958,12 +958,12 @@ TEST(TestDiagonalMatrix, create_from_array_sequence){
 
     EXPECT_EQ(matrix.get_diag_count(), 1);
     EXPECT_EQ(matrix.get_matrix_size(), 3);
-    EXPECT_EQ(matrix.get(0), 1);
-    EXPECT_EQ(matrix.get(1), 2);
-    EXPECT_EQ(matrix.get(2), 3);
+    EXPECT_EQ(matrix.get(0, 0), 1);
+    EXPECT_EQ(matrix.get(1, 1), 2);
+    EXPECT_EQ(matrix.get(2, 2), 3);
 
-    EXPECT_THROW(matrix.get(3), index_out_of_range);
-    EXPECT_THROW(matrix.get(-1), index_out_of_range);
+    EXPECT_THROW(matrix.get(3, 3), index_out_of_range);
+    EXPECT_THROW(matrix.get(-1, 3), index_out_of_range);
 
 }
 
@@ -976,12 +976,12 @@ TEST(TestDiagonalMatrix, create_from_list_sequence){
 
     EXPECT_EQ(matrix.get_diag_count(), 1);
     EXPECT_EQ(matrix.get_matrix_size(), 3);
-    EXPECT_EQ(matrix.get(0), 1);
-    EXPECT_EQ(matrix.get(1), 2);
-    EXPECT_EQ(matrix.get(2), 3);
+    EXPECT_EQ(matrix.get(0, 0), 1);
+    EXPECT_EQ(matrix.get(1, 1), 2);
+    EXPECT_EQ(matrix.get(2, 2), 3);
 
-    EXPECT_THROW(matrix.get(3), index_out_of_range);
-    EXPECT_THROW(matrix.get(-1), index_out_of_range);
+    EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
+    EXPECT_THROW(matrix.get(-1, 1), index_out_of_range);
 
 }
 
@@ -995,11 +995,11 @@ TEST(TestDiagonalMatrix, create_from_linked_list){
     EXPECT_EQ(matrix.get_diag_count(), 1);
     EXPECT_EQ(matrix.get_matrix_size(), 3);
     
-    EXPECT_EQ(matrix.get(0), 1);
-    EXPECT_EQ(matrix.get(1), 2);
-    EXPECT_EQ(matrix.get(2), 3);
-    EXPECT_THROW(matrix.get(-1), index_out_of_range);
-    EXPECT_THROW(matrix.get(3), index_out_of_range);
+    EXPECT_EQ(matrix.get(0, 0), 1);
+    EXPECT_EQ(matrix.get(1, 1), 2);
+    EXPECT_EQ(matrix.get(2, 2), 3);
+    EXPECT_THROW(matrix.get(-1, 1), index_out_of_range);
+    EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
 
 }
 
@@ -1013,11 +1013,11 @@ TEST(TestDiagonalMatrix, create_from_dynamic_array){
     EXPECT_EQ(matrix.get_diag_count(), 1);
     EXPECT_EQ(matrix.get_matrix_size(), 3);
     
-    EXPECT_EQ(matrix.get(0), 1);
-    EXPECT_EQ(matrix.get(1), 2);
-    EXPECT_EQ(matrix.get(2), 3);
-    EXPECT_THROW(matrix.get(-1), index_out_of_range);
-    EXPECT_THROW(matrix.get(3), index_out_of_range);
+    EXPECT_EQ(matrix.get(0, 0), 1);
+    EXPECT_EQ(matrix.get(1, 1), 2);
+    EXPECT_EQ(matrix.get(2, 2), 3);
+    EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
+    EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
 
 }
 
@@ -1031,30 +1031,66 @@ TEST(TestDiagonalMatrix, create_from_another){
     EXPECT_EQ(mamatrix.get_diag_count(), 1);
     EXPECT_EQ(mamatrix.get_matrix_size(), 3);
     
-    EXPECT_EQ(mamatrix.get(0), 1);
-    EXPECT_EQ(mamatrix.get(1), 2);
-    EXPECT_EQ(mamatrix.get(2), 3);
-    EXPECT_THROW(mamatrix.get(-1), index_out_of_range);
-    EXPECT_THROW(mamatrix.get(3), index_out_of_range);
+    EXPECT_EQ(mamatrix.get(0, 0), 1);
+    EXPECT_EQ(mamatrix.get(1, 1), 2);
+    EXPECT_EQ(mamatrix.get(2, 2), 3);
+    EXPECT_THROW(mamatrix.get(-1, 0), index_out_of_range);
+    EXPECT_THROW(mamatrix.get(3, 0), index_out_of_range);
 
 }
 
 TEST(TestDiagonalMatrix, check_methods){
 
-    int items[] = {1, 2, 3};
+    int items[] = {1, 2, 3, 4, 5, 6, 7};
+    double double_items[] = {1.1, 2.2, 3.3};
 
-    ArraySequence<int> seq(items, 3);
+    ArraySequence<int> seq(items, 7);
+    ArraySequence<double> double_seq(double_items, 3);
     DiagonalMatrix<ArraySequence, int> matrix(seq, 3, 1);
+    DiagonalMatrix<ArraySequence, int> fuller(seq, 7, 3);
+    DiagonalMatrix<ArraySequence, int> bigger(seq, 4, 1);
 
-    matrix.set(0, 7);
+    matrix.set(0, 0, 7);
     matrix.multiply_by_scalar(2);
     matrix.summary_with_scalar(1);
 
-    EXPECT_EQ(matrix.get(0), 15);
-    EXPECT_EQ(matrix.get(1), 5);
-    EXPECT_EQ(matrix.get(2), 7);
+    EXPECT_EQ(matrix.get(0, 2), 0);
+    EXPECT_EQ(matrix.get(0, 0), 15);
+    EXPECT_EQ(matrix.get(1, 1), 5);
+    EXPECT_EQ(matrix.get(2, 2), 7);
 
-    EXPECT_THROW(matrix.get(3), index_out_of_range);
-    EXPECT_THROW(matrix.get(-1), index_out_of_range);
+    EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
+    EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
+
+    matrix.summary_with_scalar(1.5);
+    matrix.multiply_by_scalar(2.5);
+
+    EXPECT_EQ(matrix.get(0, 0), (int)((int)(15 + 1.5) * 2.5));
+    EXPECT_EQ(matrix.get(1, 1), (int)((int)(5 + 1.5) * 2.5));
+    EXPECT_EQ(matrix.get(2, 2), (int)((int)(7 + 1.5) * 2.5));
+
+    EXPECT_THROW(matrix.summary_with_matrix(bigger), different_matrix_size);
+    
+    matrix.summary_with_matrix(matrix);
+
+    EXPECT_EQ(matrix.get(0, 0), 80);
+    EXPECT_EQ(matrix.get(1, 1), 30);
+    EXPECT_EQ(matrix.get(2, 2), 40);
+    EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
+    EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
+
+    matrix.summary_with_matrix(fuller);
+
+    EXPECT_EQ(matrix.get_diag_count(), 3);
+    EXPECT_EQ(matrix.get_matrix_size(), 3);
+    EXPECT_EQ(matrix.get(0, 0), 83);
+    EXPECT_EQ(matrix.get(1, 1), 34);
+    EXPECT_EQ(matrix.get(2, 2), 45);
+    EXPECT_EQ(matrix.get(0, 1), 1);
+    EXPECT_EQ(matrix.get(1, 2), 2);
+    EXPECT_EQ(matrix.get(1, 0), 6);
+    EXPECT_EQ(matrix.get(2, 1), 7);
+    EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
+    EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
 
 }
