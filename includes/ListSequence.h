@@ -57,7 +57,13 @@ template <class T> class ListSequence : public Sequence<T>{
 
         }
 
-        T get(int index) const override{
+        T& get(int index) override{
+
+            return list.get(index);
+
+        }
+
+        const T& get(int index) const{
 
             return list.get(index);
 
@@ -154,13 +160,13 @@ template <class T> class ListSequence : public Sequence<T>{
 
         T& operator[](int index){
 
-            return list[index];
+            return get(index);
 
         }
 
         const T& operator[](int index) const{
 
-            return list[index];
+            return get(index);
 
         }
 

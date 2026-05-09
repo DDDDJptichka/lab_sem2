@@ -54,7 +54,19 @@ template <class T> class DynamicArray{
 
         }
 
-        T get(int index) const{
+        T& get(int index){
+
+            if ((index < 0) || (index >= size)){
+
+                throw index_out_of_range("Index Out Of Range");
+
+            }
+
+            return data[index];
+
+        }
+
+        const T& get(int index) const{
 
             if ((index < 0) || (index >= size)){
 
@@ -114,21 +126,15 @@ template <class T> class DynamicArray{
 
         }
 
-        T operator[](const int index) const{
+        T& operator[](const int index){
 
             return get(index);
 
         }
 
-        T& operator[](int index){
+        const T& operator[](int index) const{
 
-            if ((index < 0) || (index >= size)){
-
-                throw index_out_of_range("Index Out Of Range");
-
-            }
-
-            return data[index];
+            return get(index);
 
         }
 

@@ -111,7 +111,30 @@ template <class T> class LinkedList{
 
         }
 
-        T get(int index) const{
+        T& get(int index){
+
+            if ((index < 0) || (index >= size)){
+
+                throw index_out_of_range("Index Out Of Range");
+
+            }
+            
+
+            size_t curr_ind = 0;
+            Node *curr_node = head.get();
+
+            while (curr_ind != index){
+
+                curr_node = curr_node->next.get();
+                ++curr_ind;
+
+            }
+
+            return curr_node->data;
+
+        }
+
+        const T& get(int index) const{
 
             if ((index < 0) || (index >= size)){
 
@@ -321,29 +344,15 @@ template <class T> class LinkedList{
 
         }
 
-        T operator[](const int index) const{
+        T& operator[](const int index){
 
             return get(index);
 
         }
 
-        T& operator[](int index){
+        const T& operator[](int index) const{
 
-            if ((index < 0) || (index >= size)){
-
-                throw index_out_of_range("Index Out Of Range");
-
-            }
-
-            Node *curr_node = head.get();
-
-            for (size_t i = 0; i < index; ++i){
-
-                curr_node = curr_node->next.get();
-
-            }
-
-            return curr_node->data;
+            return get(index);
 
         }
 

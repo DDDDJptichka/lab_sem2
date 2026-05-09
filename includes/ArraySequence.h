@@ -122,7 +122,19 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         }
 
-        T get(int index) const override{
+        T& get(int index) override{
+
+            if ((index < 0) || (index >= array.get_size())){
+
+                throw index_out_of_range("index Out Of Range");
+
+            }
+
+            return array.get(index);
+
+        }
+    
+        const T& get(int index) const{
 
             if ((index < 0) || (index >= array.get_size())){
 
@@ -253,13 +265,13 @@ template <class T> class ArraySequence : public Sequence<T>{
 
         T& operator[](int index){
 
-            return array[index];
+            return get(index);
 
         }
 
         const T& operator[](int index) const{
 
-            return array[index];
+            return get(index);
 
         }
 
