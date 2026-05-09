@@ -92,6 +92,65 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
     public:
 
+        class Iterator{
+
+            private:
+
+                const DiagonalMatrix &matrix;
+                size_t row_index;
+                size_t column_index;
+
+            public:
+
+                Iterator(const DiagonalMatrix &mat, size_t row_ind, size_t column_ind) : matrix(mat), row_index(row_ind), column_index(column_ind){}
+
+                T operator*() const{
+
+                    return matrix.get(row_index, column_index);
+
+                }
+
+                Iterator& operator++(){
+
+                    if (column_index + 1 < matrix.get_matrix_size()){
+
+                        ++column_index;
+
+                    }
+                    else{
+
+                        column_index = 0;
+                        ++row_index;
+
+                    }
+
+                    return *this;
+
+                }
+
+                Iterator operator++(int){
+
+                    Iterator res = *this;
+                    ++(*this);
+                    
+                    return res;
+
+                }
+
+                bool operator==(const Iterator &another) const{
+
+                    return ((row_index == another.row_index) && (column_index == another.column_index));
+
+                }
+
+                bool operator!=(const Iterator &another) const{
+
+                    return !(*this == another);
+
+                }
+
+        };
+
         DiagonalMatrix(){}
 
         DiagonalMatrix(const Container<T> &container, size_t count, size_t d_count) :
@@ -266,6 +325,18 @@ template <template <typename> class Container, typename T> requires MatrixContai
             }
 
             return std::sqrt(res);
+
+        }
+
+        Iterator begin() const{
+
+            return Iterator(*this, 0, 0);
+
+        }
+
+        Iterator end() const{
+
+            return Iterator(*this, get_matrix_size(), 0);
 
         }
 
