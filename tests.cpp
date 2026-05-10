@@ -1060,6 +1060,22 @@ TEST(TestDiagonalMatrix, check_methods){
     EXPECT_EQ(matrix.get(2, 2), 7);
     EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(299.0));
 
+    ArraySequence<int> res(0);
+    ArraySequence<int> curr(0);
+    res.append(15)->append(0)->append(0)->append(0)->append(5)->append(0)->append(0)->append(0)->append(7);
+    
+    for (auto item : matrix){
+
+        curr.append(item);
+
+    }
+
+    for (size_t i = 0; i < 9; ++i){
+
+        EXPECT_EQ(res[i], curr[i]);
+
+    }
+
     EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
 
@@ -1121,6 +1137,22 @@ TEST(TestDiagonalMatrix, check_methods_for_complex){
     EXPECT_EQ(matrix.get(2, 2).real(), 7);
     EXPECT_EQ(matrix.get(2, 2).imag(), 2);
     EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(311.0));
+
+    ArraySequence<std::complex<int>> res(0);
+    ArraySequence<std::complex<int>> curr(0);
+    res.append({15, 2})->append(0)->append(0)->append(0)->append({5, 2})->append(0)->append(0)->append(0)->append({7, 2});
+    
+    for (auto item : matrix){
+
+        curr.append(item);
+
+    }
+
+    for (size_t i = 0; i < 9; ++i){
+
+        EXPECT_EQ(res[i], curr[i]);
+
+    }
 
     EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
