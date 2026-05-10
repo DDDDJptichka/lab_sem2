@@ -14,6 +14,8 @@
 #include "includes/Sequence.h"
 #include "includes/DiagonalMatrix.h"
 
+#include "includes/LazyOperations.h"
+
 TEST(TestDynamicArray, size_create){
 
     DynamicArray<int> arr(4);
@@ -1203,5 +1205,47 @@ TEST(TestDiagonalMatrix, check_methods_for_complex){
     EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(13323.0));
     EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
+
+}
+
+TEST(TestLazyOperations, lazy_map){
+
+    int items[] = {1, 2, 3, 4, 5, 6, 7};
+    ArraySequence<int> cocont(items, 7);
+
+    DynamicArray<int> cont1(items, 3);
+    LinkedList<int> cont2(items, 4);
+    ArraySequence<int> cont3(items, 5);
+    ListSequence<int> cont4(items, 6);
+    DiagonalMatrix<ArraySequence, int> cont5(cocont, 7, 3);
+
+    auto arr_squares = map(cont1, [](int a){return a * a;});
+    auto list_squares = map(cont2, [](int a){return a * a;});
+    auto arr_seq_squares = map(cont3, [](int a){return a * a;});
+    auto list_seq_squares = map(cont4, [](int a){return a * a;});
+    auto matrix_squares = map(cont5, [](int a){return a * a;});
+
+    DynamicArray<int> expected(items, 3);
+
+    for (auto &item : expected){
+
+        item = item * item;
+
+    }
+
+    EXPECT_TRUE(std::equal(arr_squares.begin(), arr_squares.end(), expected.begin()));
+
+    expected.append(16);
+    EXPECT_TRUE(std::equal(list_squares.begin(), list_squares.end(), expected.begin()));
+
+    expected.append(25);
+    EXPECT_TRUE(std::equal(arr_seq_squares.begin(), arr_seq_squares.end(), expected.begin()));
+    
+    expected.append(36);
+    EXPECT_TRUE(std::equal(list_seq_squares.begin(), list_seq_squares.end(), expected.begin()));
+
+    expected.append(49);
+    DiagonalMatrix<DynamicArray, int> matrix_expected(expected, 7, 3);
+    EXPECT_TRUE(std::equal(matrix_squares.begin(), matrix_squares.end(), matrix_expected.begin()));
 
 }
