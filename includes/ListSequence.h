@@ -29,6 +29,16 @@ template <class T> class ListSequence : public Sequence<T>{
 
     public:
 
+        using Iterator = typename LinkedList<T>::Iterator;
+        using CIterator = typename LinkedList<T>::CIterator;
+
+        Iterator begin(){return list.begin();}
+        Iterator end(){return list.end();}
+        CIterator begin() const{return list.begin();}
+        CIterator end() const{return list.end();}
+        CIterator cbegin() const{return list.cbegin();}
+        CIterator cend() const{return list.cend();}
+
         ListSequence(){}
 
         ListSequence(T *items, size_t count) : list(items, count){}

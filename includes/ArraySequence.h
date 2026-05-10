@@ -74,6 +74,16 @@ template <class T> class ArraySequence : public Sequence<T>{
 
     public:
 
+        using Iterator = typename DynamicArray<T>::Iterator;
+        using CIterator = typename DynamicArray<T>::CIterator;
+
+        Iterator begin(){return array.begin();}
+        Iterator end(){return array.end();}
+        CIterator begin() const{return array.begin();}
+        CIterator end() const{return array.end();}
+        CIterator cbegin() const{return array.cbegin();}
+        CIterator cend() const{return array.cend();}
+
         ArraySequence() : array(0){}
 
         ArraySequence(size_t size) : array(size){}
