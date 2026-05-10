@@ -24,6 +24,113 @@ template <class T> class LinkedList{
 
     public:
 
+        class Iterator{
+
+            private:
+
+                Node *node;
+
+            public:
+
+                Iterator(Node *curr) : node(curr){}
+
+                T& operator*() const{
+
+                    return node->data;
+
+                }
+                
+                T* operator->() const{
+
+                    return &(node->data);
+
+                }
+
+                Iterator& operator++(){
+
+                    node = node->next.get();
+
+                    return *this;
+
+                }
+
+                Iterator operator++(int){
+
+                    Iterator res = *this;
+                    ++(*this);
+
+                    return res;
+
+                }
+
+                bool operator==(const Iterator &another) const{
+
+                    return node == another.node;
+
+                }
+
+                bool operator!=(const Iterator &another) const{
+
+                    return !(*this == another);
+
+                }
+
+        };
+
+        class CIterator{
+
+            private:
+
+                const Node *node;
+
+            public:
+
+                CIterator(const Node *curr) : node(curr){}
+                CIterator(const Iterator &iter) : node(iter.operator->()){}
+
+                const T& operator*() const{
+
+                    return node->data;
+
+                }
+                
+                const T* operator->() const{
+
+                    return &(node->data);
+
+                }
+
+                CIterator& operator++(){
+
+                    node = node->next.get();
+
+                    return *this;
+
+                }
+
+                CIterator operator++(int){
+
+                    CIterator res = *this;
+                    ++(*this);
+
+                    return res;
+
+                }
+
+                bool operator==(const CIterator &another) const{
+
+                    return node == another.node;
+
+                }
+
+                bool operator!=(const CIterator &another) const{
+
+                    return !(*this == another);
+
+                }
+
+        };
+
         LinkedList(T *items, size_t count){
 
             head = nullptr;
