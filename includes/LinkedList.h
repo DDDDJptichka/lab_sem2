@@ -131,6 +131,13 @@ template <class T> class LinkedList{
 
         };
 
+        Iterator begin(){return Iterator(head.get());}
+        Iterator end(){return Iterator(nullptr);}
+        CIterator begin() const{return CIterator(head.get());}
+        CIterator end() const{return CIterator(nullptr);}
+        CIterator cbegin() const{return CIterator(head.get());}
+        CIterator cend() const{return CIterator(nullptr);}
+
         LinkedList(T *items, size_t count){
 
             head = nullptr;
