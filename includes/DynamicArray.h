@@ -15,6 +15,16 @@ template <class T> class DynamicArray{
 
     public:
 
+        using Iterator = T*;
+        using CIterator = const T*;
+
+        Iterator begin(){return data;}
+        Iterator end(){return data + size;}
+        CIterator begin() const{return data;}
+        CIterator end() const{return data + size;}
+        CIterator cbegin() const{return data;}
+        CIterator cend() const{return data + size;}
+
         DynamicArray() : size(0), data(nullptr){}
 
         DynamicArray(T *items, size_t count){
