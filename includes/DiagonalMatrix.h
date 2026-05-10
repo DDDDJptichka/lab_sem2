@@ -92,7 +92,7 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
     public:
 
-        class Iterator{
+        class MatrixCIterator{
 
             private:
 
@@ -102,7 +102,7 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
             public:
 
-                Iterator(const DiagonalMatrix &mat, size_t row_ind, size_t column_ind) : matrix(mat), row_index(row_ind), column_index(column_ind){}
+                MatrixCIterator(const DiagonalMatrix &mat, size_t row_ind, size_t column_ind) : matrix(mat), row_index(row_ind), column_index(column_ind){}
 
                 T operator*() const{
 
@@ -110,7 +110,7 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
                 }
 
-                Iterator& operator++(){
+                MatrixCIterator& operator++(){
 
                     if (column_index + 1 < matrix.get_matrix_size()){
 
@@ -128,28 +128,31 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
                 }
 
-                Iterator operator++(int){
+                MatrixCIterator operator++(int){
 
-                    Iterator res = *this;
+                    MatrixCIterator res = *this;
                     ++(*this);
                     
                     return res;
 
                 }
 
-                bool operator==(const Iterator &another) const{
+                bool operator==(const MatrixCIterator &another) const{
 
                     return ((row_index == another.row_index) && (column_index == another.column_index));
 
                 }
 
-                bool operator!=(const Iterator &another) const{
+                bool operator!=(const MatrixCIterator &another) const{
 
                     return !(*this == another);
 
                 }
 
         };
+
+        MatrixCIterator begin() const{return MatrixCIterator(*this, 0, 0);}
+        MatrixCIterator end() const{return MatrixCIterator(*this, get_matrix_size(), 0);}
 
         DiagonalMatrix(){}
 
@@ -325,18 +328,6 @@ template <template <typename> class Container, typename T> requires MatrixContai
             }
 
             return std::sqrt(res);
-
-        }
-
-        Iterator begin() const{
-
-            return Iterator(*this, 0, 0);
-
-        }
-
-        Iterator end() const{
-
-            return Iterator(*this, get_matrix_size(), 0);
 
         }
 
