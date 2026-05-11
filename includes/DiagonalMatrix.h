@@ -17,7 +17,6 @@ template <template <typename> class Container, typename T> concept MatrixContain
     {c.get(i)} -> std::convertible_to<T>;
     c.append(value);
     c[i];
-    requires(requires {c.get_length();} || requires {c.get_size();});
 
 };
 

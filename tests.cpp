@@ -1219,7 +1219,7 @@ TEST(TestLazyOperations, lazy_map){
     ListSequence<int> cont4(items, 6);
     DiagonalMatrix<ArraySequence, int> cont5(cocont, 7, 3);
 
-    auto arr_squares = map(cont1, [](int a){return a * a;});
+    auto arr_squares = map(map(map(map(cont1, [](int a){return a * a;}), [](int a){return a;}), [](int a){return a - 10;}), [](int a){return a + 10;});
     auto list_squares = map(cont2, [](int a){return a * a;});
     auto arr_seq_squares = map(cont3, [](int a){return a * a;});
     auto list_seq_squares = map(cont4, [](int a){return a * a;});
@@ -1247,5 +1247,52 @@ TEST(TestLazyOperations, lazy_map){
     expected.append(49);
     DiagonalMatrix<DynamicArray, int> matrix_expected(expected, 7, 3);
     EXPECT_TRUE(std::equal(matrix_squares.begin(), matrix_squares.end(), matrix_expected.begin()));
+
+}
+
+TEST(TestLazyOperations, lazy_where_reduce){
+
+    int items[] = {1, 2, 3, 4, 5, 6, 7};
+    ArraySequence<int> cocont(items, 1);
+    cocont.append(3)->append(5)->append(7);
+
+    DynamicArray<int> cont1(items, 3);
+    LinkedList<int> cont2(items, 4);
+    ArraySequence<int> cont3(items, 5);
+    ListSequence<int> cont4(items, 6);
+    DiagonalMatrix<ArraySequence, int> cont5(cocont, 4, 1);
+
+    auto arr_squares = where(cont1, [](int a){return (a % 2 == 1);});
+    auto list_squares = where(cont2, [](int a){return (a % 2 == 1);});
+    auto arr_seq_squares = where(cont3, [](int a){return (a % 2 == 1);});
+    auto list_seq_squares = where(cont4, [](int a){return (a % 2 == 1);});
+    auto matrix_squares = where(cont5, [](int a){return (a % 2 == 1);});
+
+    DynamicArray<int> expected(items, 1);
+
+    expected.append(3);
+    EXPECT_TRUE(std::equal(arr_squares.begin(), arr_squares.end(), expected.begin()));
+
+    EXPECT_TRUE(std::equal(list_squares.begin(), list_squares.end(), expected.begin()));
+
+    expected.append(5);
+    EXPECT_TRUE(std::equal(arr_seq_squares.begin(), arr_seq_squares.end(), expected.begin()));
+    
+    EXPECT_TRUE(std::equal(list_seq_squares.begin(), list_seq_squares.end(), expected.begin()));
+
+    expected.append(7);
+    EXPECT_TRUE(std::equal(matrix_squares.begin(), matrix_squares.end(), expected.begin()));
+
+    auto res_1 = reduce(arr_squares, [](int a, int c){return a * a + c;}, 2);
+    auto res_2 = reduce(list_squares, [](int a, int c){return a * a + c;}, 2);
+    auto res_3 = reduce(arr_seq_squares, [](int a, int c){return a * a + c;}, 2);
+    auto res_4 = reduce(list_seq_squares, [](int a, int c){return a * a + c;}, 2);
+    auto res_5 = reduce(matrix_squares, [](int a, int c){return a * a + c;}, 2);
+
+    EXPECT_EQ(res_1, (1 * 1 + 2) * (1 * 1 + 2) + 3);
+    EXPECT_EQ(res_2, ((1 * 1 + 2) * (1 * 1 + 2) + 3));
+    EXPECT_EQ(res_3, ((1 * 1 + 2) * (1 * 1 + 2) + 3) * ((1 * 1 + 2) * (1 * 1 + 2) + 3) + 5);
+    EXPECT_EQ(res_4, ((1 * 1 + 2) * (1 * 1 + 2) + 3) * ((1 * 1 + 2) * (1 * 1 + 2) + 3) + 5);
+    EXPECT_EQ(res_5, (((1 * 1 + 2) * (1 * 1 + 2) + 3) * ((1 * 1 + 2) * (1 * 1 + 2) + 3) + 5) * (((1 * 1 + 2) * (1 * 1 + 2) + 3) * ((1 * 1 + 2) * (1 * 1 + 2) + 3) + 5) + 7);
 
 }
