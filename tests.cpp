@@ -1250,7 +1250,7 @@ TEST(TestLazyOperations, lazy_map){
 
 }
 
-TEST(TestLazyOperations, lazy_where_reduce){
+TEST(TestLazyOperations, lazy_where_reduce_composition){
 
     int items[] = {1, 2, 3, 4, 5, 6, 7};
     ArraySequence<int> cocont(items, 1);
@@ -1294,5 +1294,19 @@ TEST(TestLazyOperations, lazy_where_reduce){
     EXPECT_EQ(res_3, ((1 * 1 + 2) * (1 * 1 + 2) + 3) * ((1 * 1 + 2) * (1 * 1 + 2) + 3) + 5);
     EXPECT_EQ(res_4, ((1 * 1 + 2) * (1 * 1 + 2) + 3) * ((1 * 1 + 2) * (1 * 1 + 2) + 3) + 5);
     EXPECT_EQ(res_5, (((1 * 1 + 2) * (1 * 1 + 2) + 3) * ((1 * 1 + 2) * (1 * 1 + 2) + 3) + 5) * (((1 * 1 + 2) * (1 * 1 + 2) + 3) * ((1 * 1 + 2) * (1 * 1 + 2) + 3) + 5) + 7);
+
+    DiagonalMatrix<ArraySequence, int> cont6(cocont, 2, 1);
+
+    auto res_6 = reduce(where(map(cont1, [](int a){return a + 1;}), [](int a){return a % 2 == 1;}), [](int a, int c){return a * a + c;}, 2);
+    auto res_7 = reduce(where(map(cont2, [](int a){return a + 1;}), [](int a){return a % 2 == 1;}), [](int a, int c){return a * a + c;}, 2);
+    auto res_8 = reduce(where(map(cont3, [](int a){return a + 1;}), [](int a){return a % 2 == 1;}), [](int a, int c){return a * a + c;}, 2);
+    auto res_9 = reduce(where(map(cont4, [](int a){return a + 1;}), [](int a){return a % 2 == 1;}), [](int a, int c){return a * a + c;}, 2);
+    auto res_10 = reduce(where(map(cont6, [](auto a){return a + 1;}), [](auto a){return a % 2 == 1;}), [](auto a, auto c){return a * a + c;}, 2);
+
+    EXPECT_EQ(res_6, 3 * 3 + 2);
+    EXPECT_EQ(res_7, ((3 * 3 + 2) * (3 * 3 + 2) + 5));
+    EXPECT_EQ(res_8, ((3 * 3 + 2) * (3 * 3 + 2) + 5));
+    EXPECT_EQ(res_9, ((3 * 3 + 2) * (3 * 3 + 2) + 5) * ((3 * 3 + 2) * (3 * 3 + 2) + 5) + 7);
+    EXPECT_EQ(res_10, (1 * 1 + 2) * (1 * 1 + 2) + 1);
 
 }
