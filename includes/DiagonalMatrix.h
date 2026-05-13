@@ -7,9 +7,6 @@
 #include <concepts>
 #include <type_traits>
 
-#include "DynamicArray.h"
-#include "LinkedList.h"
-#include "ArraySequence.h"
 #include "Exception.h"
 
 template <template <typename> class Container, typename T> concept MatrixContainer = requires(Container<T> c, T value, int i){
@@ -314,13 +311,11 @@ template <template <typename> class Container, typename T> requires MatrixContai
         double frobenius_norm() const{
 
             double res = 0;
-            size_t size = get_buff_size();
             
-            for (size_t i = 0; i < size; ++i){
+            for (auto itemm : buffer){
 
-                T item = buffer[i];
-                double re = std::real(item);
-                double im = std::imag(item);
+                double re = std::real(itemm);
+                double im = std::imag(itemm);
 
                 res += re * re + im * im;
 

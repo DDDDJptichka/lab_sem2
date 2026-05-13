@@ -15,6 +15,7 @@
 #include "includes/DiagonalMatrix.h"
 
 #include "includes/LazyOperations.h"
+#include "includes/Shaker.h"
 
 TEST(TestDynamicArray, size_create){
 
