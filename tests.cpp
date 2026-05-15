@@ -1334,3 +1334,19 @@ TEST(TestDiagonalMatrix, check_convert){
     EXPECT_TRUE(std::equal(matrix.begin(), matrix.end(), res2.begin()));
 
 }
+
+TEST(TestDiagonalMatrix, check_shaker){
+
+    int items[] = {1, 2, 3, 4, 5, 6, 7};
+
+    ArraySequence<int> seq(items, 7);
+    ArraySequence<int> res(items, 7);
+    shaker(seq, 2);
+
+    EXPECT_TRUE(!(std::equal(seq.begin(), seq.end(), res.begin())));
+    
+    std::sort(seq.begin(), seq.end());
+
+    EXPECT_TRUE(std::equal(seq.begin(), seq.end(), res.begin()));
+
+}

@@ -26,7 +26,7 @@ template <typename Container> size_t get_size(const Container &container){
 
 template <typename Container> void shaker(Container &container, size_t k){
 
-    size_t c_size = container.get_size();
+    size_t c_size = get_size(container);
 
     if ((c_size < k) || (k < 1)){
 
@@ -47,12 +47,38 @@ template <typename Container> void shaker(Container &container, size_t k){
         
         if (i == (k - 1)){
 
-            seg_end.append(c_size - seg_start[i] + 1);
+            seg_end.append(c_size - 1);
 
         }
         else{
 
             seg_end.append((i + 1) * seg_size);
+
+        }
+
+    }
+
+    auto swap = [&](size_t seg1_index, size_t seg2_index){
+
+        for (size_t i = 0; i < swaps; ++i){
+
+            std::uniform_int_distribution<size_t> dist_seg1(seg_start[seg1_index], seg_end[seg1_index]);
+            std::uniform_int_distribution<size_t> dist_seg2(seg_start[seg2_index], seg_end[seg2_index]);
+
+            size_t index1 = dist_seg1(generator);
+            size_t index2 = dist_seg2(generator);
+
+            std::swap(container[index1], container[index2]);
+
+        }
+
+    };
+
+    for (size_t d = k / 2; d >= 1; --d){
+
+        for (size_t i = 0; i + d < k; ++i){
+
+            swap(i, i + d);
 
         }
 
