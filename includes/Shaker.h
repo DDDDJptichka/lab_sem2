@@ -1,3 +1,6 @@
+#include <cmath>
+#include <algorithm>
+
 #include <type_traits>
 #include <random>
 #include <chrono>
@@ -33,6 +36,7 @@ template <typename Container> void shaker(Container &container, size_t k){
 
     static std::mt19937 generator(std::chrono::steady_clock::now().time_since_epoch().count());
     size_t seg_size = c_size / k;
+    size_t swaps = std::max(seg_size / 2, size_t(1));
 
     DynamicArray<size_t> seg_start(0);
     DynamicArray<size_t> seg_end(0);

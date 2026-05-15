@@ -1311,3 +1311,26 @@ TEST(TestLazyOperations, lazy_where_reduce_composition){
     EXPECT_EQ(res_10, (1 * 1 + 2) * (1 * 1 + 2) + 1);
 
 }
+
+TEST(TestDiagonalMatrix, check_convert){
+
+    int items[] = {1, 2, 3, 4, 5, 6, 7};
+
+    ArraySequence<int> seq(items, 7);
+    DiagonalMatrix<ArraySequence, int> matrix(seq, 3, 1);
+    DiagonalMatrix<ArraySequence, int> matrix2(seq, 3, 1);
+    ArraySequence<int> res(0);
+    ArraySequence<int> res2(0);
+    res.append(1)->append(0)->append(-10)->append(0)->append(2)->append(0)->append(10)->append(0)->append(3);
+
+    matrix.set(2, 0, 10);
+    matrix.set(0, 2, -10);
+
+    EXPECT_TRUE(std::equal(matrix.begin(), matrix.end(), res.begin()));
+
+    matrix.summary_with_matrix(matrix2);
+    res2.append(2)->append(0)->append(-10)->append(0)->append(4)->append(0)->append(10)->append(0)->append(6);
+
+    EXPECT_TRUE(std::equal(matrix.begin(), matrix.end(), res2.begin()));
+
+}

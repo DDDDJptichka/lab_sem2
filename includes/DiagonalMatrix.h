@@ -24,10 +24,45 @@ template <template <typename> class Container, typename T> requires MatrixContai
         Container<T> buffer;
         size_t diag_count = 0;
         size_t matrix_size = 0;
+        bool diagonal_flag = 1;
+
+        void convert(){
+
+            if (diagonal_flag == 0){
+
+                return;
+
+            }
+
+            Container<T> new_buff;
+
+            for (size_t i = 0; i < matrix_size; ++i){
+
+                for (size_t j = 0; j < matrix_size; ++j){
+
+                    new_buff.append(get(i, j));
+
+                }
+
+            }
+
+            buffer = std::move(new_buff);
+            diagonal_flag = 0;
+
+        }
 
         size_t get_buff_size() const{
 
-            return matrix_size + ((matrix_size - 1) + (matrix_size - ((diag_count - 1) / 2))) * ((diag_count - 1) / 2);
+            if (diagonal_flag == 1){
+                
+                return matrix_size + ((matrix_size - 1) + (matrix_size - ((diag_count - 1) / 2))) * ((diag_count - 1) / 2);
+            
+            }
+            else{
+
+                return matrix_size * matrix_size;
+
+            }
 
         }
 
@@ -98,6 +133,12 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
             public:
 
+                using iterator_category = std::forward_iterator_tag;
+                using value_type = T;
+                using difference_type = std::ptrdiff_t;
+                using pointer = const T*;
+                using reference = T;
+            
                 MatrixCIterator(const DiagonalMatrix &mat, size_t row_ind, size_t column_ind) : matrix(mat), row_index(row_ind), column_index(column_ind){}
 
                 T operator*() const{
@@ -192,6 +233,12 @@ template <template <typename> class Container, typename T> requires MatrixContai
                 throw index_out_of_range("Index Out Of Range");
 
             }
+            
+            if (diagonal_flag == 0){
+
+                return buffer[matrix_size * row_index + column_index];
+
+            }
 
             if (abs(row_index - column_index) > ((diag_count - 1) / 2)){
 
@@ -211,9 +258,20 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
             }
 
+            if (diagonal_flag == 0){
+
+                buffer[matrix_size * row_index + column_index] = item;
+
+                return;
+
+            }
+
             if (abs(row_index - column_index) > ((diag_count - 1) / 2)){
 
-                throw index_out_of_range("Index Out Of Range");
+                convert();
+                buffer[matrix_size * row_index + column_index] = item;
+
+                return;
 
             }
 
@@ -253,56 +311,75 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
             }
 
-            size_t this_size = get_buff_size();
-            size_t another_size = another.get_buff_size();
-            size_t diff = abs((int)this_size - (int)another_size) / 2;
-            Container<T> new_buff;
+            if ((diagonal_flag && another.diagonal_flag) == 1){
 
-            if (this_size >= another_size){
+                size_t this_size = get_buff_size();
+                size_t another_size = another.get_buff_size();
+                size_t diff = abs((int)this_size - (int)another_size) / 2;
+                Container<T> new_buff;
 
-                for (size_t i = 0; i < diff; ++i){
+                if (this_size >= another_size){
 
-                    new_buff.append(buffer[i]);
+                    for (size_t i = 0; i < diff; ++i){
+
+                        new_buff.append(buffer[i]);
+
+                    }
+
+                    for (size_t i = 0; i < another_size; ++i){
+
+                        new_buff.append(buffer[i + diff] + another.buffer[i]);
+
+                    }
+
+                    for (size_t i = another_size + diff; i < this_size; ++i){
+
+                        new_buff.append(buffer[i]);
+
+                    }
+
+                    copy_to_container(new_buff, another_size, this_size);
 
                 }
+                else{
 
-                for (size_t i = 0; i < another_size; ++i){
+                    for (size_t i = 0; i < diff; ++i){
 
-                    new_buff.append(buffer[i + diff] + another.buffer[i]);
+                        new_buff.append(another.buffer[i]);
+
+                    }
+
+                    for (size_t i = 0; i < this_size; ++i){
+
+                        new_buff.append(another.buffer[i + diff] + buffer[i]);
+
+                    }
+
+                    for (size_t i = this_size + diff; i < another_size; ++i){
+
+                        new_buff.append(another.buffer[i]);
+
+                    }
+
+                    diag_count = another.diag_count;
+                    copy_to_container(new_buff, this_size, another_size);
 
                 }
-
-                for (size_t i = another_size + diff; i < this_size; ++i){
-
-                    new_buff.append(buffer[i]);
-
-                }
-
-                copy_to_container(new_buff, another_size, this_size);
 
             }
             else{
 
-                for (size_t i = 0; i < diff; ++i){
+                convert();
 
-                    new_buff.append(another.buffer[i]);
+                for (size_t i = 0; i < matrix_size; ++i){
 
-                }
+                    for (size_t j = 0; j < matrix_size; ++j){
 
-                for (size_t i = 0; i < this_size; ++i){
+                        buffer[i * matrix_size + j] = buffer[i * matrix_size + j] + another.get(i, j);
 
-                    new_buff.append(another.buffer[i + diff] + buffer[i]);
-
-                }
-
-                for (size_t i = this_size + diff; i < another_size; ++i){
-
-                    new_buff.append(another.buffer[i]);
+                    }
 
                 }
-
-                diag_count = another.diag_count;
-                copy_to_container(new_buff, this_size, another_size);
 
             }
 
