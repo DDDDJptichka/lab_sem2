@@ -48,6 +48,7 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
             buffer = std::move(new_buff);
             diagonal_flag = 0;
+            diag_count = (matrix_size * (matrix_size - 1)) + matrix_size;
 
         }
 
@@ -210,7 +211,8 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
             diag_count(another.diag_count),
             matrix_size(another.matrix_size),
-            buffer(another.buffer){}
+            buffer(another.buffer),
+            diagonal_flag(another.diagonal_flag){}
         
         ~DiagonalMatrix(){}
 
@@ -293,11 +295,11 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
         template <class A> requires requires(T t, A a){{t + a} -> std::convertible_to<T>;} void summary_with_scalar(A scalar){
             
-            size_t buff_size = get_buff_size();
+            convert();
 
-            for (size_t i = 0; i < buff_size; ++i){
+            for (auto &item : buffer){
 
-                buffer[i] = buffer[i] + scalar;
+                item += scalar;
 
             }
 
@@ -401,5 +403,7 @@ template <template <typename> class Container, typename T> requires MatrixContai
             return std::sqrt(res);
 
         }
+
+    
 
 };

@@ -1057,15 +1057,15 @@ TEST(TestDiagonalMatrix, check_methods){
     matrix.multiply_by_scalar(2);
     matrix.summary_with_scalar(1);
 
-    EXPECT_EQ(matrix.get(0, 2), 0);
+    EXPECT_EQ(matrix.get(0, 2), 1);
     EXPECT_EQ(matrix.get(0, 0), 15);
     EXPECT_EQ(matrix.get(1, 1), 5);
     EXPECT_EQ(matrix.get(2, 2), 7);
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(299.0));
+    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(305.0));
 
     ArraySequence<int> res(0);
     ArraySequence<int> curr(0);
-    res.append(15)->append(0)->append(0)->append(0)->append(5)->append(0)->append(0)->append(0)->append(7);
+    res.append(15)->append(1)->append(1)->append(1)->append(5)->append(1)->append(1)->append(1)->append(7);
     
     for (auto item : matrix){
 
@@ -1088,7 +1088,7 @@ TEST(TestDiagonalMatrix, check_methods){
     EXPECT_EQ(matrix.get(0, 0), (int)((int)(15 + 1.5) * 2.5));
     EXPECT_EQ(matrix.get(1, 1), (int)((int)(5 + 1.5) * 2.5));
     EXPECT_EQ(matrix.get(2, 2), (int)((int)(7 + 1.5) * 2.5));
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(2225.0));
+    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(2375.0));
 
     EXPECT_THROW(matrix.summary_with_matrix(bigger), different_matrix_size);
     
@@ -1097,22 +1097,22 @@ TEST(TestDiagonalMatrix, check_methods){
     EXPECT_EQ(matrix.get(0, 0), 80);
     EXPECT_EQ(matrix.get(1, 1), 30);
     EXPECT_EQ(matrix.get(2, 2), 40);
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(8900.0));
+    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(9500.0));
     EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
 
     matrix.summary_with_matrix(fuller);
 
-    EXPECT_EQ(matrix.get_diag_count(), 3);
+    EXPECT_EQ(matrix.get_diag_count(), 9);
     EXPECT_EQ(matrix.get_matrix_size(), 3);
     EXPECT_EQ(matrix.get(0, 0), 83);
     EXPECT_EQ(matrix.get(1, 1), 34);
     EXPECT_EQ(matrix.get(2, 2), 45);
-    EXPECT_EQ(matrix.get(0, 1), 1);
-    EXPECT_EQ(matrix.get(1, 2), 2);
-    EXPECT_EQ(matrix.get(1, 0), 6);
-    EXPECT_EQ(matrix.get(2, 1), 7);
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(10160.0));
+    EXPECT_EQ(matrix.get(0, 1), 11);
+    EXPECT_EQ(matrix.get(1, 2), 12);
+    EXPECT_EQ(matrix.get(1, 0), 16);
+    EXPECT_EQ(matrix.get(2, 1), 17);
+    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(11080.0));
     EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
 
@@ -1131,7 +1131,7 @@ TEST(TestDiagonalMatrix, check_methods_for_complex){
     matrix.multiply_by_scalar(std::complex<int>(2, 0));
     matrix.summary_with_scalar(std::complex<int>(1, 0));
 
-    EXPECT_EQ(matrix.get(0, 2).real(), 0);
+    EXPECT_EQ(matrix.get(0, 2).real(), 1);
     EXPECT_EQ(matrix.get(0, 2).imag(), 0);
     EXPECT_EQ(matrix.get(0, 0).real(), 15);
     EXPECT_EQ(matrix.get(0, 0).imag(), 2);
@@ -1139,11 +1139,11 @@ TEST(TestDiagonalMatrix, check_methods_for_complex){
     EXPECT_EQ(matrix.get(1, 1).imag(), 2);
     EXPECT_EQ(matrix.get(2, 2).real(), 7);
     EXPECT_EQ(matrix.get(2, 2).imag(), 2);
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(311.0));
+    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(317.0));
 
     ArraySequence<std::complex<int>> res(0);
     ArraySequence<std::complex<int>> curr(0);
-    res.append({15, 2})->append(0)->append(0)->append(0)->append({5, 2})->append(0)->append(0)->append(0)->append({7, 2});
+    res.append({15, 2})->append({1, 0})->append({1, 0})->append({1, 0})->append({5, 2})->append({1, 0})->append({1, 0})->append({1, 0})->append({7, 2});
     
     for (auto item : matrix){
 
@@ -1169,7 +1169,7 @@ TEST(TestDiagonalMatrix, check_methods_for_complex){
     EXPECT_EQ(matrix.get(1, 1).imag(), 18);
     EXPECT_EQ(matrix.get(2, 2).real(), 10);
     EXPECT_EQ(matrix.get(2, 2).imag(), 22);
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(3064.0));
+    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(3304.0));
 
     EXPECT_THROW(matrix.summary_with_matrix(bigger), different_matrix_size);
     
@@ -1181,13 +1181,13 @@ TEST(TestDiagonalMatrix, check_methods_for_complex){
     EXPECT_EQ(matrix.get(1, 1).imag(), 36);
     EXPECT_EQ(matrix.get(2, 2).real(), 20);
     EXPECT_EQ(matrix.get(2, 2).imag(), 44);
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(12256.0));
+    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(13216.0));
     EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
 
     matrix.summary_with_matrix(fuller);
 
-    EXPECT_EQ(matrix.get_diag_count(), 3);
+    EXPECT_EQ(matrix.get_diag_count(), 9);
     EXPECT_EQ(matrix.get_matrix_size(), 3);
     EXPECT_EQ(matrix.get(0, 0).real(), 55);
     EXPECT_EQ(matrix.get(0, 0).imag(), 77);
@@ -1195,15 +1195,15 @@ TEST(TestDiagonalMatrix, check_methods_for_complex){
     EXPECT_EQ(matrix.get(1, 1).imag(), 37);
     EXPECT_EQ(matrix.get(2, 2).real(), 25);
     EXPECT_EQ(matrix.get(2, 2).imag(), 45);
-    EXPECT_EQ(matrix.get(0, 1).real(), 1);
-    EXPECT_EQ(matrix.get(0, 1).imag(), 1);
-    EXPECT_EQ(matrix.get(1, 2).real(), 2);
-    EXPECT_EQ(matrix.get(1, 2).imag(), 1);
-    EXPECT_EQ(matrix.get(1, 0).real(), 6);
-    EXPECT_EQ(matrix.get(1, 0).imag(), 1);
-    EXPECT_EQ(matrix.get(2, 1).real(), 7);
-    EXPECT_EQ(matrix.get(2, 1).imag(), 1);
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(13323.0));
+    EXPECT_EQ(matrix.get(0, 1).real(), 5);
+    EXPECT_EQ(matrix.get(0, 1).imag(), 13);
+    EXPECT_EQ(matrix.get(1, 2).real(), 6);
+    EXPECT_EQ(matrix.get(1, 2).imag(), 13);
+    EXPECT_EQ(matrix.get(1, 0).real(), 10);
+    EXPECT_EQ(matrix.get(1, 0).imag(), 13);
+    EXPECT_EQ(matrix.get(2, 1).real(), 11);
+    EXPECT_EQ(matrix.get(2, 1).imag(), 13);
+    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(14507.0));
     EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
 
@@ -1349,4 +1349,12 @@ TEST(TestDiagonalMatrix, check_shaker){
 
     EXPECT_TRUE(std::equal(seq.begin(), seq.end(), res.begin()));
 
+    // for (size_t i = 0; i < 10000; ++i){
+
+    //     shaker(seq, 2);
+
+    //     EXPECT_TRUE(!(std::equal(seq.begin(), seq.end(), res.begin())));
+    //     std::cout << "  " << i;
+
+    // }
 }
