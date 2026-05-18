@@ -60,3 +60,11 @@ class different_matrix_size : public exception{
         explicit different_matrix_size(const std::string &msg) : exception(msg){}
 
 };
+
+class zero_determinant : public exception{
+
+    public:
+
+        explicit zero_determinant(const std::string &msg) : exception(msg){}
+
+};

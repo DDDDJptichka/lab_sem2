@@ -9,8 +9,9 @@
 
 #include "Exception.h"
 
-template <template <typename> class Container, typename T> concept MatrixContainer = requires(Container<T> c, T value, int i){
+template <template <typename> class Container, typename T> concept MatrixContainer = requires(Container<T> c, const Container<T> another, T value, int i){
 
+    {c = another} -> std::same_as<Container<T>&>;
     {c.get(i)} -> std::convertible_to<T>;
     c.append(value);
     c[i];
@@ -19,12 +20,67 @@ template <template <typename> class Container, typename T> concept MatrixContain
 
 template <template <typename> class Container, typename T> requires MatrixContainer<Container, T> class DiagonalMatrix{
 
+    template <template <typename> class B, typename C> requires MatrixContainer<B, C> friend class DiagonalMatrix;
+
     private:
 
         Container<T> buffer;
         size_t diag_count = 0;
         size_t matrix_size = 0;
         bool diagonal_flag = 1;
+
+        Container<T> make_minor(const Container<T> &container, size_t row, size_t column, size_t size) const{
+
+            Container<T> minor;
+
+            for (size_t i = 0; i < size; ++i){
+
+                for (size_t j = 0; j < size; ++j){
+
+                    if ((i != row) && (j != column)){
+
+                        minor.append(container[i * size + j]);
+
+                    }
+
+                }
+
+            }
+
+            return minor;
+
+        }
+
+        T get_det(const Container<T> &container, size_t size) const{
+
+            if (size == 1){
+
+                return container[0];
+
+            }
+
+            T res = 0;
+
+            for (size_t i = 0; i < size; ++i){
+
+                Container<T> minor(make_minor(container, 0, i, size));
+                
+                if (i % 2 == 0){
+
+                    res += container[i] * get_det(minor, size - 1);
+
+                }
+                else{
+
+                    res += (-1) * container[i] * get_det(minor, size - 1);
+
+                }
+
+            }
+
+            return res;
+
+        }
 
         void convert(){
 
@@ -46,9 +102,9 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
             }
 
-            buffer = std::move(new_buff);
+            buffer = new_buff;
             diagonal_flag = 0;
-            diag_count = (matrix_size * (matrix_size - 1)) + matrix_size;
+            diag_count = 2 * matrix_size - 1;
 
         }
 
@@ -103,22 +159,6 @@ template <template <typename> class Container, typename T> requires MatrixContai
             }
 
             return buff_index;
-
-        }
-
-        void copy_to_container(Container<T> &another_buff, size_t copy_size, size_t another_size){
-
-            for(size_t i = 0; i < copy_size; ++i){
-
-                buffer[i] = another_buff[i];
-
-            }
-
-            for(size_t i = copy_size; i < another_size; ++i){
-
-                buffer.append(another_buff[i]);
-
-            }
 
         }
 
@@ -281,31 +321,64 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
         }
 
-        template <class A> requires requires(T t, A a){{t * a} -> std::convertible_to<T>;} void multiply_by_scalar(A scalar){
+        template <class A> auto multiply_by_scalar(A scalar) const{
             
-            size_t buff_size = get_buff_size();
+            using res_type = decltype(T{} * scalar);
+            Container<res_type> new_buffer;
 
-            for (size_t i = 0; i < buff_size; ++i){
+            for (auto item : buffer){
 
-                buffer[i] = buffer[i] * scalar;
+                new_buffer.append(item * scalar);
 
+            }
+
+            if (diagonal_flag == 1){
+            
+                DiagonalMatrix<Container, res_type> res(new_buffer, get_buff_size(), diag_count);
+            
+                return res;
+
+            }
+            else{
+
+                DiagonalMatrix<Container, res_type> res;
+                res.buffer = new_buffer;
+                res.diag_count = 2 * matrix_size - 1;
+                res.diagonal_flag = 0;
+                res.matrix_size = matrix_size;
+
+                return res;
+                
             }
 
         }
 
-        template <class A> requires requires(T t, A a){{t + a} -> std::convertible_to<T>;} void summary_with_scalar(A scalar){
+        template <class A> auto summary_with_scalar(A scalar) const{
             
-            convert();
+            using res_type = decltype(T{} + scalar);
+            Container<res_type> new_buffer;
 
-            for (auto &item : buffer){
+            for (size_t i = 0; i < matrix_size; ++i){
 
-                item += scalar;
+                for (size_t j = 0; j < matrix_size; ++j){
+
+                    new_buffer.append(get(i, j) + scalar);
+
+                }
 
             }
 
+            DiagonalMatrix<Container, res_type> res;
+            res.buffer = new_buffer;
+            res.diag_count = 2 * matrix_size - 1;
+            res.diagonal_flag = 0;
+            res.matrix_size = matrix_size;
+
+            return res;
+
         }
 
-        void summary_with_matrix(DiagonalMatrix<Container, T> &another){
+        void summary_with_matrix(DiagonalMatrix<Container, T> &another){//todo: не забыть тоже сделать иммутбл
 
             if (this->matrix_size != another.matrix_size){
 
@@ -340,7 +413,7 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
                     }
 
-                    copy_to_container(new_buff, another_size, this_size);
+                    buffer = new_buff;
 
                 }
                 else{
@@ -364,7 +437,7 @@ template <template <typename> class Container, typename T> requires MatrixContai
                     }
 
                     diag_count = another.diag_count;
-                    copy_to_container(new_buff, this_size, another_size);
+                    buffer = new_buff;
 
                 }
 
@@ -404,6 +477,67 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
         }
 
-    
+        auto get_inverse_matrix() const{
+
+            DiagonalMatrix<Container, T> res_matrix(*this);
+            DiagonalMatrix<Container, T> tmp(*this);
+            res_matrix.convert();
+            tmp.convert();
+
+            T det = get_det(res_matrix.buffer, matrix_size);
+
+            if (det == T{}){
+
+                throw zero_determinant("Matrix can`t be inversed, because det == 0");
+
+            }
+
+            if (matrix_size == 1){
+
+                res_matrix.set(0, 0, T{1});
+                
+                return res_matrix.multiply_by_scalar(1.0 / det);
+
+            }
+
+            for (size_t i = 0; i < matrix_size; ++i){
+
+                for (size_t j = 0; j < matrix_size; ++j){
+
+                    if ((i + j) % 2 == 0){
+
+                        res_matrix.set(j, i, get_det(make_minor(tmp.buffer, i, j, matrix_size), matrix_size - 1));
+
+                    }
+                    else{
+
+                        res_matrix.set(j, i, (-1) * get_det(make_minor(tmp.buffer, i, j, matrix_size), matrix_size - 1));                        
+
+                    }
+
+                }
+
+            }
+
+            return res_matrix.multiply_by_scalar(1.0 / det);
+
+        }
+
+        auto &operator=(const DiagonalMatrix<Container, T> &another){
+
+            if (this == &another){
+
+                return *this;
+
+            }
+
+            buffer = another.buffer;
+            matrix_size = another.matrix_size;
+            diag_count = another.diag_count;
+            diagonal_flag = another.diagonal_flag;
+
+            return *this;
+
+        }
 
 };

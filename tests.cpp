@@ -1054,8 +1054,8 @@ TEST(TestDiagonalMatrix, check_methods){
     DiagonalMatrix<ArraySequence, int> bigger(seq, 4, 1);
 
     matrix.set(0, 0, 7);
-    matrix.multiply_by_scalar(2);
-    matrix.summary_with_scalar(1);
+    matrix = matrix.multiply_by_scalar(2);
+    matrix = matrix.summary_with_scalar(1);
 
     EXPECT_EQ(matrix.get(0, 2), 1);
     EXPECT_EQ(matrix.get(0, 0), 15);
@@ -1082,39 +1082,51 @@ TEST(TestDiagonalMatrix, check_methods){
     EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
 
-    matrix.summary_with_scalar(1.5);
-    matrix.multiply_by_scalar(2.5);
+    DiagonalMatrix<ArraySequence, double> mamatrix;
+    mamatrix = matrix.summary_with_scalar(1.5);
+    mamatrix = mamatrix.multiply_by_scalar(2.5);
 
-    EXPECT_EQ(matrix.get(0, 0), (int)((int)(15 + 1.5) * 2.5));
-    EXPECT_EQ(matrix.get(1, 1), (int)((int)(5 + 1.5) * 2.5));
-    EXPECT_EQ(matrix.get(2, 2), (int)((int)(7 + 1.5) * 2.5));
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(2375.0));
+    EXPECT_DOUBLE_EQ(mamatrix.get(0, 0), 41.25);
+    EXPECT_DOUBLE_EQ(mamatrix.get(1, 1), 16.25);
+    EXPECT_DOUBLE_EQ(mamatrix.get(2, 2), 21.25);
+    EXPECT_DOUBLE_EQ(mamatrix.frobenius_norm(), std::sqrt(2651.5625));
 
-    EXPECT_THROW(matrix.summary_with_matrix(bigger), different_matrix_size);
-    
-    matrix.summary_with_matrix(matrix);
+    auto bigger_double = bigger.multiply_by_scalar(1.0);
+    auto fuller_double = fuller.multiply_by_scalar(1.0);
 
-    EXPECT_EQ(matrix.get(0, 0), 80);
-    EXPECT_EQ(matrix.get(1, 1), 30);
-    EXPECT_EQ(matrix.get(2, 2), 40);
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(9500.0));
-    EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
-    EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
+    EXPECT_THROW(mamatrix.summary_with_matrix(bigger_double), different_matrix_size);
 
-    matrix.summary_with_matrix(fuller);
+    mamatrix.summary_with_matrix(mamatrix);
 
-    EXPECT_EQ(matrix.get_diag_count(), 9);
-    EXPECT_EQ(matrix.get_matrix_size(), 3);
-    EXPECT_EQ(matrix.get(0, 0), 83);
-    EXPECT_EQ(matrix.get(1, 1), 34);
-    EXPECT_EQ(matrix.get(2, 2), 45);
-    EXPECT_EQ(matrix.get(0, 1), 11);
-    EXPECT_EQ(matrix.get(1, 2), 12);
-    EXPECT_EQ(matrix.get(1, 0), 16);
-    EXPECT_EQ(matrix.get(2, 1), 17);
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(11080.0));
-    EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
-    EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
+    EXPECT_DOUBLE_EQ(mamatrix.get(0, 0), 82.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(1, 1), 32.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(2, 2), 42.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(0, 1), 12.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(0, 2), 12.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(1, 0), 12.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(1, 2), 12.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(2, 0), 12.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(2, 1), 12.5);
+    EXPECT_DOUBLE_EQ(mamatrix.frobenius_norm(), std::sqrt(10606.25));
+    EXPECT_THROW(mamatrix.get(3, 0), index_out_of_range);
+    EXPECT_THROW(mamatrix.get(-1, 0), index_out_of_range);
+
+    mamatrix.summary_with_matrix(fuller_double);
+
+    EXPECT_EQ(mamatrix.get_diag_count(), 5);
+    EXPECT_EQ(mamatrix.get_matrix_size(), 3);
+    EXPECT_DOUBLE_EQ(mamatrix.get(0, 0), 85.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(1, 1), 36.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(2, 2), 47.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(0, 1), 13.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(1, 2), 14.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(1, 0), 18.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(2, 1), 19.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(0, 2), 12.5);
+    EXPECT_DOUBLE_EQ(mamatrix.get(2, 0), 12.5);
+    EXPECT_DOUBLE_EQ(mamatrix.frobenius_norm(), std::sqrt(12326.25));
+    EXPECT_THROW(mamatrix.get(3, 0), index_out_of_range);
+    EXPECT_THROW(mamatrix.get(-1, 0), index_out_of_range);
 
 }
 
@@ -1128,8 +1140,8 @@ TEST(TestDiagonalMatrix, check_methods_for_complex){
     DiagonalMatrix<ArraySequence, std::complex<int>> bigger(seq, 4, 1);
 
     matrix.set(0, 0, std::complex<int>(7, 1));
-    matrix.multiply_by_scalar(std::complex<int>(2, 0));
-    matrix.summary_with_scalar(std::complex<int>(1, 0));
+    matrix = matrix.multiply_by_scalar(std::complex<int>(2, 0));
+    matrix = matrix.summary_with_scalar(std::complex<int>(1, 0));
 
     EXPECT_EQ(matrix.get(0, 2).real(), 1);
     EXPECT_EQ(matrix.get(0, 2).imag(), 0);
@@ -1160,52 +1172,54 @@ TEST(TestDiagonalMatrix, check_methods_for_complex){
     EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
 
-    matrix.summary_with_scalar(std::complex<int>(1.5, 1.5));
-    matrix.multiply_by_scalar(std::complex<int>(2.5, 2.5));
+    DiagonalMatrix<ArraySequence, std::complex<int>> mamatrix;
 
-    EXPECT_EQ(matrix.get(0, 0).real(), 26);
-    EXPECT_EQ(matrix.get(0, 0).imag(), 38);
-    EXPECT_EQ(matrix.get(1, 1).real(), 6);
-    EXPECT_EQ(matrix.get(1, 1).imag(), 18);
-    EXPECT_EQ(matrix.get(2, 2).real(), 10);
-    EXPECT_EQ(matrix.get(2, 2).imag(), 22);
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(3304.0));
+    mamatrix = matrix.summary_with_scalar(std::complex<int>(1, 1));
+    mamatrix = mamatrix.multiply_by_scalar(std::complex<int>(2, 2));
 
-    EXPECT_THROW(matrix.summary_with_matrix(bigger), different_matrix_size);
+    EXPECT_EQ(mamatrix.get(0, 0).real(), 26);
+    EXPECT_EQ(mamatrix.get(0, 0).imag(), 38);
+    EXPECT_EQ(mamatrix.get(1, 1).real(), 6);
+    EXPECT_EQ(mamatrix.get(1, 1).imag(), 18);
+    EXPECT_EQ(mamatrix.get(2, 2).real(), 10);
+    EXPECT_EQ(mamatrix.get(2, 2).imag(), 22);
+    EXPECT_DOUBLE_EQ(mamatrix.frobenius_norm(), std::sqrt(3304.0));
+
+    EXPECT_THROW(mamatrix.summary_with_matrix(bigger), different_matrix_size);
     
-    matrix.summary_with_matrix(matrix);
+    mamatrix.summary_with_matrix(mamatrix);
 
-    EXPECT_EQ(matrix.get(0, 0).real(), 52);
-    EXPECT_EQ(matrix.get(0, 0).imag(), 76);
-    EXPECT_EQ(matrix.get(1, 1).real(), 12);
-    EXPECT_EQ(matrix.get(1, 1).imag(), 36);
-    EXPECT_EQ(matrix.get(2, 2).real(), 20);
-    EXPECT_EQ(matrix.get(2, 2).imag(), 44);
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(13216.0));
-    EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
-    EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
+    EXPECT_EQ(mamatrix.get(0, 0).real(), 52);
+    EXPECT_EQ(mamatrix.get(0, 0).imag(), 76);
+    EXPECT_EQ(mamatrix.get(1, 1).real(), 12);
+    EXPECT_EQ(mamatrix.get(1, 1).imag(), 36);
+    EXPECT_EQ(mamatrix.get(2, 2).real(), 20);
+    EXPECT_EQ(mamatrix.get(2, 2).imag(), 44);
+    EXPECT_DOUBLE_EQ(mamatrix.frobenius_norm(), std::sqrt(13216.0));
+    EXPECT_THROW(mamatrix.get(3, 0), index_out_of_range);
+    EXPECT_THROW(mamatrix.get(-1, 0), index_out_of_range);
 
-    matrix.summary_with_matrix(fuller);
+    mamatrix.summary_with_matrix(fuller);
 
-    EXPECT_EQ(matrix.get_diag_count(), 9);
-    EXPECT_EQ(matrix.get_matrix_size(), 3);
-    EXPECT_EQ(matrix.get(0, 0).real(), 55);
-    EXPECT_EQ(matrix.get(0, 0).imag(), 77);
-    EXPECT_EQ(matrix.get(1, 1).real(), 16);
-    EXPECT_EQ(matrix.get(1, 1).imag(), 37);
-    EXPECT_EQ(matrix.get(2, 2).real(), 25);
-    EXPECT_EQ(matrix.get(2, 2).imag(), 45);
-    EXPECT_EQ(matrix.get(0, 1).real(), 5);
-    EXPECT_EQ(matrix.get(0, 1).imag(), 13);
-    EXPECT_EQ(matrix.get(1, 2).real(), 6);
-    EXPECT_EQ(matrix.get(1, 2).imag(), 13);
-    EXPECT_EQ(matrix.get(1, 0).real(), 10);
-    EXPECT_EQ(matrix.get(1, 0).imag(), 13);
-    EXPECT_EQ(matrix.get(2, 1).real(), 11);
-    EXPECT_EQ(matrix.get(2, 1).imag(), 13);
-    EXPECT_DOUBLE_EQ(matrix.frobenius_norm(), std::sqrt(14507.0));
-    EXPECT_THROW(matrix.get(3, 0), index_out_of_range);
-    EXPECT_THROW(matrix.get(-1, 0), index_out_of_range);
+    EXPECT_EQ(mamatrix.get_diag_count(), 5);
+    EXPECT_EQ(mamatrix.get_matrix_size(), 3);
+    EXPECT_EQ(mamatrix.get(0, 0).real(), 55);
+    EXPECT_EQ(mamatrix.get(0, 0).imag(), 77);
+    EXPECT_EQ(mamatrix.get(1, 1).real(), 16);
+    EXPECT_EQ(mamatrix.get(1, 1).imag(), 37);
+    EXPECT_EQ(mamatrix.get(2, 2).real(), 25);
+    EXPECT_EQ(mamatrix.get(2, 2).imag(), 45);
+    EXPECT_EQ(mamatrix.get(0, 1).real(), 5);
+    EXPECT_EQ(mamatrix.get(0, 1).imag(), 13);
+    EXPECT_EQ(mamatrix.get(1, 2).real(), 6);
+    EXPECT_EQ(mamatrix.get(1, 2).imag(), 13);
+    EXPECT_EQ(mamatrix.get(1, 0).real(), 10);
+    EXPECT_EQ(mamatrix.get(1, 0).imag(), 13);
+    EXPECT_EQ(mamatrix.get(2, 1).real(), 11);
+    EXPECT_EQ(mamatrix.get(2, 1).imag(), 13);
+    EXPECT_DOUBLE_EQ(mamatrix.frobenius_norm(), std::sqrt(14507.0));
+    EXPECT_THROW(mamatrix.get(3, 0), index_out_of_range);
+    EXPECT_THROW(mamatrix.get(-1, 0), index_out_of_range);
 
 }
 
