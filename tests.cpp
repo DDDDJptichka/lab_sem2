@@ -1096,7 +1096,7 @@ TEST(TestDiagonalMatrix, check_methods){
 
     EXPECT_THROW(mamatrix.summary_with_matrix(bigger_double), different_matrix_size);
 
-    mamatrix.summary_with_matrix(mamatrix);
+    mamatrix = mamatrix.summary_with_matrix(mamatrix);
 
     EXPECT_DOUBLE_EQ(mamatrix.get(0, 0), 82.5);
     EXPECT_DOUBLE_EQ(mamatrix.get(1, 1), 32.5);
@@ -1111,7 +1111,7 @@ TEST(TestDiagonalMatrix, check_methods){
     EXPECT_THROW(mamatrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(mamatrix.get(-1, 0), index_out_of_range);
 
-    mamatrix.summary_with_matrix(fuller_double);
+    mamatrix = mamatrix.summary_with_matrix(fuller_double);
 
     EXPECT_EQ(mamatrix.get_diag_count(), 5);
     EXPECT_EQ(mamatrix.get_matrix_size(), 3);
@@ -1128,13 +1128,31 @@ TEST(TestDiagonalMatrix, check_methods){
     EXPECT_THROW(mamatrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(mamatrix.get(-1, 0), index_out_of_range);
 
+    DiagonalMatrix<ArraySequence, int> mtrx(seq, 2, 1);
+
+    auto ans = mtrx.get_inverse_matrix();
+
+    EXPECT_DOUBLE_EQ(ans.get(0, 0), 1);
+    EXPECT_DOUBLE_EQ(ans.get(1, 1), 1.0 / 2.0);
+    EXPECT_DOUBLE_EQ(ans.get(1, 0), 0);
+    EXPECT_DOUBLE_EQ(ans.get(0, 1), 0);
+
+    ans = ans.get_inverse_matrix();
+
+    EXPECT_DOUBLE_EQ(ans.get(0, 0), 1);
+    EXPECT_DOUBLE_EQ(ans.get(1, 1), 2);
+    EXPECT_DOUBLE_EQ(ans.get(1, 0), 0);
+    EXPECT_DOUBLE_EQ(ans.get(0, 1), 0);
+
 }
 
 TEST(TestDiagonalMatrix, check_methods_for_complex){
 
     std::complex<int> items[] = {{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1}, {7, 1}};
+    std::complex<double> d_items[] = {{1.1, 1.1}, {2.2, 1.1}};
 
     ArraySequence<std::complex<int>> seq(items, 7);
+    ListSequence<std::complex<double>> d_seq(d_items, 2);
     DiagonalMatrix<ArraySequence, std::complex<int>> matrix(seq, 3, 1);
     DiagonalMatrix<ArraySequence, std::complex<int>> fuller(seq, 7, 3);
     DiagonalMatrix<ArraySequence, std::complex<int>> bigger(seq, 4, 1);
@@ -1187,7 +1205,7 @@ TEST(TestDiagonalMatrix, check_methods_for_complex){
 
     EXPECT_THROW(mamatrix.summary_with_matrix(bigger), different_matrix_size);
     
-    mamatrix.summary_with_matrix(mamatrix);
+    mamatrix = mamatrix.summary_with_matrix(mamatrix);
 
     EXPECT_EQ(mamatrix.get(0, 0).real(), 52);
     EXPECT_EQ(mamatrix.get(0, 0).imag(), 76);
@@ -1199,7 +1217,7 @@ TEST(TestDiagonalMatrix, check_methods_for_complex){
     EXPECT_THROW(mamatrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(mamatrix.get(-1, 0), index_out_of_range);
 
-    mamatrix.summary_with_matrix(fuller);
+    mamatrix = mamatrix.summary_with_matrix(fuller);
 
     EXPECT_EQ(mamatrix.get_diag_count(), 5);
     EXPECT_EQ(mamatrix.get_matrix_size(), 3);
@@ -1220,6 +1238,42 @@ TEST(TestDiagonalMatrix, check_methods_for_complex){
     EXPECT_DOUBLE_EQ(mamatrix.frobenius_norm(), std::sqrt(14507.0));
     EXPECT_THROW(mamatrix.get(3, 0), index_out_of_range);
     EXPECT_THROW(mamatrix.get(-1, 0), index_out_of_range);
+
+    DiagonalMatrix<ArraySequence, std::complex<int>> mtrx(seq, 2, 1);
+    DiagonalMatrix<ListSequence, std::complex<double>> d_mtrx(d_seq, 2, 1);
+
+    auto ans = mtrx.get_inverse_matrix();
+
+    EXPECT_DOUBLE_EQ(ans.get(0, 0).real(), 0.5);
+    EXPECT_DOUBLE_EQ(ans.get(0, 0).imag(), -0.5);
+    EXPECT_DOUBLE_EQ(ans.get(0, 1).real(), 0);
+    EXPECT_DOUBLE_EQ(ans.get(0, 1).imag(), 0);
+    EXPECT_DOUBLE_EQ(ans.get(1, 0).real(), 0);
+    EXPECT_DOUBLE_EQ(ans.get(1, 0).imag(), 0);
+    EXPECT_DOUBLE_EQ(ans.get(1, 1).real(), 0.4);
+    EXPECT_DOUBLE_EQ(ans.get(1, 1).imag(), -0.2);
+
+    ans = ans.get_inverse_matrix();
+
+    EXPECT_DOUBLE_EQ(ans.get(0, 0).real(), 1);
+    EXPECT_DOUBLE_EQ(ans.get(0, 0).imag(), 1);
+    EXPECT_DOUBLE_EQ(ans.get(0, 1).real(), 0);
+    EXPECT_DOUBLE_EQ(ans.get(0, 1).imag(), 0);
+    EXPECT_DOUBLE_EQ(ans.get(1, 0).real(), 0);
+    EXPECT_DOUBLE_EQ(ans.get(1, 0).imag(), 0);
+    EXPECT_DOUBLE_EQ(ans.get(1, 1).real(), 2);
+    EXPECT_DOUBLE_EQ(ans.get(1, 1).imag(), 1);
+
+    auto ressss = mtrx.summary_with_matrix(d_mtrx);
+
+    EXPECT_DOUBLE_EQ(ressss.get(0, 0).real(), 2.1);
+    EXPECT_DOUBLE_EQ(ressss.get(0, 0).imag(), 2.1);
+    EXPECT_DOUBLE_EQ(ressss.get(0, 1).real(), 0);
+    EXPECT_DOUBLE_EQ(ressss.get(0, 1).imag(), 0);
+    EXPECT_DOUBLE_EQ(ressss.get(1, 0).real(), 0);
+    EXPECT_DOUBLE_EQ(ressss.get(1, 0).imag(), 0);
+    EXPECT_DOUBLE_EQ(ressss.get(1, 1).real(), 4.2);
+    EXPECT_DOUBLE_EQ(ressss.get(1, 1).imag(), 2.1);
 
 }
 
@@ -1342,7 +1396,7 @@ TEST(TestDiagonalMatrix, check_convert){
 
     EXPECT_TRUE(std::equal(matrix.begin(), matrix.end(), res.begin()));
 
-    matrix.summary_with_matrix(matrix2);
+    matrix = matrix.summary_with_matrix(matrix2);
     res2.append(2)->append(0)->append(-10)->append(0)->append(4)->append(0)->append(10)->append(0)->append(6);
 
     EXPECT_TRUE(std::equal(matrix.begin(), matrix.end(), res2.begin()));

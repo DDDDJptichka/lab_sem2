@@ -9,6 +9,30 @@
 
 #include "Exception.h"
 
+template <typename X> auto sum_value(const X &value){
+
+    return value;
+
+}
+
+template <typename X> std::complex<double> sum_value(const std::complex<X> &value){
+
+    return {static_cast<double>(value.real()), static_cast<double>(value.imag())};
+
+}
+
+template <typename Z> double inv_type_scalar(const Z &scalar){
+    
+    return static_cast<double>(scalar);
+
+};
+
+template <typename Z> std::complex<double> inv_type_scalar(const std::complex<Z> &scalar){
+    
+    return {static_cast<double>(scalar.real()), static_cast<double>(scalar.imag())};
+
+};
+
 template <template <typename> class Container, typename T> concept MatrixContainer = requires(Container<T> c, const Container<T> another, T value, int i){
 
     {c = another} -> std::same_as<Container<T>&>;
@@ -59,7 +83,7 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
             }
 
-            T res = 0;
+            T res = T{};
 
             for (size_t i = 0; i < size; ++i){
 
@@ -72,7 +96,7 @@ template <template <typename> class Container, typename T> requires MatrixContai
                 }
                 else{
 
-                    res += (-1) * container[i] * get_det(minor, size - 1);
+                    res += T{-1} * container[i] * get_det(minor, size - 1);
 
                 }
 
@@ -162,6 +186,38 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
         }
 
+        template <class A> auto multiply_by_scalar_inv(A scalar) const{
+            
+            using res_type = decltype(inv_type_scalar(T{}) * inv_type_scalar(scalar));
+            Container<res_type> new_buffer;
+
+            for (auto item : buffer){
+
+                new_buffer.append(inv_type_scalar(item) * inv_type_scalar(scalar));
+
+            }
+
+            if (diagonal_flag == 1){
+            
+                DiagonalMatrix<Container, res_type> res(new_buffer, get_buff_size(), diag_count);
+            
+                return res;
+
+            }
+            else{
+
+                DiagonalMatrix<Container, res_type> res;
+                res.buffer = new_buffer;
+                res.diag_count = 2 * matrix_size - 1;
+                res.diagonal_flag = 0;
+                res.matrix_size = matrix_size;
+
+                return res;
+                
+            }
+
+        }
+
     public:
 
         class MatrixCIterator{
@@ -234,7 +290,7 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
         DiagonalMatrix(){}
 
-        DiagonalMatrix(const Container<T> &container, size_t count, size_t d_count) :
+        template<template <typename> class Container2> requires MatrixContainer<Container2, T> DiagonalMatrix(const Container2<T> &container, size_t count, size_t d_count) :
 
             diag_count(d_count),
             matrix_size((((d_count - 1) / 2)*((d_count - 1) / 2) + ((d_count - 1) / 2) + count) / d_count){
@@ -378,7 +434,7 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
         }
 
-        void summary_with_matrix(DiagonalMatrix<Container, T> &another){//todo: не забыть тоже сделать иммутбл
+        template <template <typename> class Container2, typename A> requires MatrixContainer<Container2, A> auto summary_with_matrix(const DiagonalMatrix<Container2, A> &another) const{
 
             if (this->matrix_size != another.matrix_size){
 
@@ -386,77 +442,89 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
             }
 
+            using res_type = std::conditional_t<std::is_same_v<T, A>, T, decltype(sum_value(T{}) + sum_value(A{}))>;
+            
+            DiagonalMatrix<Container, res_type> res_matrix;
+            Container<res_type> new_buff;
+
             if ((diagonal_flag && another.diagonal_flag) == 1){
 
                 size_t this_size = get_buff_size();
                 size_t another_size = another.get_buff_size();
                 size_t diff = abs((int)this_size - (int)another_size) / 2;
-                Container<T> new_buff;
 
                 if (this_size >= another_size){
 
                     for (size_t i = 0; i < diff; ++i){
 
-                        new_buff.append(buffer[i]);
+                        new_buff.append(sum_value(buffer[i]));
 
                     }
 
                     for (size_t i = 0; i < another_size; ++i){
 
-                        new_buff.append(buffer[i + diff] + another.buffer[i]);
+                        new_buff.append(sum_value(buffer[i + diff]) + sum_value(another.buffer[i]));
 
                     }
 
                     for (size_t i = another_size + diff; i < this_size; ++i){
 
-                        new_buff.append(buffer[i]);
+                        new_buff.append(sum_value(buffer[i]));
 
                     }
 
-                    buffer = new_buff;
+                    res_matrix.diag_count = diag_count;
 
                 }
                 else{
 
                     for (size_t i = 0; i < diff; ++i){
 
-                        new_buff.append(another.buffer[i]);
+                        new_buff.append(sum_value(another.buffer[i]));
 
                     }
 
                     for (size_t i = 0; i < this_size; ++i){
 
-                        new_buff.append(another.buffer[i + diff] + buffer[i]);
+                        new_buff.append(sum_value(another.buffer[i + diff]) + sum_value(buffer[i]));
 
                     }
 
                     for (size_t i = this_size + diff; i < another_size; ++i){
 
-                        new_buff.append(another.buffer[i]);
+                        new_buff.append(sum_value(another.buffer[i]));
 
                     }
 
-                    diag_count = another.diag_count;
-                    buffer = new_buff;
+                    res_matrix.diag_count = another.diag_count;
 
                 }
 
+                res_matrix.buffer = new_buff;
+                res_matrix.matrix_size = matrix_size;
+                res_matrix.diagonal_flag = 1;
+
             }
             else{
-
-                convert();
 
                 for (size_t i = 0; i < matrix_size; ++i){
 
                     for (size_t j = 0; j < matrix_size; ++j){
 
-                        buffer[i * matrix_size + j] = buffer[i * matrix_size + j] + another.get(i, j);
+                        new_buff.append(sum_value(get(i, j)) + sum_value(another.get(i, j)));
 
                     }
 
                 }
 
+                res_matrix.buffer = new_buff;
+                res_matrix.matrix_size = matrix_size;
+                res_matrix.diag_count = 2 * matrix_size - 1;
+                res_matrix.diagonal_flag = 0;
+
             }
+
+            return res_matrix;
 
         }
 
@@ -479,7 +547,7 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
         auto get_inverse_matrix() const{
 
-            DiagonalMatrix<Container, T> res_matrix(*this);
+            DiagonalMatrix<Container, T> res_matrix(*this); 
             DiagonalMatrix<Container, T> tmp(*this);
             res_matrix.convert();
             tmp.convert();
@@ -496,30 +564,30 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
                 res_matrix.set(0, 0, T{1});
                 
-                return res_matrix.multiply_by_scalar(1.0 / det);
-
             }
+            else{
+                
+                for (size_t i = 0; i < matrix_size; ++i){
 
-            for (size_t i = 0; i < matrix_size; ++i){
+                    for (size_t j = 0; j < matrix_size; ++j){
 
-                for (size_t j = 0; j < matrix_size; ++j){
+                        if ((i + j) % 2 == 0){
 
-                    if ((i + j) % 2 == 0){
+                            res_matrix.set(j, i, get_det(make_minor(tmp.buffer, i, j, matrix_size), matrix_size - 1));
 
-                        res_matrix.set(j, i, get_det(make_minor(tmp.buffer, i, j, matrix_size), matrix_size - 1));
+                        }
+                        else{
 
-                    }
-                    else{
+                            res_matrix.set(j, i, T{-1} * get_det(make_minor(tmp.buffer, i, j, matrix_size), matrix_size - 1));                        
 
-                        res_matrix.set(j, i, (-1) * get_det(make_minor(tmp.buffer, i, j, matrix_size), matrix_size - 1));                        
+                        }
 
                     }
 
                 }
-
             }
 
-            return res_matrix.multiply_by_scalar(1.0 / det);
+            return res_matrix.multiply_by_scalar_inv(inv_type_scalar(T{1}) / inv_type_scalar(det));
 
         }
 
