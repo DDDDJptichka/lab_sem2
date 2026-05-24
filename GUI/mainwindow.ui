@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>835</width>
+    <height>613</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="RunButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>130</y>
+      <width>171</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Enter</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="MethodBox">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>50</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>map</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>reduce</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>where</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>get</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>set</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>get_diag_count</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>get_matrix_size</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>get_inverse_matrix</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>frobenius_norm</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>multiply_by_scalar</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>summary_with_scalar</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>summary_with_matrix</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="ContainerTypeBox">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>DynamicArray</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>LinkedList</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>ArraySequence</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>ListSequence</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QSpinBox" name="MatrixSizeBox">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>20</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="DiagCountBox">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>20</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="CreateMatrixButton">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>70</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Create</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="MatrixTable">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>120</y>
+      <width>601</width>
+      <height>451</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="ScalarInput">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>90</y>
+      <width>171</width>
+      <height>24</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="OutputText">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>270</y>
+      <width>201</width>
+      <height>181</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>835</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
