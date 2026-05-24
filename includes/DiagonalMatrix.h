@@ -116,13 +116,9 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
             Container<T> new_buff;
 
-            for (size_t i = 0; i < matrix_size; ++i){
+            for (auto item : *this){
 
-                for (size_t j = 0; j < matrix_size; ++j){
-
-                    new_buff.append(get(i, j));
-
-                }
+                new_buff.append(item);
 
             }
 
@@ -414,13 +410,9 @@ template <template <typename> class Container, typename T> requires MatrixContai
             using res_type = decltype(T{} + scalar);
             Container<res_type> new_buffer;
 
-            for (size_t i = 0; i < matrix_size; ++i){
+            for (auto item : *this){
 
-                for (size_t j = 0; j < matrix_size; ++j){
-
-                    new_buffer.append(get(i, j) + scalar);
-
-                }
+                new_buffer.append(item + scalar);
 
             }
 
@@ -608,4 +600,4 @@ template <template <typename> class Container, typename T> requires MatrixContai
 
         }
 
-};
+};//todo::алгоритм томаса на 3х диаг(для ур-я теплопров) тепловая карта с помощью canvas
