@@ -1,0 +1,70 @@
+#pragma once
+
+#include <string>
+#include <exception>
+
+class exception : public std::exception{
+
+    protected:
+
+        std::string message;
+
+    public:
+
+        explicit exception(const std::string &msg) : message(msg){}
+
+        const char *what() const noexcept override{
+
+            return message.c_str();
+
+        }
+
+};
+
+class index_out_of_range : public exception{
+
+    public:
+
+        explicit index_out_of_range(const std::string &msg) : exception(msg){}
+
+};
+
+class empty_container : public exception{
+
+    public:
+
+        explicit empty_container(const std::string &msg) : exception(msg){}
+
+};
+
+class nullptr_argument : public exception{
+
+    public:
+
+        explicit nullptr_argument(const std::string &msg) : exception(msg){}
+
+};
+
+class not_usable : public exception{
+
+    public:
+
+        explicit not_usable(const std::string &msg) : exception(msg){}
+
+};
+
+class different_matrix_size : public exception{
+
+    public:
+
+        explicit different_matrix_size(const std::string &msg) : exception(msg){}
+
+};
+
+class zero_determinant : public exception{
+
+    public:
+
+        explicit zero_determinant(const std::string &msg) : exception(msg){}
+
+};
