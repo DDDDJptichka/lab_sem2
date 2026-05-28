@@ -101,9 +101,42 @@ template <class T> class LazySequence : public Sequence<T>{
             return length;
 
         }
-        
-        Sequence<T> *append(T item) override{}
-        Sequence<T> *prepend(T item) override{}
+
+        Sequence<T> *append(T item) override{
+
+            if (inf == true){
+
+                throw not_usable("Can`t append smth, because sequence is infinite");
+
+            }
+
+            if (length > 0){
+
+                materialize_to(length - 1);
+
+            }
+
+            cache.append(item);
+            ++length;
+
+            return this;
+
+        }
+
+        Sequence<T> *prepend(T item) override{
+
+            cache.prepend(item);
+
+            if (inf == false){
+                
+                ++length;
+
+            }
+
+            return this;
+
+        }
+
         Sequence<T> *insert_at(T item, int index) override{};
         Sequence<T> *get_sub_sequence(int start_index, int end_index) const override{};
         Sequence<T> *concat(Sequence<T> *sequence) const override{}

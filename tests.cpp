@@ -1647,3 +1647,39 @@ TEST(TestLazySequence, create_from_fin_gen){
     EXPECT_THROW(seq[3], index_out_of_range);
 
 }
+
+TEST(TestLazySequence, check_methods){
+
+    Generator<int> gen([](size_t i){return i * i;});
+    LazySequence<int> seq_fin(gen, 3);
+    LazySequence<int> seq_inf(gen);
+
+    seq_fin.append(10);
+    seq_fin.prepend(-10);
+
+    EXPECT_EQ(seq_fin.get_length(), 5);
+    EXPECT_EQ(seq_fin[0], -10);
+    EXPECT_EQ(seq_fin[1], 0);
+    EXPECT_EQ(seq_fin[2], 1);
+    EXPECT_EQ(seq_fin[3], 4);
+    EXPECT_EQ(seq_fin[4], 10);
+    EXPECT_THROW(seq_fin[5], index_out_of_range);
+    EXPECT_EQ(seq_fin.get_first(), -10);
+    EXPECT_EQ(seq_fin.get_last(), 10);
+    EXPECT_EQ(seq_fin.materialised_size(), 5);
+
+    seq_inf.prepend(-10);
+
+    EXPECT_EQ(seq_inf.materialised_size(), 1);
+    EXPECT_EQ(seq_inf.get_length(), 0);
+    EXPECT_EQ(seq_inf[0], -10);
+    EXPECT_EQ(seq_inf[1], 0);
+    EXPECT_EQ(seq_inf[2], 1);
+    EXPECT_EQ(seq_inf[3], 4);
+    EXPECT_EQ(seq_inf[4], 9);
+    EXPECT_THROW(seq_inf.append(10), not_usable);
+    EXPECT_EQ(seq_inf.get_first(), -10);
+    EXPECT_THROW(seq_inf.get_last(), not_usable);
+    EXPECT_EQ(seq_inf.materialised_size(), 5);
+
+}
