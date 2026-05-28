@@ -48,10 +48,10 @@ template <typename T> OnlineStatistics<T> collect(LazySequence<T> &seq, size_t c
 
 template <typename T> void print(OnlineStatistics<T> &stats){
 
-    std::cout << "count: " << stats.count;
-    std::cout << "min: " << stats.min;
-    std::cout << "max: " << stats.max;
-    std::cout << "sum: " << stats.sum;
-    std::cout << "mean: " << stats.mean;
+    std::cout << "\ncount: " << stats.count;
+    std::cout << "\nmin: " << stats.min;
+    std::cout << "\nmax: " << stats.max;
+    std::cout << "\nsum: " << stats.sum;
+    std::cout << "\nmean: " << stats.mean;
 
 }
