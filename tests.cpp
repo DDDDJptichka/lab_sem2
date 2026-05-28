@@ -17,8 +17,8 @@
 #include "includes/LazyOperations.h"
 #include "includes/Shaker.h"
 
-#include "includes/Option.h"
-#include "includes/Generator.h"
+#include "includes_lab4/Option.h"
+#include "includes_lab4/Generator.h"
 
 TEST(TestDynamicArray, size_create){
 
