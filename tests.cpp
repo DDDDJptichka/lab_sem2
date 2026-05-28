@@ -1466,7 +1466,7 @@ TEST(TestOption, create_from_another){
 
 }
 
-TEST(TestOption, check_operator){
+TEST(TestOption, check_operators){
 
     Option<int> opt(322);
     Option<int> opt2;
@@ -1484,6 +1484,10 @@ TEST(TestOption, check_operator){
     EXPECT_EQ(opt.has_value(), true);
     EXPECT_EQ(opt.value(), 11);
 
+    opt2.value() = opt.value();
+
+    EXPECT_TRUE(opt == opt2);
+
 }
 
 TEST(TestOption, check_reset){
@@ -1497,5 +1501,66 @@ TEST(TestOption, check_reset){
 
     EXPECT_EQ(opt.has_value(), false);
     EXPECT_THROW(opt.value(), empty_option);
+
+}
+
+TEST(TestGenerator, create_empty){
+
+    Generator<int> gen;
+
+    EXPECT_EQ(gen.get_position(), 0);
+    EXPECT_FALSE(gen.has_next());
+    EXPECT_EQ(gen.try_get_next(), Option<int>());
+    EXPECT_TRUE(gen.begin() == gen.end());
+    EXPECT_THROW(gen.get_next(), index_out_of_range);
+
+}
+
+TEST(TestGenerator, create_not_empty_and_check_NOTiterable){
+
+    Generator<int> gen([](size_t i){return i * i;});
+
+    int expected[] = {0, 1, 4, 9};
+
+    EXPECT_THROW(gen.begin(), not_usable);
+    EXPECT_THROW(gen.end(), not_usable);
+    EXPECT_EQ(gen.get_position(), 0);
+
+    for (size_t i = 0; i < 4; ++i){
+
+        EXPECT_EQ(gen.try_get_next().value(), expected[i]);
+
+    }
+
+    EXPECT_TRUE(gen.has_next());
+    EXPECT_EQ(gen.get_position(), 4);
+    EXPECT_EQ(gen.get_next(), 16);
+
+}
+
+TEST(TestGenerator, create_not_empty_and_check_iterable){
+
+    Generator<int> gen([](size_t i){return i * i;}, 4);
+
+    int expected[] = {0, 1, 4, 9};
+    size_t index = 0;
+
+    for (auto val : gen){
+
+        EXPECT_EQ(val, expected[index]);
+        ++index;
+
+    }
+
+    index = 0;
+
+    EXPECT_EQ(gen.get_position(), 0);
+
+    while (gen.has_next()){
+
+        EXPECT_EQ(gen.try_get_next().value(), expected[index]);
+        ++index;
+
+    }
 
 }

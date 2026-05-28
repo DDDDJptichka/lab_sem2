@@ -30,7 +30,7 @@ template <class T> class Option{
 
         }
     
-        Option(const Option& another){
+        Option(const Option<T>& another){
 
             if (another.has_val == true){
 
@@ -101,6 +101,12 @@ template <class T> class Option{
             }
 
             return *this;
+
+        }
+
+        bool operator==(const Option<T> &another) const{
+
+            return ((has_value() == another.has_value()) || (value() == another.value()));
 
         }
 
