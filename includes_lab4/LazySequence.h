@@ -137,9 +137,73 @@ template <class T> class LazySequence : public Sequence<T>{
 
         }
 
-        Sequence<T> *insert_at(T item, int index) override{};
-        Sequence<T> *get_sub_sequence(int start_index, int end_index) const override{};
-        Sequence<T> *concat(Sequence<T> *sequence) const override{}
+        Sequence<T> *insert_at(T item, int index) override{
+
+            if (index < 0){
+
+                throw index_out_of_range("Index Out Of Range");
+
+            }
+
+            if (inf == true){
+
+                materialize_to(index);
+                cache.insert_at(item, index);
+
+                return this;
+
+            }
+
+            if (index > length){
+
+                throw index_out_of_range("Index Out Of Range");
+
+            }
+
+            if (length > 0){
+
+                materialize_to(length - 1);
+
+            }
+
+            cache.insert_at(item, index);
+            ++length;
+
+            return this;
+
+        }
+
+        Sequence<T> *get_sub_sequence(int start_index, int end_index) const override{
+
+            if ((inf == false) && (length <= std::max(start_index, end_index))){
+
+                throw index_out_of_range("Index Out Of Range");
+
+            }
+
+            materialize_to(std::max(start_index, end_index));
+
+            return cache.get_sub_sequence(start_index, end_index);
+
+        }
+
+        Sequence<T> *concat(Sequence<T> *sequence) const override{
+
+            if (inf == true){
+
+                throw not_usable("Can`t use concat, because sequence is infinite");
+
+            }
+
+            if (length > 0){
+
+                materialize_to(length - 1);
+
+            }
+
+            return cache.concat(sequence);
+
+        }
 
         T& operator[](int index){
 

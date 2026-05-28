@@ -1682,4 +1682,29 @@ TEST(TestLazySequence, check_methods){
     EXPECT_THROW(seq_inf.get_last(), not_usable);
     EXPECT_EQ(seq_inf.materialised_size(), 5);
 
+    LazySequence<int> seq_fin_2(gen, 2);
+    LazySequence<int> seq_inf_2(gen);
+
+    seq_fin_2.insert_at(1, 0);
+    seq_fin_2.insert_at(2, 2);
+
+    EXPECT_EQ(seq_fin_2.get_length(), 4);
+    EXPECT_EQ(seq_fin_2[0], 1);
+    EXPECT_EQ(seq_fin_2[1], 0);
+    EXPECT_EQ(seq_fin_2[2], 2);
+    EXPECT_EQ(seq_fin_2[3], 1);
+    EXPECT_THROW(seq_fin_2[4], index_out_of_range);
+    EXPECT_EQ(seq_fin_2.materialised_size(), 4);
+
+    seq_inf_2.insert_at(1, 0);
+    seq_inf_2.insert_at(2, 2);
+
+    EXPECT_EQ(seq_inf_2.get_length(), 0);
+    EXPECT_EQ(seq_inf_2[0], 1);
+    EXPECT_EQ(seq_inf_2[1], 0);
+    EXPECT_EQ(seq_inf_2[2], 2);
+    EXPECT_EQ(seq_inf_2[3], 1);
+    EXPECT_EQ(seq_inf_2[4], 4);
+    EXPECT_EQ(seq_inf_2.materialised_size(), 5);
+
 }
