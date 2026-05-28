@@ -1707,4 +1707,19 @@ TEST(TestLazySequence, check_methods){
     EXPECT_EQ(seq_inf_2[4], 4);
     EXPECT_EQ(seq_inf_2.materialised_size(), 5);
 
+    Sequence<int> *res = seq_fin_2.get_sub_sequence(0, 2);
+    Sequence<int> *res_inf = seq_inf_2.get_sub_sequence(5, 7);
+
+    EXPECT_EQ(res->get_length(), 3);
+    EXPECT_EQ(res->get(0), 1);
+    EXPECT_EQ(res->get(1), 0);
+    EXPECT_EQ(res->get(2), 2);
+    EXPECT_THROW(res->get(3), index_out_of_range);
+
+    EXPECT_EQ(res_inf->get_length(), 3);
+    EXPECT_EQ(res_inf->get(0), 9);
+    EXPECT_EQ(res_inf->get(1), 16);
+    EXPECT_EQ(res_inf->get(2), 25);
+    EXPECT_THROW(res_inf->get(3), index_out_of_range);
+
 }
