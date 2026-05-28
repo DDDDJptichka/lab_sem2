@@ -68,3 +68,11 @@ class zero_determinant : public exception{
         explicit zero_determinant(const std::string &msg) : exception(msg){}
 
 };
+
+class empty_option : public exception{
+
+    public:
+
+        explicit empty_option(const std::string &msg) : exception(msg){}
+
+};
