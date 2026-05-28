@@ -96,6 +96,8 @@ template <class T> class Generator{
 
         Generator(std::function<T(size_t)> rule, size_t count) : rule(rule), count(count), inf(false){}
 
+        ~Generator(){}
+
         bool has_next() const{
 
             return ((rule != nullptr) && (inf || index < count));

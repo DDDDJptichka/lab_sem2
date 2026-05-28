@@ -19,6 +19,7 @@
 
 #include "includes_lab4/Option.h"
 #include "includes_lab4/Generator.h"
+#include "includes_lab4/LazySequence.h"
 
 TEST(TestDynamicArray, size_create){
 
@@ -1562,5 +1563,87 @@ TEST(TestGenerator, create_not_empty_and_check_iterable){
         ++index;
 
     }
+
+}
+
+TEST(TestLazySequence, create_empty){
+
+    LazySequence<int> seq;
+
+    EXPECT_EQ(seq.get_length(), 0);
+    EXPECT_EQ(seq.materialised_size(), 0);
+    EXPECT_THROW(seq[0], index_out_of_range);
+
+}
+
+TEST(TestLazySequence, create_from_arr){
+
+    int items[] = {1, 2, 3, 4};
+    LazySequence<int> seq(items, 3);
+
+    EXPECT_EQ(seq.get_length(), 3);
+    EXPECT_EQ(seq.get_first(), 1);
+    EXPECT_EQ(seq[1], 2);
+    EXPECT_EQ(seq.get_last(), 3);
+    EXPECT_EQ(seq.materialised_size(), 3);
+
+}
+
+TEST(TestLazySequence, create_from_seq){
+
+    int items[] = {1, 2, 3, 4};
+    ArraySequence<int> arr(items, 2);
+    ListSequence<int> list(items, 1);
+
+    LazySequence<int> seq1(arr);
+    LazySequence<int> seq2(list);
+    LazySequence<int> seq3(seq1);
+
+    EXPECT_EQ(seq1.get_length(), 2);
+    EXPECT_EQ(seq1.get_first(), 1);
+    EXPECT_EQ(seq1.get_last(), 2);
+    EXPECT_EQ(seq1.materialised_size(), 2);
+
+    EXPECT_EQ(seq2.get_length(), 1);
+    EXPECT_EQ(seq2.get_first(), 1);
+    EXPECT_EQ(seq2.get_last(), 1);
+    EXPECT_EQ(seq2.materialised_size(), 1);
+
+    EXPECT_EQ(seq3.get_length(), 2);
+    EXPECT_EQ(seq3.get_first(), 1);
+    EXPECT_EQ(seq3.get_last(), 2);
+    EXPECT_EQ(seq3.materialised_size(), 2);
+
+}
+
+TEST(TestLazySequence, create_from_inf_gen){
+
+    Generator<int> gen([](size_t i){return i * i;});
+    LazySequence<int> seq(gen);
+
+    EXPECT_EQ(seq.get_length(), 0);
+    EXPECT_EQ(seq.materialised_size(), 0);
+    EXPECT_EQ(seq[2], 4);
+    EXPECT_EQ(seq.get_length(), 0);
+    EXPECT_EQ(seq[0], 0);
+    EXPECT_EQ(seq[1], 1);
+    EXPECT_EQ(seq.materialised_size(), 3);
+
+}
+
+TEST(TestLazySequence, create_from_fin_gen){
+
+    Generator<int> gen([](size_t i){return i * i;});
+    LazySequence<int> seq(gen, 3);
+
+    EXPECT_EQ(seq.get_length(), 3);
+    EXPECT_EQ(seq.materialised_size(), 0);
+    EXPECT_EQ(seq[0], 0);
+    EXPECT_EQ(seq.materialised_size(), 1);
+    EXPECT_EQ(seq[1], 1);
+    EXPECT_EQ(seq.materialised_size(), 2);
+    EXPECT_EQ(seq[2], 4);
+    EXPECT_EQ(seq.materialised_size(), 3);
+    EXPECT_THROW(seq[3], index_out_of_range);
 
 }
