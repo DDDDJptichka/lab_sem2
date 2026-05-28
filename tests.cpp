@@ -1722,4 +1722,19 @@ TEST(TestLazySequence, check_methods){
     EXPECT_EQ(res_inf->get(2), 25);
     EXPECT_THROW(res_inf->get(3), index_out_of_range);
 
+    Sequence<int> *ress = seq_fin_2.concat(&seq_fin_2);
+
+    EXPECT_EQ(ress->get_length(), 8);
+    EXPECT_EQ(ress->get(0), 1);
+    EXPECT_EQ(ress->get(1), 0);
+    EXPECT_EQ(ress->get(2), 2);
+    EXPECT_EQ(ress->get(3), 1);
+    EXPECT_EQ(ress->get(4), 1);
+    EXPECT_EQ(ress->get(5), 0);
+    EXPECT_EQ(ress->get(6), 2);
+    EXPECT_EQ(ress->get(7), 1);
+    EXPECT_THROW(ress->get(8), index_out_of_range);
+
+    EXPECT_THROW(seq_inf_2.concat(&seq_inf_2), not_usable);
+
 }
