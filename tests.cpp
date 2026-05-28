@@ -17,6 +17,9 @@
 #include "includes/LazyOperations.h"
 #include "includes/Shaker.h"
 
+#include "includes/Option.h"
+#include "includes/Generator.h"
+
 TEST(TestDynamicArray, size_create){
 
     DynamicArray<int> arr(4);
@@ -1425,4 +1428,74 @@ TEST(TestDiagonalMatrix, check_shaker){
     //     std::cout << "  " << i;
 
     // }
+}
+
+TEST(TestOption, create_empty){
+
+    Option<int> opt;
+
+    EXPECT_EQ(opt.has_value(), false);
+    EXPECT_THROW(opt.value(), empty_option);
+
+}
+
+TEST(TestOption, create_not_empty){
+
+    Option<int> opt(322);
+
+    EXPECT_EQ(opt.has_value(), true);
+    EXPECT_EQ(opt.value(), 322);
+
+}
+
+TEST(TestOption, create_from_another){
+
+    Option<int> opt(322);
+    Option<int> res(opt);
+
+    EXPECT_EQ(res.has_value(), true);
+    EXPECT_EQ(res.value(), 322);
+
+    opt.value() = 11;
+    res.value() = 12;
+
+    EXPECT_EQ(res.has_value(), true);
+    EXPECT_EQ(res.value(), 12);
+    EXPECT_EQ(opt.has_value(), true);
+    EXPECT_EQ(opt.value(), 11);
+
+}
+
+TEST(TestOption, check_operator){
+
+    Option<int> opt(322);
+    Option<int> opt2;
+
+    opt2 = opt;
+
+    EXPECT_EQ(opt2.has_value(), true);
+    EXPECT_EQ(opt2.value(), 322);
+
+    opt.value() = 11;
+    opt2.value() = 12;
+
+    EXPECT_EQ(opt2.has_value(), true);
+    EXPECT_EQ(opt2.value(), 12);
+    EXPECT_EQ(opt.has_value(), true);
+    EXPECT_EQ(opt.value(), 11);
+
+}
+
+TEST(TestOption, check_reset){
+
+    Option<int> opt(322);
+
+    EXPECT_EQ(opt.has_value(), true);
+    EXPECT_EQ(opt.value(), 322);
+
+    opt.reset();
+
+    EXPECT_EQ(opt.has_value(), false);
+    EXPECT_THROW(opt.value(), empty_option);
+
 }
