@@ -20,6 +20,7 @@
 #include "includes_lab4/Option.h"
 #include "includes_lab4/Generator.h"
 #include "includes_lab4/LazySequence.h"
+#include "includes_lab4/OnlineStatistics.h"
 
 TEST(TestDynamicArray, size_create){
 
@@ -1736,5 +1737,22 @@ TEST(TestLazySequence, check_methods){
     EXPECT_THROW(ress->get(8), index_out_of_range);
 
     EXPECT_THROW(seq_inf_2.concat(&seq_inf_2), not_usable);
+
+}
+
+TEST(TestOnlineStatistics, collect_from_lazy_seq){
+
+    Generator<int> gen([](size_t i){return i * i;});
+    LazySequence<int> seq(gen);
+
+    OnlineStatistics<int> stats = collect(seq, 5);
+
+    EXPECT_EQ(stats.count, 5);
+    EXPECT_EQ(stats.min, 0);
+    EXPECT_EQ(stats.max, 16);
+    EXPECT_EQ(stats.sum, 0 + 1 + 4 + 9 + 16);
+    EXPECT_DOUBLE_EQ(stats.mean, 6.0);
+
+    EXPECT_EQ(seq.materialised_size(), 5);
 
 }

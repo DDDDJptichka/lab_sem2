@@ -11,7 +11,7 @@ add_subdirectory(googletest)
 add_executable(a main.cpp)
 add_executable(tests tests.cpp)
 
-target_include_directories(a PRIVATE includes)
-target_include_directories(tests PRIVATE includes)
+target_include_directories(a PRIVATE includes includes_lab4)
+target_include_directories(tests PRIVATE includes includes_lab4)
 
 target_link_libraries(tests gtest gtest_main)
